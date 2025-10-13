@@ -142,5 +142,7 @@ lib/
 licenses.txt
 dist/licenses.txt
 dist/sourcemap-register.js
+.devcontainer/runtime.env
 
 .devcontainer/runtime.env
+.env

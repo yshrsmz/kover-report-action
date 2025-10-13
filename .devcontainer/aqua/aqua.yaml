@@ -1,0 +1,14 @@
+---
+# aqua - https://aquaproj.github.io/
+
+registries:
+  - type: standard
+    ref: v4.419.0
+
+packages:
+  - name: starship/starship
+    version: v1.23.0
+  - name: junegunn/fzf
+    version: v0.65.2
+  - name: pnpm/pnpm
+    version: v10.17.1
