@@ -80,7 +80,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -137,3 +136,10 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Build output for GitHub Actions
+lib/
+licenses.txt
+dist/licenses.txt
+dist/sourcemap-register.js
+
