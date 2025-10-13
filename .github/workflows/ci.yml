@@ -9,28 +9,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: '24'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Install dependencies
-        run: npm ci
-      
+        run: pnpm install --frozen-lockfile
+
       - name: Format check
-        run: npm run format:check
-      
+        run: pnpm run format:check
+
       - name: Lint
-        run: npm run lint
-      
+        run: pnpm run lint
+
       - name: Build
-        run: npm run build
-      
+        run: pnpm run build
+
       - name: Check for uncommitted changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then

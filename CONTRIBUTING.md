@@ -6,9 +6,10 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 1. Fork and clone the repository
 2. Install Node.js 20.x or higher
-3. Install dependencies:
+3. Install pnpm if you haven't already
+4. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 ## Development Workflow
@@ -19,15 +20,15 @@ Thank you for your interest in contributing! This document provides guidelines f
 2. Make your changes in the `src/` directory
 3. Format your code:
    ```bash
-   npm run format
+   pnpm run format
    ```
 4. Lint your code:
    ```bash
-   npm run lint
+   pnpm run lint
    ```
 5. Build the action:
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 ### Building
@@ -35,7 +36,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 The action uses [@vercel/ncc](https://github.com/vercel/ncc) to compile TypeScript and bundle dependencies:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 This compiles:
@@ -48,12 +49,11 @@ This compiles:
 
 We use:
 - **TypeScript** for type safety
-- **ESLint** for linting
-- **Prettier** for code formatting
+- **Biome** for linting and code formatting
 
 Run all checks:
 ```bash
-npm run all
+pnpm run all
 ```
 
 ### Testing
@@ -75,15 +75,14 @@ Before submitting a PR:
 │   └── index.js        # Action entry point
 ├── action.yml          # Action metadata
 ├── tsconfig.json       # TypeScript config
-├── eslint.config.mjs   # ESLint config
-├── .prettierrc.json    # Prettier config
+├── biome.json          # Biome config
 └── package.json        # Dependencies and scripts
 ```
 
 ## Pull Request Process
 
 1. Update documentation if needed
-2. Run `npm run all` to ensure everything passes
+2. Run `pnpm run all` to ensure everything passes
 3. Commit your changes including the built `dist/` directory
 4. Create a pull request with a clear description
 5. Wait for review and address any feedback

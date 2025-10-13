@@ -7,12 +7,12 @@ inputs:
     description: 'Path to the Kover XML coverage report file'
     required: true
     default: 'build/reports/kover/report.xml'
-  
+
   min-coverage:
     description: 'Minimum coverage percentage required (0-100)'
     required: false
     default: '0'
-  
+
   title:
     description: 'Title for the coverage report comment'
     required: false
@@ -21,15 +21,15 @@ inputs:
 outputs:
   coverage-percentage:
     description: 'Overall coverage percentage'
-  
+
   lines-covered:
     description: 'Number of lines covered'
-  
+
   lines-total:
     description: 'Total number of lines'
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 
 branding:
