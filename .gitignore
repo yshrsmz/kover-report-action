@@ -146,3 +146,4 @@ dist/sourcemap-register.js
 
 .devcontainer/runtime.env
 .env
+.pnpm-store/
