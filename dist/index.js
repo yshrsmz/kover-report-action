@@ -768,6 +768,7 @@ async function parseCoverageFile(filePath) {
  * @param xmlData Parsed XML object
  * @returns Coverage result or null if INSTRUCTION counter not found
  */
+// biome-ignore lint/suspicious/noExplicitAny: XML structure is dynamic and not type-safe
 function extractInstructionCounter(xmlData) {
     try {
         // Type guard to check if xmlData has the expected structure
@@ -788,6 +789,7 @@ function extractInstructionCounter(xmlData) {
             counters = [counters];
         }
         // Find INSTRUCTION counter
+        // biome-ignore lint/suspicious/noExplicitAny: XML counter structure is dynamic
         const instructionCounter = counters.find((counter) => counter?.['@_type'] === 'INSTRUCTION');
         if (!instructionCounter) {
             return null;

@@ -64,6 +64,7 @@ export function expectError(fn: () => any, expectedMessage?: string): void {
  * @example
  * await expectAsyncError(async () => await parseInvalid(), 'Invalid format');
  */
+// biome-ignore lint/suspicious/noExplicitAny: Test helper accepts any return type from async test functions
 export async function expectAsyncError(
   // biome-ignore lint/suspicious/noExplicitAny: Test helper accepts any return type from async test functions
   fn: () => Promise<any>,

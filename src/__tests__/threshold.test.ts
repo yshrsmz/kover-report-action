@@ -145,7 +145,8 @@ describe('validateThresholds', () => {
 
   it('should throw error for non-numeric threshold', () => {
     const thresholds = {
-      core: 'eighty' as unknown as number,
+      // biome-ignore lint/suspicious/noExplicitAny: Testing invalid type intentionally
+      core: 'eighty' as any,
     };
     expect(() => validateThresholds(thresholds)).toThrow('must be a number');
   });

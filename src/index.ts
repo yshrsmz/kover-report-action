@@ -40,7 +40,7 @@ async function run(): Promise<void> {
     }
 
     // Parse and validate thresholds
-    let thresholds: Record<string, number>;
+    let thresholds: ReturnType<typeof parseThresholdsFromJSON>;
     try {
       thresholds = parseThresholdsFromJSON(thresholdsInput);
       core.info(`✅ Thresholds configured: ${Object.keys(thresholds).length} rules`);

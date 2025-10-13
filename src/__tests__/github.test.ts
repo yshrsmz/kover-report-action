@@ -37,13 +37,16 @@ describe('postCoverageComment', () => {
       },
     };
 
+    // biome-ignore lint/suspicious/noExplicitAny: Mock type casting for test setup
     vi.mocked(github.getOctokit).mockReturnValue(mockOctokit as any);
   });
 
   it('should create a new comment when none exists', async () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [], // No existing comments
     } as any);
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.createComment.mockResolvedValue({
       data: { id: 456 },
     } as any);
@@ -67,6 +70,7 @@ describe('postCoverageComment', () => {
   });
 
   it('should update existing comment when found', async () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [
         { id: 100, body: 'Some other comment' },
@@ -74,6 +78,7 @@ describe('postCoverageComment', () => {
         { id: 300, body: 'Another comment' },
       ],
     } as any);
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.updateComment.mockResolvedValue({
       data: { id: 200 },
     } as any);
@@ -144,7 +149,9 @@ describe('postCoverageComment', () => {
 
   it('should mask token in logs', async () => {
     const token = 'ghp_secret_token_12345';
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] } as any);
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.createComment.mockResolvedValue({ data: { id: 456 } } as any);
 
     await postCoverageComment(token, 'report');
@@ -153,6 +160,7 @@ describe('postCoverageComment', () => {
   });
 
   it('should handle create comment failure', async () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] } as any);
     mockOctokit.rest.issues.createComment.mockRejectedValue(new Error('Create failed'));
 
@@ -162,6 +170,7 @@ describe('postCoverageComment', () => {
   });
 
   it('should handle update comment failure', async () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [{ id: 200, body: '<!-- kover-coverage-report -->\nOld' }],
     } as any);
