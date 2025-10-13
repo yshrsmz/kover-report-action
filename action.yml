@@ -1,32 +1,75 @@
 name: 'Kover Report Action'
-description: 'A GitHub Action for generating and reporting Kover coverage reports'
+description: 'A generalized GitHub Action for generating and reporting code coverage from Kover XML reports with multi-module support'
 author: 'yshrsmz'
 
 inputs:
-  coverage-file:
-    description: 'Path to the Kover XML coverage report file'
-    required: true
-    default: 'build/reports/kover/report.xml'
+  # Discovery & Paths
+  discovery-command:
+    description: 'Command to discover modules (e.g., "./gradlew -q projects"). If not provided, uses coverage-files glob pattern.'
+    required: false
+
+  coverage-files:
+    description: 'Glob pattern for coverage files (used when discovery-command is not provided)'
+    required: false
+    default: '**/build/reports/kover/report.xml'
+
+  module-path-template:
+    description: 'Path template for module coverage files (use {module} placeholder). Only used with discovery-command.'
+    required: false
+    default: '{module}/build/reports/kover/report.xml'
+
+  ignore-modules:
+    description: 'Comma-separated list of modules to ignore (e.g., ":core,:build-logic")'
+    required: false
+    default: ''
+
+  # Thresholds
+  thresholds:
+    description: 'JSON object with module type/name thresholds (e.g., {"core": 80, ":core:testing": 0, "default": 60})'
+    required: false
+    default: '{"default": 60}'
 
   min-coverage:
-    description: 'Minimum coverage percentage required (0-100)'
+    description: 'Global minimum coverage percentage required (0-100). Fails action if overall coverage is below this value.'
     required: false
     default: '0'
 
+  # Reporting
+  github-token:
+    description: 'GitHub token for PR comments (typically ${{ secrets.GITHUB_TOKEN }})'
+    required: false
+
   title:
-    description: 'Title for the coverage report comment'
+    description: 'Title for the coverage report'
     required: false
     default: 'Code Coverage Report'
 
+  enable-pr-comment:
+    description: 'Whether to post coverage report as PR comment'
+    required: false
+    default: 'true'
+
+  # Advanced
+  debug:
+    description: 'Enable debug logging'
+    required: false
+    default: 'false'
+
 outputs:
   coverage-percentage:
-    description: 'Overall coverage percentage'
+    description: 'Overall coverage percentage (weighted by module size)'
 
-  lines-covered:
-    description: 'Number of lines covered'
+  instructions-covered:
+    description: 'Total instructions covered across all modules'
 
-  lines-total:
-    description: 'Total number of lines'
+  instructions-total:
+    description: 'Total instructions across all modules'
+
+  modules-coverage-json:
+    description: 'JSON object with per-module coverage (e.g., {":core:common": 85.5, ":data": 75.2})'
+
+  modules-below-threshold:
+    description: 'Comma-separated list of modules below threshold'
 
 runs:
   using: 'node24'
