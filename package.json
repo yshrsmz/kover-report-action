@@ -1,0 +1,41 @@
+{
+  "name": "kover-report-action",
+  "version": "1.0.0",
+  "description": "coverage report action for Kover",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && ncc build lib/index.js -o dist --source-map --license licenses.txt",
+    "format": "prettier --write 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "package": "npm run build",
+    "test": "echo \"No tests specified yet\"",
+    "all": "npm run format && npm run lint && npm run build"
+  },
+  "keywords": [
+    "github-action",
+    "coverage",
+    "kover",
+    "kotlin",
+    "testing"
+  ],
+  "author": "yshrsmz",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@types/node": "^24.7.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "@vercel/ncc": "^0.38.4",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0"
+  }
+}
