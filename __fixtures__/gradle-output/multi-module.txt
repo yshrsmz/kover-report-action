@@ -1,0 +1,6 @@
+Root project 'myapp'
++--- Project ':app'
++--- Project ':core:common'
++--- Project ':core:testing'
++--- Project ':data:repository'
+\--- Project ':feature:auth'

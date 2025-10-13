@@ -1,0 +1,3 @@
+Some unexpected output
+Not a valid Gradle projects list
+Random text here

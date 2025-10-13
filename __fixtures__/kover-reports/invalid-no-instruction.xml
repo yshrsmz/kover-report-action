@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Valid XML but missing INSTRUCTION counter -->
+<report name="Kover report">
+  <counter type="LINE" missed="50" covered="200"/>
+  <counter type="BRANCH" missed="20" covered="80"/>
+</report>

@@ -1,0 +1,2 @@
+Root project 'myapp'
+\--- Project ':app'
