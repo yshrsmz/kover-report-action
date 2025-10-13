@@ -81,25 +81,25 @@ jobs:
 ### Prerequisites
 
 - Node.js 20.x or higher
-- npm or yarn
+- pnpm
 
 ### Setup
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Format code
-npm run format
+pnpm run format
 
 # Lint code
-npm run lint
+pnpm run lint
 
 # Build the action
-npm run build
+pnpm run build
 
 # Run all checks
-npm run all
+pnpm run all
 ```
 
 ### Project Structure
@@ -122,7 +122,7 @@ npm run all
 The action uses [@vercel/ncc](https://github.com/vercel/ncc) to compile the TypeScript code and all dependencies into a single JavaScript file:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 This creates `dist/index.js` which should be committed to the repository.

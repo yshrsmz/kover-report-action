@@ -8,7 +8,7 @@ async function run(): Promise<void> {
   try {
     // Get inputs from action.yml
     const coverageFile = core.getInput('coverage-file', { required: true });
-    const minCoverage = parseFloat(core.getInput('min-coverage') || '0');
+    const minCoverage = Number.parseFloat(core.getInput('min-coverage') || '0');
     const title = core.getInput('title') || 'Code Coverage Report';
 
     core.info(`📊 Processing coverage file: ${coverageFile}`);
