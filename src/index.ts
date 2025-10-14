@@ -5,11 +5,11 @@ import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './artifacts';
 import { discoverModulesFromCommand, discoverModulesFromGlob } from './discovery';
 import { postCoverageComment } from './github';
 import {
-  DEFAULT_BASELINE_BRANCH,
-  DEFAULT_HISTORY_RETENTION,
   addHistoryEntry,
   compareWithBaseline,
   createHistoryEntry,
+  DEFAULT_BASELINE_BRANCH,
+  DEFAULT_HISTORY_RETENTION,
   loadHistory,
   saveHistory,
   trimHistory,
@@ -114,7 +114,7 @@ async function run(): Promise<void> {
 
       if (moduleNames.length === 0) {
         throw new Error(
-          `No modules found by discovery command.\nCommand: ${discoveryCommand}\nPossible causes:\n- Command output does not contain "Project \'...\'" patterns\n- All modules are in the ignore-modules list\n- Command failed or returned no output\nTip: Run the command locally to verify its output format.`
+          `No modules found by discovery command.\nCommand: ${discoveryCommand}\nPossible causes:\n- Command output does not contain "Project '...'" patterns\n- All modules are in the ignore-modules list\n- Command failed or returned no output\nTip: Run the command locally to verify its output format.`
         );
       }
 
@@ -342,6 +342,7 @@ async function run(): Promise<void> {
       } else {
         core.warning(
           '⚠️  Cannot post PR comment: github-token not provided. ' +
+            // biome-ignore lint/suspicious/noTemplateCurlyInString: Intentional - showing GitHub Actions workflow syntax
             'To enable PR comments, add: github-token: ${{ secrets.GITHUB_TOKEN }}'
         );
       }
