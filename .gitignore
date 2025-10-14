@@ -140,8 +140,8 @@ vite.config.ts.timestamp-*
 # Build output for GitHub Actions
 lib/
 
-# Coverage history temp directory
-.coverage-history/
+# Coverage history temp directory (for artifact upload/download)
+.coverage-history-temp/
 
 .devcontainer/runtime.env
 .env

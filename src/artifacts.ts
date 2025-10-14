@@ -1,11 +1,9 @@
 /**
  * GitHub Artifacts integration for coverage history storage
- * Handles loading and saving coverage history using local file storage
- *
- * Note: Full GitHub Artifacts integration will be added in a future update.
- * For now, history is stored in a local file that can be committed to the repository.
+ * Handles loading and saving coverage history using GitHub Actions Artifacts API v2
  */
 
+import { DefaultArtifactClient } from '@actions/artifact'
 import * as core from '@actions/core'
 import { writeFile, readFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -22,74 +20,112 @@ export const COVERAGE_HISTORY_ARTIFACT_NAME = 'coverage-history'
 export const HISTORY_FILENAME = 'coverage-history.json'
 
 /**
- * Default directory for coverage history
+ * Default directory for coverage history (temporary)
  */
-export const HISTORY_DIR = '.coverage-history'
+const HISTORY_TEMP_DIR = '.coverage-history-temp'
 
 /**
- * Load coverage history from local file
- * Returns empty array if file doesn't exist or can't be loaded
+ * Load coverage history from GitHub artifacts
+ * Returns empty array if artifact doesn't exist or can't be loaded
  * @param artifactName Name of the artifact (default: 'coverage-history')
  * @returns JSON string of history data
  */
 export async function loadHistoryFromArtifacts(
-  _artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
+  artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
 ): Promise<string> {
-  try {
-    const historyDir = join(process.cwd(), HISTORY_DIR)
-    const historyPath = join(historyDir, HISTORY_FILENAME)
+  const artifactClient = new DefaultArtifactClient()
 
-    if (!existsSync(historyPath)) {
-      core.debug(`History file not found: ${historyPath}`)
+  try {
+    core.debug(`Looking for artifact: ${artifactName}`)
+
+    // First, get the artifact metadata to obtain its ID
+    const artifact = await artifactClient.getArtifact(artifactName)
+
+    if (!artifact || !artifact.artifact) {
+      core.debug(`Artifact not found: ${artifactName}`)
       return '[]'
     }
 
-    core.debug(`Loading history from: ${historyPath}`)
+    core.debug(`Found artifact: ${artifact.artifact.name} (ID: ${artifact.artifact.id})`)
+
+    // Create temp directory for download
+    const tempDir = join(process.cwd(), HISTORY_TEMP_DIR)
+    if (!existsSync(tempDir)) {
+      await mkdir(tempDir, { recursive: true })
+    }
+
+    // Download artifact using its ID
+    const downloadResponse = await artifactClient.downloadArtifact(artifact.artifact.id, {
+      path: tempDir
+    })
+
+    const downloadPath = downloadResponse.downloadPath || tempDir
+    core.debug(`Downloaded artifact to: ${downloadPath}`)
+
+    // Read history file
+    const historyPath = join(downloadPath, HISTORY_FILENAME)
     const historyJson = await readFile(historyPath, 'utf-8')
 
     core.debug(`Loaded history: ${historyJson.length} bytes`)
 
     return historyJson
   } catch (error) {
-    // File might not exist on first run - this is expected
+    // Artifact might not exist on first run - this is expected
     if (error instanceof Error) {
-      core.debug(`Could not load history file: ${error.message}`)
+      core.debug(`Could not load history artifact: ${error.message}`)
     } else {
-      core.debug('Could not load history file: unknown error')
+      core.debug('Could not load history artifact: unknown error')
     }
     return '[]' // Return empty array
   }
 }
 
 /**
- * Save coverage history to local file
+ * Save coverage history to GitHub artifacts
  * @param historyJson JSON string of history data
  * @param artifactName Name of the artifact (default: 'coverage-history')
  */
 export async function saveHistoryToArtifacts(
   historyJson: string,
-  _artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
+  artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
 ): Promise<void> {
-  try {
-    const historyDir = join(process.cwd(), HISTORY_DIR)
-    const historyPath = join(historyDir, HISTORY_FILENAME)
+  const artifactClient = new DefaultArtifactClient()
 
-    // Create directory if it doesn't exist
-    if (!existsSync(historyDir)) {
-      await mkdir(historyDir, { recursive: true })
+  try {
+    // Create temp directory for upload
+    const tempDir = join(process.cwd(), HISTORY_TEMP_DIR)
+    if (!existsSync(tempDir)) {
+      await mkdir(tempDir, { recursive: true })
     }
 
-    // Write history to file
+    // Write history to temp file
+    const historyPath = join(tempDir, HISTORY_FILENAME)
     await writeFile(historyPath, historyJson, 'utf-8')
 
-    core.info(`💾 Saved coverage history to: ${historyPath}`)
-    core.info(`   (You can commit this file to track history in your repository)`)
+    core.debug(`Wrote history to: ${historyPath}`)
+
+    // Upload artifact
+    // Note: v2 API automatically handles replacing existing artifacts with the same name
+    const uploadResponse = await artifactClient.uploadArtifact(
+      artifactName,
+      [historyPath],
+      tempDir,
+      {
+        retentionDays: 90 // Keep for 90 days
+      }
+    )
+
+    if (uploadResponse.id) {
+      core.info(`💾 Uploaded coverage history artifact (ID: ${uploadResponse.id})`)
+    } else {
+      core.info('💾 Uploaded coverage history artifact')
+    }
   } catch (error) {
     // Log error but don't fail the action
     if (error instanceof Error) {
-      core.warning(`Failed to save history file: ${error.message}`)
+      core.warning(`Failed to save history artifact: ${error.message}`)
     } else {
-      core.warning('Failed to save history file: unknown error')
+      core.warning('Failed to save history artifact: unknown error')
     }
   }
 }
