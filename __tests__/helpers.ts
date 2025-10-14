@@ -21,6 +21,7 @@ export async function loadFixture(relativePath: string): Promise<string> {
  * @example
  * const thresholds = await loadJsonFixture('thresholds/complex.json');
  */
+// biome-ignore lint/suspicious/noExplicitAny: Generic default for flexible test fixture loading
 export async function loadJsonFixture<T = any>(relativePath: string): Promise<T> {
   const content = await loadFixture(relativePath);
   return JSON.parse(content);
@@ -33,6 +34,7 @@ export async function loadJsonFixture<T = any>(relativePath: string): Promise<T>
  * @example
  * expectError(() => parseInvalid(), 'Invalid format');
  */
+// biome-ignore lint/suspicious/noExplicitAny: Test helper accepts any return type from test functions
 export function expectError(fn: () => any, expectedMessage?: string): void {
   let threw = false;
   let error: Error | undefined;
@@ -62,6 +64,7 @@ export function expectError(fn: () => any, expectedMessage?: string): void {
  * @example
  * await expectAsyncError(async () => await parseInvalid(), 'Invalid format');
  */
+// biome-ignore lint/suspicious/noExplicitAny: Test helper accepts any return type from async test functions
 export async function expectAsyncError(
   fn: () => Promise<any>,
   expectedMessage?: string
