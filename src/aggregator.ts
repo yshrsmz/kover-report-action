@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { type CoverageResult, parseCoverageFile } from './parser';
-import { type ThresholdConfig, checkThreshold, getThresholdForModule } from './threshold';
+import { checkThreshold, getThresholdForModule, type ThresholdConfig } from './threshold';
 
 /**
  * Module coverage information with threshold and pass/fail status

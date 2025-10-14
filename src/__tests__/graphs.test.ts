@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  type TrendData,
   generateCompactTrendGraph,
   generateCoverageTrendGraph,
   generateModuleTrendGraph,
+  type TrendData,
 } from '../graphs';
 
 describe('generateCoverageTrendGraph', () => {
