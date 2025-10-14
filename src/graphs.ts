@@ -7,14 +7,14 @@
  * Data point for trend visualization
  */
 export interface TrendData {
-  label: string // Date, commit, or other label
-  value: number // Coverage percentage (0-100)
+  label: string; // Date, commit, or other label
+  value: number; // Coverage percentage (0-100)
 }
 
 /**
  * Sparkline block characters (8 levels from low to high)
  */
-const SPARKLINE_CHARS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
+const SPARKLINE_CHARS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
 
 /**
  * Generate a coverage trend graph with ASCII art
@@ -25,73 +25,74 @@ const SPARKLINE_CHARS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
  */
 export function generateCoverageTrendGraph(data: TrendData[], title: string): string {
   if (data.length === 0) {
-    return `**${title}**\n\nNo history data available.`
+    return `**${title}**\n\nNo history data available.`;
   }
 
-  const lines: string[] = []
+  const lines: string[] = [];
 
   // Title
-  lines.push(`**${title}**`)
-  lines.push('')
+  lines.push(`**${title}**`);
+  lines.push('');
 
   // If only one data point, show it simply
   if (data.length === 1) {
-    lines.push(`${data[0].label}: ${data[0].value.toFixed(1)}%`)
-    return lines.join('\n')
+    lines.push(`${data[0].label}: ${data[0].value.toFixed(1)}%`);
+    return lines.join('\n');
   }
 
   // Find min/max for scaling
-  const values = data.map(d => d.value)
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  const range = max - min
+  const values = data.map((d) => d.value);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min;
 
   // If all values are the same, show flat line
   if (range === 0) {
-    lines.push(`All values: ${max.toFixed(1)}%`)
-    lines.push(`${data[0].label} → ${data[data.length - 1].label}`)
-    return lines.join('\n')
+    lines.push(`All values: ${max.toFixed(1)}%`);
+    lines.push(`${data[0].label} → ${data[data.length - 1].label}`);
+    return lines.join('\n');
   }
 
   // Graph dimensions
-  const height = 10
-  const width = Math.min(data.length, 50)
+  const height = 10;
+  const width = Math.min(data.length, 50);
 
   // Sample data if too many points
-  const sampledData =
-    data.length > width ? sampleData(data, width) : data
+  const sampledData = data.length > width ? sampleData(data, width) : data;
 
   // Create graph
   const graph: string[][] = Array.from({ length: height }, () =>
     Array(sampledData.length).fill(' ')
-  )
+  );
 
   // Plot points
   for (let i = 0; i < sampledData.length; i++) {
-    const value = sampledData[i].value
-    const normalizedValue = (value - min) / range
-    const row = height - 1 - Math.round(normalizedValue * (height - 1))
-    graph[row][i] = '●'
+    const value = sampledData[i].value;
+    const normalizedValue = (value - min) / range;
+    const row = height - 1 - Math.round(normalizedValue * (height - 1));
+    graph[row][i] = '●';
   }
 
   // Draw graph with axis
-  lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`)
+  lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
   for (let row = 0; row < height; row++) {
-    const percentage = max - (row / (height - 1)) * range
-    const label = `${percentage.toFixed(0)}%`.padStart(4)
-    lines.push(`│${label} ${graph[row].join('')} │`)
+    const percentage = max - (row / (height - 1)) * range;
+    const label = `${percentage.toFixed(0)}%`.padStart(4);
+    lines.push(`│${label} ${graph[row].join('')} │`);
   }
-  lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`)
+  lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
 
   // X-axis labels
   if (sampledData.length > 1) {
-    const firstLabel = sampledData[0].label.substring(0, 8)
-    const lastLabel = sampledData[sampledData.length - 1].label.substring(0, 8)
-    const padding = ' '.repeat(Math.max(0, sampledData.length - firstLabel.length - lastLabel.length))
-    lines.push(`       ${firstLabel}${padding}${lastLabel}`)
+    const firstLabel = sampledData[0].label.substring(0, 8);
+    const lastLabel = sampledData[sampledData.length - 1].label.substring(0, 8);
+    const padding = ' '.repeat(
+      Math.max(0, sampledData.length - firstLabel.length - lastLabel.length)
+    );
+    lines.push(`       ${firstLabel}${padding}${lastLabel}`);
   }
 
-  return lines.join('\n')
+  return lines.join('\n');
 }
 
 /**
@@ -102,10 +103,10 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
  */
 export function generateModuleTrendGraph(data: TrendData[], moduleName: string): string {
   if (data.length === 0) {
-    return `**${moduleName}**\n\nNo history data available for this module.`
+    return `**${moduleName}**\n\nNo history data available for this module.`;
   }
 
-  return generateCoverageTrendGraph(data, moduleName)
+  return generateCoverageTrendGraph(data, moduleName);
 }
 
 /**
@@ -116,35 +117,35 @@ export function generateModuleTrendGraph(data: TrendData[], moduleName: string):
  */
 export function generateCompactTrendGraph(data: TrendData[]): string {
   if (data.length === 0) {
-    return ''
+    return '';
   }
 
   if (data.length === 1) {
     // Single point - use middle block
-    return SPARKLINE_CHARS[4]
+    return SPARKLINE_CHARS[4];
   }
 
   // Find min/max for scaling
-  const values = data.map(d => d.value)
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  const range = max - min
+  const values = data.map((d) => d.value);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min;
 
   // If all values are the same, use middle block
   if (range === 0) {
-    return SPARKLINE_CHARS[4].repeat(data.length)
+    return SPARKLINE_CHARS[4].repeat(data.length);
   }
 
   // Map each value to a sparkline character
   const sparkline = values
-    .map(value => {
-      const normalized = (value - min) / range
-      const index = Math.min(7, Math.floor(normalized * 8))
-      return SPARKLINE_CHARS[index]
+    .map((value) => {
+      const normalized = (value - min) / range;
+      const index = Math.min(7, Math.floor(normalized * 8));
+      return SPARKLINE_CHARS[index];
     })
-    .join('')
+    .join('');
 
-  return sparkline
+  return sparkline;
 }
 
 /**
@@ -156,18 +157,18 @@ export function generateCompactTrendGraph(data: TrendData[]): string {
  */
 function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
   if (data.length <= targetWidth) {
-    return data
+    return data;
   }
 
-  const step = data.length / targetWidth
-  const sampled: TrendData[] = []
+  const step = data.length / targetWidth;
+  const sampled: TrendData[] = [];
 
   for (let i = 0; i < targetWidth; i++) {
-    const index = Math.floor(i * step)
-    sampled.push(data[index])
+    const index = Math.floor(i * step);
+    sampled.push(data[index]);
   }
 
-  return sampled
+  return sampled;
 }
 
 /**
@@ -179,32 +180,32 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
  */
 export function generateRecentChangesSummary(data: TrendData[], count = 5): string {
   if (data.length === 0) {
-    return 'No recent data'
+    return 'No recent data';
   }
 
-  const recent = data.slice(-count)
-  const lines: string[] = []
+  const recent = data.slice(-count);
+  const lines: string[] = [];
 
-  lines.push('**Recent Changes:**')
-  lines.push('')
+  lines.push('**Recent Changes:**');
+  lines.push('');
 
   for (let i = 0; i < recent.length; i++) {
-    const point = recent[i]
-    let change = ''
+    const point = recent[i];
+    let change = '';
 
     if (i > 0) {
-      const delta = point.value - recent[i - 1].value
+      const delta = point.value - recent[i - 1].value;
       if (delta > 0.1) {
-        change = ` (↑ +${delta.toFixed(1)}%)`
+        change = ` (↑ +${delta.toFixed(1)}%)`;
       } else if (delta < -0.1) {
-        change = ` (↓ ${delta.toFixed(1)}%)`
+        change = ` (↓ ${delta.toFixed(1)}%)`;
       } else {
-        change = ` (→)`
+        change = ' (→)';
       }
     }
 
-    lines.push(`- ${point.label}: ${point.value.toFixed(1)}%${change}`)
+    lines.push(`- ${point.label}: ${point.value.toFixed(1)}%${change}`);
   }
 
-  return lines.join('\n')
+  return lines.join('\n');
 }

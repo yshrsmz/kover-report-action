@@ -5,14 +5,14 @@ import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './artifacts';
 import { discoverModulesFromCommand, discoverModulesFromGlob } from './discovery';
 import { postCoverageComment } from './github';
 import {
-  loadHistory,
-  saveHistory,
+  DEFAULT_BASELINE_BRANCH,
+  DEFAULT_HISTORY_RETENTION,
   addHistoryEntry,
-  trimHistory,
   compareWithBaseline,
   createHistoryEntry,
-  DEFAULT_BASELINE_BRANCH,
-  DEFAULT_HISTORY_RETENTION
+  loadHistory,
+  saveHistory,
+  trimHistory,
 } from './history';
 import { normalizeModuleName, resolveModulePath, resolveSecurePath } from './paths';
 import { generateMarkdownReport } from './report';
@@ -36,7 +36,8 @@ async function run(): Promise<void> {
     const githubToken = core.getInput('github-token');
     const enablePrComment = core.getInput('enable-pr-comment') !== 'false'; // Default true
     const enableHistory = core.getInput('enable-history') === 'true'; // Default false
-    const historyRetentionInput = core.getInput('history-retention') || String(DEFAULT_HISTORY_RETENTION);
+    const historyRetentionInput =
+      core.getInput('history-retention') || String(DEFAULT_HISTORY_RETENTION);
     const baselineBranch = core.getInput('baseline-branch') || DEFAULT_BASELINE_BRANCH;
     const debug = core.getInput('debug') === 'true';
 
@@ -67,7 +68,9 @@ async function run(): Promise<void> {
     core.info(`🎯 Minimum coverage requirement: ${minCoverage}%`);
     core.info(`📝 Report title: ${title}`);
     if (enableHistory) {
-      core.info(`📈 History tracking enabled (baseline: ${baselineBranch}, retention: ${historyRetention})`);
+      core.info(
+        `📈 History tracking enabled (baseline: ${baselineBranch}, retention: ${historyRetention})`
+      );
     }
 
     if (debug) {
@@ -251,12 +254,19 @@ async function run(): Promise<void> {
           }
 
           // Compare with baseline
-          const baselineComparison = compareWithBaseline(history, currentModuleCoverage, overall.percentage, baselineBranch);
+          const baselineComparison = compareWithBaseline(
+            history,
+            currentModuleCoverage,
+            overall.percentage,
+            baselineBranch
+          );
           comparison = baselineComparison ?? undefined;
 
           if (comparison) {
             core.info(`📈 Comparing with baseline (${comparison.baseline.timestamp})`);
-            core.info(`   Overall change: ${comparison.overallDelta > 0 ? '+' : ''}${comparison.overallDelta.toFixed(1)}%`);
+            core.info(
+              `   Overall change: ${comparison.overallDelta > 0 ? '+' : ''}${comparison.overallDelta.toFixed(1)}%`
+            );
 
             if (debug) {
               const improvements = Object.entries(comparison.moduleDelta).filter(
@@ -289,8 +299,11 @@ async function run(): Promise<void> {
           overall.total,
           Object.fromEntries(
             overall.modules
-              .filter(({ coverage }) => coverage !== null)
-              .map(({ module, coverage }) => [module, coverage!.percentage])
+              .filter(
+                (m): m is typeof m & { coverage: NonNullable<typeof m.coverage> } =>
+                  m.coverage !== null
+              )
+              .map(({ module, coverage }) => [module, coverage.percentage])
           )
         );
 

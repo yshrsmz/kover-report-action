@@ -6,35 +6,35 @@
 /**
  * Default history retention (number of entries to keep)
  */
-export const DEFAULT_HISTORY_RETENTION = 50
+export const DEFAULT_HISTORY_RETENTION = 50;
 
 /**
  * Default baseline branch name
  */
-export const DEFAULT_BASELINE_BRANCH = 'main'
+export const DEFAULT_BASELINE_BRANCH = 'main';
 
 /**
  * A single history entry representing coverage at a point in time
  */
 export interface HistoryEntry {
-  timestamp: string // ISO 8601 format
-  branch: string // Branch name (e.g., 'main', 'feature/xyz')
-  commit: string // Commit SHA
+  timestamp: string; // ISO 8601 format
+  branch: string; // Branch name (e.g., 'main', 'feature/xyz')
+  commit: string; // Commit SHA
   overall: {
-    percentage: number // Overall coverage percentage
-    covered: number // Total covered instructions
-    total: number // Total instructions
-  }
-  modules: Record<string, number> // Module name -> coverage percentage
+    percentage: number; // Overall coverage percentage
+    covered: number; // Total covered instructions
+    total: number; // Total instructions
+  };
+  modules: Record<string, number>; // Module name -> coverage percentage
 }
 
 /**
  * Comparison result between current and baseline coverage
  */
 export interface HistoryComparison {
-  overallDelta: number // Change in overall coverage (percentage points)
-  moduleDelta: Record<string, number | null> // Module name -> delta (null if no baseline)
-  baseline: HistoryEntry // The baseline entry used for comparison
+  overallDelta: number; // Change in overall coverage (percentage points)
+  moduleDelta: Record<string, number | null>; // Module name -> delta (null if no baseline)
+  baseline: HistoryEntry; // The baseline entry used for comparison
 }
 
 /**
@@ -43,13 +43,13 @@ export interface HistoryComparison {
  */
 export function loadHistory(json: string): HistoryEntry[] {
   try {
-    const parsed = JSON.parse(json)
+    const parsed = JSON.parse(json);
     if (!Array.isArray(parsed)) {
-      return []
+      return [];
     }
-    return parsed as HistoryEntry[]
+    return parsed as HistoryEntry[];
   } catch {
-    return []
+    return [];
   }
 }
 
@@ -57,29 +57,23 @@ export function loadHistory(json: string): HistoryEntry[] {
  * Save history to JSON string
  */
 export function saveHistory(history: HistoryEntry[]): string {
-  return JSON.stringify(history, null, 2)
+  return JSON.stringify(history, null, 2);
 }
 
 /**
  * Add a new entry to history (prepends to array)
  * Returns a new array without mutating the original
  */
-export function addHistoryEntry(
-  history: HistoryEntry[],
-  entry: HistoryEntry
-): HistoryEntry[] {
-  return [entry, ...history]
+export function addHistoryEntry(history: HistoryEntry[], entry: HistoryEntry): HistoryEntry[] {
+  return [entry, ...history];
 }
 
 /**
  * Trim history to keep only the most recent N entries
  * Returns a new array without mutating the original
  */
-export function trimHistory(
-  history: HistoryEntry[],
-  retention: number
-): HistoryEntry[] {
-  return history.slice(0, retention)
+export function trimHistory(history: HistoryEntry[], retention: number): HistoryEntry[] {
+  return history.slice(0, retention);
 }
 
 /**
@@ -93,32 +87,32 @@ export function compareWithBaseline(
   baselineBranch: string
 ): HistoryComparison | null {
   // Find most recent entry from the baseline branch
-  const baseline = history.find(entry => entry.branch === baselineBranch)
+  const baseline = history.find((entry) => entry.branch === baselineBranch);
 
   if (!baseline) {
-    return null
+    return null;
   }
 
   // Calculate overall delta
-  const overallDelta = currentOverall - baseline.overall.percentage
+  const overallDelta = currentOverall - baseline.overall.percentage;
 
   // Calculate per-module delta
-  const moduleDelta: Record<string, number | null> = {}
+  const moduleDelta: Record<string, number | null> = {};
   for (const [moduleName, currentCoverage] of Object.entries(currentModules)) {
-    const baselineCoverage = baseline.modules[moduleName]
+    const baselineCoverage = baseline.modules[moduleName];
     if (baselineCoverage !== undefined) {
-      moduleDelta[moduleName] = currentCoverage - baselineCoverage
+      moduleDelta[moduleName] = currentCoverage - baselineCoverage;
     } else {
       // Module exists in current but not in baseline (new module)
-      moduleDelta[moduleName] = null
+      moduleDelta[moduleName] = null;
     }
   }
 
   return {
     overallDelta,
     moduleDelta,
-    baseline
-  }
+    baseline,
+  };
 }
 
 /**
@@ -140,10 +134,10 @@ export function createHistoryEntry(
     overall: {
       percentage: overallPercentage,
       covered: overallCovered,
-      total: overallTotal
+      total: overallTotal,
     },
-    modules
-  }
+    modules,
+  };
 }
 
 /**
@@ -152,9 +146,9 @@ export function createHistoryEntry(
  * @returns Emoji: ↑ (increase), ↓ (decrease), → (no change)
  */
 export function getTrendIndicator(delta: number): string {
-  if (delta > 0.1) return '↑' // Increased
-  if (delta < -0.1) return '↓' // Decreased
-  return '→' // No significant change (±0.1%)
+  if (delta > 0.1) return '↑'; // Increased
+  if (delta < -0.1) return '↓'; // Decreased
+  return '→'; // No significant change (±0.1%)
 }
 
 /**
@@ -163,8 +157,8 @@ export function getTrendIndicator(delta: number): string {
  * @returns Formatted string like "+2.5%" or "-1.0%"
  */
 export function formatDelta(delta: number): string {
-  const sign = delta >= 0 ? '+' : ''
-  return `${sign}${delta.toFixed(1)}%`
+  const sign = delta >= 0 ? '+' : '';
+  return `${sign}${delta.toFixed(1)}%`;
 }
 
 /**
@@ -172,9 +166,9 @@ export function formatDelta(delta: number): string {
  * Returns true if entry has all required fields
  */
 export function isValidHistoryEntry(entry: unknown): entry is HistoryEntry {
-  if (typeof entry !== 'object' || entry === null) return false
+  if (typeof entry !== 'object' || entry === null) return false;
 
-  const e = entry as Record<string, unknown>
+  const e = entry as Record<string, unknown>;
 
   return (
     typeof e.timestamp === 'string' &&
@@ -187,5 +181,5 @@ export function isValidHistoryEntry(entry: unknown): entry is HistoryEntry {
     typeof (e.overall as Record<string, unknown>).total === 'number' &&
     typeof e.modules === 'object' &&
     e.modules !== null
-  )
+  );
 }

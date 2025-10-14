@@ -1,6 +1,6 @@
 import type { ModuleCoverage, OverallCoverage } from './aggregator';
 import type { HistoryComparison } from './history';
-import { getTrendIndicator, formatDelta } from './history';
+import { formatDelta, getTrendIndicator } from './history';
 
 /**
  * HTML comment identifier for finding and updating PR comments
