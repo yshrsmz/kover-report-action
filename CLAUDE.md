@@ -8,6 +8,11 @@ This is a GitHub Action that parses Kover (Kotlin code coverage tool) XML report
 
 **Important**: This project uses **pnpm** as the package manager, not npm. All commands should use `pnpm` instead of `npm`.
 
+**Package Manager Commands:**
+- Use `pnpm run <script>` for package.json scripts (e.g., `pnpm run lint`)
+- Use `pnpm exec <binary>` to run binaries from node_modules (e.g., `pnpm exec biome check --write`)
+- **Never use `npx`** - always use `pnpm exec` instead
+
 ## Coding Style
 
 ### Prefer Simple, Functional Patterns Over Heavy Classes

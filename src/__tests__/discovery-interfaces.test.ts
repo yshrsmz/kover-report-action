@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index';
 import * as discoveryModule from '../discovery';
+import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index';
 import * as pathsModule from '../paths';
 
 // Mock the old discovery module functions
