@@ -471,6 +471,160 @@ async function findExistingComment(octokit, owner, repo, prNumber) {
 
 /***/ }),
 
+/***/ 8331:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+/**
+ * History tracking for coverage data
+ * Stores coverage history in GitHub artifacts and compares against baseline
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DEFAULT_BASELINE_BRANCH = exports.DEFAULT_HISTORY_RETENTION = void 0;
+exports.loadHistory = loadHistory;
+exports.saveHistory = saveHistory;
+exports.addHistoryEntry = addHistoryEntry;
+exports.trimHistory = trimHistory;
+exports.compareWithBaseline = compareWithBaseline;
+exports.createHistoryEntry = createHistoryEntry;
+exports.getTrendIndicator = getTrendIndicator;
+exports.formatDelta = formatDelta;
+exports.isValidHistoryEntry = isValidHistoryEntry;
+/**
+ * Default history retention (number of entries to keep)
+ */
+exports.DEFAULT_HISTORY_RETENTION = 50;
+/**
+ * Default baseline branch name
+ */
+exports.DEFAULT_BASELINE_BRANCH = 'main';
+/**
+ * Load history from JSON string
+ * Returns empty array if JSON is invalid or not an array
+ */
+function loadHistory(json) {
+    try {
+        const parsed = JSON.parse(json);
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
+        return parsed;
+    }
+    catch {
+        return [];
+    }
+}
+/**
+ * Save history to JSON string
+ */
+function saveHistory(history) {
+    return JSON.stringify(history, null, 2);
+}
+/**
+ * Add a new entry to history (prepends to array)
+ * Returns a new array without mutating the original
+ */
+function addHistoryEntry(history, entry) {
+    return [entry, ...history];
+}
+/**
+ * Trim history to keep only the most recent N entries
+ * Returns a new array without mutating the original
+ */
+function trimHistory(history, retention) {
+    return history.slice(0, retention);
+}
+/**
+ * Compare current coverage with baseline from history
+ * Returns null if no baseline exists for the specified branch
+ */
+function compareWithBaseline(history, currentModules, currentOverall, baselineBranch) {
+    // Find most recent entry from the baseline branch
+    const baseline = history.find(entry => entry.branch === baselineBranch);
+    if (!baseline) {
+        return null;
+    }
+    // Calculate overall delta
+    const overallDelta = currentOverall - baseline.overall.percentage;
+    // Calculate per-module delta
+    const moduleDelta = {};
+    for (const [moduleName, currentCoverage] of Object.entries(currentModules)) {
+        const baselineCoverage = baseline.modules[moduleName];
+        if (baselineCoverage !== undefined) {
+            moduleDelta[moduleName] = currentCoverage - baselineCoverage;
+        }
+        else {
+            // Module exists in current but not in baseline (new module)
+            moduleDelta[moduleName] = null;
+        }
+    }
+    return {
+        overallDelta,
+        moduleDelta,
+        baseline
+    };
+}
+/**
+ * Create a history entry from current coverage data
+ */
+function createHistoryEntry(timestamp, branch, commit, overallPercentage, overallCovered, overallTotal, modules) {
+    return {
+        timestamp,
+        branch,
+        commit,
+        overall: {
+            percentage: overallPercentage,
+            covered: overallCovered,
+            total: overallTotal
+        },
+        modules
+    };
+}
+/**
+ * Get trend indicator emoji based on delta
+ * @param delta - Coverage change in percentage points
+ * @returns Emoji: ↑ (increase), ↓ (decrease), → (no change)
+ */
+function getTrendIndicator(delta) {
+    if (delta > 0.1)
+        return '↑'; // Increased
+    if (delta < -0.1)
+        return '↓'; // Decreased
+    return '→'; // No significant change (±0.1%)
+}
+/**
+ * Format delta as a string with sign and percentage
+ * @param delta - Coverage change in percentage points
+ * @returns Formatted string like "+2.5%" or "-1.0%"
+ */
+function formatDelta(delta) {
+    const sign = delta >= 0 ? '+' : '';
+    return `${sign}${delta.toFixed(1)}%`;
+}
+/**
+ * Validate history entry structure
+ * Returns true if entry has all required fields
+ */
+function isValidHistoryEntry(entry) {
+    if (typeof entry !== 'object' || entry === null)
+        return false;
+    const e = entry;
+    return (typeof e.timestamp === 'string' &&
+        typeof e.branch === 'string' &&
+        typeof e.commit === 'string' &&
+        typeof e.overall === 'object' &&
+        e.overall !== null &&
+        typeof e.overall.percentage === 'number' &&
+        typeof e.overall.covered === 'number' &&
+        typeof e.overall.total === 'number' &&
+        typeof e.modules === 'object' &&
+        e.modules !== null);
+}
+//# sourceMappingURL=history.js.map
+
+/***/ }),
+
 /***/ 9479:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -948,13 +1102,14 @@ function resolveSecurePath(basePath, relativePath) {
 /***/ }),
 
 /***/ 3905:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.COMMENT_IDENTIFIER = void 0;
 exports.generateMarkdownReport = generateMarkdownReport;
+const history_1 = __nccwpck_require__(8331);
 /**
  * HTML comment identifier for finding and updating PR comments
  * Exported for use in GitHub PR comment integration
@@ -969,9 +1124,10 @@ const REPO_URL = 'https://github.com/yshrsmz/kover-report-action';
  * Includes overall coverage, per-module breakdown, and status indicators
  * @param overall Overall coverage data with per-module breakdown
  * @param title Report title (displayed as heading)
+ * @param comparison Optional history comparison for trend indicators
  * @returns Markdown-formatted report with HTML comment identifier
  */
-function generateMarkdownReport(overall, title) {
+function generateMarkdownReport(overall, title, comparison) {
     const lines = [];
     // HTML comment identifier for finding and updating the comment
     lines.push(exports.COMMENT_IDENTIFIER);
@@ -979,22 +1135,42 @@ function generateMarkdownReport(overall, title) {
     // Title with emoji
     lines.push(`## 📊 ${title}`);
     lines.push('');
-    // Overall coverage summary
+    // Overall coverage summary with trend indicator if available
     const formattedOverall = formatPercentage(overall.percentage);
-    lines.push(`**Overall Coverage: ${formattedOverall}**`);
+    if (comparison) {
+        const trendIndicator = (0, history_1.getTrendIndicator)(comparison.overallDelta);
+        const delta = (0, history_1.formatDelta)(comparison.overallDelta);
+        lines.push(`**Overall Coverage: ${formattedOverall}** ${trendIndicator} ${delta}`);
+    }
+    else {
+        lines.push(`**Overall Coverage: ${formattedOverall}**`);
+    }
     lines.push('');
     // Module coverage table
     lines.push('### Module Coverage');
     lines.push('');
-    lines.push('| Module | Coverage | Threshold | Status |');
-    lines.push('|--------|----------|-----------|--------|');
+    // Table header - add "Change" column if comparison is available
+    if (comparison) {
+        lines.push('| Module | Coverage | Threshold | Change | Status |');
+        lines.push('|--------|----------|-----------|--------|--------|');
+    }
+    else {
+        lines.push('| Module | Coverage | Threshold | Status |');
+        lines.push('|--------|----------|-----------|--------|');
+    }
     // Sort modules alphabetically for consistent output
     const sortedModules = [...overall.modules].sort((a, b) => a.module.localeCompare(b.module));
     for (const module of sortedModules) {
         const coverageStr = formatCoverage(module);
         const thresholdStr = `${module.threshold}%`;
         const statusStr = formatStatus(module);
-        lines.push(`| ${module.module} | ${coverageStr} | ${thresholdStr} | ${statusStr} |`);
+        if (comparison) {
+            const changeStr = formatChange(module.module, comparison);
+            lines.push(`| ${module.module} | ${coverageStr} | ${thresholdStr} | ${changeStr} | ${statusStr} |`);
+        }
+        else {
+            lines.push(`| ${module.module} | ${coverageStr} | ${thresholdStr} | ${statusStr} |`);
+        }
     }
     // Legend explaining status indicators
     lines.push('');
@@ -1039,6 +1215,23 @@ function formatStatus(module) {
         return '⚠️';
     }
     return module.passed ? '✅' : '❌';
+}
+/**
+ * Format change indicator for a module based on history comparison
+ * Shows trend indicator and delta, or indicator for new modules
+ * @param moduleName Name of the module
+ * @param comparison History comparison data
+ * @returns Formatted change string (e.g., "↑ +1.5%" or "new")
+ */
+function formatChange(moduleName, comparison) {
+    const delta = comparison.moduleDelta[moduleName];
+    // Module exists in current but not in baseline (new module)
+    if (delta === null || delta === undefined) {
+        return 'new';
+    }
+    const trendIndicator = (0, history_1.getTrendIndicator)(delta);
+    const deltaStr = (0, history_1.formatDelta)(delta);
+    return `${trendIndicator} ${deltaStr}`;
 }
 //# sourceMappingURL=report.js.map
 

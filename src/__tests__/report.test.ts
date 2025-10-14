@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { OverallCoverage } from '../aggregator';
 import { generateMarkdownReport } from '../report';
+import type { HistoryComparison } from '../history';
 
 describe('generateMarkdownReport', () => {
   it('should generate report with all passing modules', () => {
@@ -232,5 +233,171 @@ describe('generateMarkdownReport', () => {
     expect(report).toContain('## 📊 Coverage Report');
     expect(report).toContain('**Overall Coverage: 0.0%**');
     expect(report).toContain('### Module Coverage');
+  });
+
+  it('should show trend indicators when comparison is provided', () => {
+    const coverage: OverallCoverage = {
+      percentage: 87.0,
+      covered: 870,
+      total: 1000,
+      modules: [
+        {
+          module: ':core:common',
+          coverage: { covered: 870, missed: 130, total: 1000, percentage: 87.0 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const comparison: HistoryComparison = {
+      overallDelta: 1.5, // +1.5%
+      moduleDelta: {
+        ':core:common': 1.5,
+      },
+      baseline: {
+        timestamp: '2025-01-15T10:30:00Z',
+        branch: 'main',
+        commit: 'abc123',
+        overall: { percentage: 85.5, covered: 855, total: 1000 },
+        modules: { ':core:common': 85.5 },
+      },
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', comparison);
+
+    expect(report).toContain('**Overall Coverage: 87.0%**');
+    expect(report).toContain('↑'); // Upward trend
+    expect(report).toContain('+1.5%'); // Delta
+    expect(report).toContain('Change'); // Column header
+  });
+
+  it('should show downward trend for decreased coverage', () => {
+    const coverage: OverallCoverage = {
+      percentage: 83.0,
+      covered: 830,
+      total: 1000,
+      modules: [
+        {
+          module: ':feature:auth',
+          coverage: { covered: 830, missed: 170, total: 1000, percentage: 83.0 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const comparison: HistoryComparison = {
+      overallDelta: -2.5, // -2.5%
+      moduleDelta: {
+        ':feature:auth': -2.5,
+      },
+      baseline: {
+        timestamp: '2025-01-15T10:30:00Z',
+        branch: 'main',
+        commit: 'abc123',
+        overall: { percentage: 85.5, covered: 855, total: 1000 },
+        modules: { ':feature:auth': 85.5 },
+      },
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', comparison);
+
+    expect(report).toContain('↓'); // Downward trend
+    expect(report).toContain('-2.5%'); // Delta
+  });
+
+  it('should show no change indicator for stable coverage', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.5,
+      covered: 855,
+      total: 1000,
+      modules: [
+        {
+          module: ':data:repository',
+          coverage: { covered: 855, missed: 145, total: 1000, percentage: 85.5 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const comparison: HistoryComparison = {
+      overallDelta: 0.0, // No change
+      moduleDelta: {
+        ':data:repository': 0.05, // Very small change (< 0.1%)
+      },
+      baseline: {
+        timestamp: '2025-01-15T10:30:00Z',
+        branch: 'main',
+        commit: 'abc123',
+        overall: { percentage: 85.5, covered: 855, total: 1000 },
+        modules: { ':data:repository': 85.45 },
+      },
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', comparison);
+
+    expect(report).toContain('→'); // No change trend
+  });
+
+  it('should handle modules without baseline (new modules)', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [
+        {
+          module: ':new:module',
+          coverage: { covered: 850, missed: 150, total: 1000, percentage: 85.0 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const comparison: HistoryComparison = {
+      overallDelta: 1.0,
+      moduleDelta: {
+        ':new:module': null, // New module, no baseline
+      },
+      baseline: {
+        timestamp: '2025-01-15T10:30:00Z',
+        branch: 'main',
+        commit: 'abc123',
+        overall: { percentage: 84.0, covered: 840, total: 1000 },
+        modules: {},
+      },
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', comparison);
+
+    expect(report).toContain(':new:module');
+    expect(report).toContain('85.0%');
+    // Should show "new" or "-" for modules without baseline
+    expect(report).toMatch(/new|—|-/i);
+  });
+
+  it('should not show trend column when no comparison provided', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.5,
+      covered: 855,
+      total: 1000,
+      modules: [
+        {
+          module: ':core:common',
+          coverage: { covered: 855, missed: 145, total: 1000, percentage: 85.5 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report');
+
+    // Should not have "Change" column when no comparison
+    expect(report).not.toContain('Change');
+    expect(report).not.toContain('↑');
+    expect(report).not.toContain('↓');
   });
 });

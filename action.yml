@@ -49,6 +49,22 @@ inputs:
     required: false
     default: 'true'
 
+  # History & Trends
+  enable-history:
+    description: 'Enable coverage history tracking and trend indicators'
+    required: false
+    default: 'false'
+
+  history-retention:
+    description: 'Number of history entries to keep (used when enable-history is true)'
+    required: false
+    default: '50'
+
+  baseline-branch:
+    description: 'Branch to use as baseline for trend comparison (e.g., "main", "develop")'
+    required: false
+    default: 'main'
+
   # Advanced
   debug:
     description: 'Enable debug logging'

@@ -1,4 +1,6 @@
 import type { ModuleCoverage, OverallCoverage } from './aggregator';
+import type { HistoryComparison } from './history';
+import { getTrendIndicator, formatDelta } from './history';
 
 /**
  * HTML comment identifier for finding and updating PR comments
@@ -16,9 +18,14 @@ const REPO_URL = 'https://github.com/yshrsmz/kover-report-action';
  * Includes overall coverage, per-module breakdown, and status indicators
  * @param overall Overall coverage data with per-module breakdown
  * @param title Report title (displayed as heading)
+ * @param comparison Optional history comparison for trend indicators
  * @returns Markdown-formatted report with HTML comment identifier
  */
-export function generateMarkdownReport(overall: OverallCoverage, title: string): string {
+export function generateMarkdownReport(
+  overall: OverallCoverage,
+  title: string,
+  comparison?: HistoryComparison
+): string {
   const lines: string[] = [];
 
   // HTML comment identifier for finding and updating the comment
@@ -29,16 +36,29 @@ export function generateMarkdownReport(overall: OverallCoverage, title: string):
   lines.push(`## 📊 ${title}`);
   lines.push('');
 
-  // Overall coverage summary
+  // Overall coverage summary with trend indicator if available
   const formattedOverall = formatPercentage(overall.percentage);
-  lines.push(`**Overall Coverage: ${formattedOverall}**`);
+  if (comparison) {
+    const trendIndicator = getTrendIndicator(comparison.overallDelta);
+    const delta = formatDelta(comparison.overallDelta);
+    lines.push(`**Overall Coverage: ${formattedOverall}** ${trendIndicator} ${delta}`);
+  } else {
+    lines.push(`**Overall Coverage: ${formattedOverall}**`);
+  }
   lines.push('');
 
   // Module coverage table
   lines.push('### Module Coverage');
   lines.push('');
-  lines.push('| Module | Coverage | Threshold | Status |');
-  lines.push('|--------|----------|-----------|--------|');
+
+  // Table header - add "Change" column if comparison is available
+  if (comparison) {
+    lines.push('| Module | Coverage | Threshold | Change | Status |');
+    lines.push('|--------|----------|-----------|--------|--------|');
+  } else {
+    lines.push('| Module | Coverage | Threshold | Status |');
+    lines.push('|--------|----------|-----------|--------|');
+  }
 
   // Sort modules alphabetically for consistent output
   const sortedModules = [...overall.modules].sort((a, b) => a.module.localeCompare(b.module));
@@ -48,7 +68,14 @@ export function generateMarkdownReport(overall: OverallCoverage, title: string):
     const thresholdStr = `${module.threshold}%`;
     const statusStr = formatStatus(module);
 
-    lines.push(`| ${module.module} | ${coverageStr} | ${thresholdStr} | ${statusStr} |`);
+    if (comparison) {
+      const changeStr = formatChange(module.module, comparison);
+      lines.push(
+        `| ${module.module} | ${coverageStr} | ${thresholdStr} | ${changeStr} | ${statusStr} |`
+      );
+    } else {
+      lines.push(`| ${module.module} | ${coverageStr} | ${thresholdStr} | ${statusStr} |`);
+    }
   }
 
   // Legend explaining status indicators
@@ -99,4 +126,24 @@ function formatStatus(module: ModuleCoverage): string {
     return '⚠️';
   }
   return module.passed ? '✅' : '❌';
+}
+
+/**
+ * Format change indicator for a module based on history comparison
+ * Shows trend indicator and delta, or indicator for new modules
+ * @param moduleName Name of the module
+ * @param comparison History comparison data
+ * @returns Formatted change string (e.g., "↑ +1.5%" or "new")
+ */
+function formatChange(moduleName: string, comparison: HistoryComparison): string {
+  const delta = comparison.moduleDelta[moduleName];
+
+  // Module exists in current but not in baseline (new module)
+  if (delta === null || delta === undefined) {
+    return 'new';
+  }
+
+  const trendIndicator = getTrendIndicator(delta);
+  const deltaStr = formatDelta(delta);
+  return `${trendIndicator} ${deltaStr}`;
 }

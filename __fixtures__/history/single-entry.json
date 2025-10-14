@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2025-01-15T10:30:00Z",
+    "branch": "main",
+    "commit": "abc123",
+    "overall": {
+      "percentage": 85.5,
+      "covered": 855,
+      "total": 1000
+    },
+    "modules": {
+      ":core:common": 85.5
+    }
+  }
+]

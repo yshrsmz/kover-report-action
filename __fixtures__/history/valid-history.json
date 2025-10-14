@@ -1,0 +1,50 @@
+[
+  {
+    "timestamp": "2025-01-15T10:30:00Z",
+    "branch": "main",
+    "commit": "abc123",
+    "overall": {
+      "percentage": 85.5,
+      "covered": 855,
+      "total": 1000
+    },
+    "modules": {
+      ":core:common": 85.5,
+      ":core:testing": 92.0,
+      ":data:repository": 78.2,
+      ":feature:auth": 70.5
+    }
+  },
+  {
+    "timestamp": "2025-01-14T10:30:00Z",
+    "branch": "main",
+    "commit": "def456",
+    "overall": {
+      "percentage": 83.0,
+      "covered": 830,
+      "total": 1000
+    },
+    "modules": {
+      ":core:common": 83.0,
+      ":core:testing": 91.0,
+      ":data:repository": 76.0,
+      ":feature:auth": 68.0
+    }
+  },
+  {
+    "timestamp": "2025-01-13T10:30:00Z",
+    "branch": "main",
+    "commit": "ghi789",
+    "overall": {
+      "percentage": 82.5,
+      "covered": 825,
+      "total": 1000
+    },
+    "modules": {
+      ":core:common": 82.5,
+      ":core:testing": 90.5,
+      ":data:repository": 75.5,
+      ":feature:auth": 67.5
+    }
+  }
+]
