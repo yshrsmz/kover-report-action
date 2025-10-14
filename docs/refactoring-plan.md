@@ -1,13 +1,13 @@
 # Refactoring Plan: Architecture Improvements
 
-**Status**: In Progress (Phase 1 & 2 Complete)
-**Date**: Started 2025-10-14 | Updated: 2025-10-14
+**Status**: In Progress (Phase 1, 2, & 3 Complete)
+**Date**: Started 2025-10-14 | Updated: 2025-10-15
 **Goal**: Transform monolithic entrypoint into maintainable, testable, composable architecture
 
 **Progress**:
 - ✅ Phase 1: Logger Abstraction - **COMPLETE**
 - ✅ Phase 2: Configuration Layer - **COMPLETE**
-- ⏳ Phase 3: Manager Interfaces - Not started
+- ✅ Phase 3: Manager Interfaces - **COMPLETE** (3A, 3B, & 3C all complete)
 - ⏳ Phase 4: Action Runner - Not started
 - ⏳ Phase 5: Slim Entrypoint - Not started
 
@@ -114,6 +114,30 @@ The current codebase has grown to a point where `src/index.ts` (377 lines) mixes
 ---
 
 ## Implementation Plan
+
+### Architectural Pattern Decision: Classes vs Functions
+
+This refactoring follows a **functional-first** approach with classes used only when genuinely beneficial:
+
+**✅ Use Classes When:**
+- **Stateful behavior required**: Managing mutable state across multiple operations (e.g., `HistoryManager` with internal history array)
+- **Test doubles for interfaces**: `SpyLogger`, `SpyReporter` need internal state to record calls
+- **True implementations of interfaces**: `ActionsLogger` implements `Logger` interface with forwarding behavior
+
+**✅ Use Functions When:**
+- **Stateless operations**: Pure transformations, strategy selection, data processing
+- **Configuration/setup**: Factory functions that return configured instances or closures
+- **Simple abstractions**: Function types for strategies (e.g., `ModuleDiscovery`, `Reporter`)
+
+**Examples:**
+- `ModuleDiscovery` → Function type (not interface) with `createCommandDiscovery()` factory
+- `Reporter` → Function type with `createActionsReporter()` factory
+- `HistoryManager` → Class (needs mutable state for history tracking)
+- `ActionRunner` → Could be function, but class is acceptable for complex orchestration
+
+This approach keeps the codebase simple while using classes where they genuinely add value.
+
+---
 
 ### Phase 1: Logger Abstraction (Foundation)
 
@@ -552,7 +576,7 @@ describe('loadConfig', () => {
 - `src/discovery/command.ts` (extract from `src/discovery.ts`)
 - `src/discovery/glob.ts` (extract from `src/discovery.ts`)
 
-**Design**:
+**Design** (Using functional patterns):
 ```typescript
 // src/discovery/index.ts
 
@@ -565,12 +589,16 @@ export interface ModuleReference {
   filePath: string;
 }
 
-export interface ModuleDiscovery {
-  discover(config: DiscoveryConfig): Promise<ModuleReference[]>;
-}
+/**
+ * Module discovery function type
+ * A discovery function takes a config and returns discovered modules
+ */
+export type ModuleDiscovery = (
+  config: DiscoveryConfig,
+) => Promise<ModuleReference[]>;
 
-export { CommandDiscovery } from './command';
-export { GlobDiscovery } from './glob';
+export { createCommandDiscovery } from './command';
+export { createGlobDiscovery } from './glob';
 ```
 
 ```typescript
@@ -580,35 +608,40 @@ import { discoverModulesFromCommand } from '../discovery';
 import { resolveModulePath } from '../paths';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
 
-export class CommandDiscovery implements ModuleDiscovery {
-  constructor(
-    private readonly command: string,
-    private readonly pathTemplate: string
-  ) {}
-
-  async discover(config: DiscoveryConfig): Promise<ModuleReference[]> {
+/**
+ * Creates a command-based discovery function
+ *
+ * @param command - Command to execute (e.g., './gradlew -q projects')
+ * @param pathTemplate - Path template with {module} placeholder
+ * @returns Discovery function that can be called with config
+ */
+export function createCommandDiscovery(
+  command: string,
+  pathTemplate: string,
+): ModuleDiscovery {
+  return async (config: DiscoveryConfig): Promise<ModuleReference[]> => {
     const moduleNames = await discoverModulesFromCommand(
-      this.command,
-      config.ignoredModules
+      command,
+      config.ignoredModules,
     );
 
     if (moduleNames.length === 0) {
       throw new Error(
         `No modules found by discovery command.\n` +
-        `Command: ${this.command}\n` +
+        `Command: ${command}\n` +
         'Possible causes:\n' +
         '- Command output does not contain "Project \'...\'" patterns\n' +
         '- All modules are in the ignore-modules list\n' +
         '- Command failed or returned no output\n' +
-        'Tip: Run the command locally to verify its output format.'
+        'Tip: Run the command locally to verify its output format.',
       );
     }
 
     return moduleNames.map((name) => ({
       name,
-      filePath: resolveModulePath(name, this.pathTemplate)
+      filePath: resolveModulePath(name, pathTemplate),
     }));
-  }
+  };
 }
 ```
 
@@ -618,42 +651,65 @@ export class CommandDiscovery implements ModuleDiscovery {
 import { discoverModulesFromGlob } from '../discovery';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
 
-export class GlobDiscovery implements ModuleDiscovery {
-  constructor(private readonly pattern: string) {}
-
-  async discover(config: DiscoveryConfig): Promise<ModuleReference[]> {
-    const results = await discoverModulesFromGlob(
-      this.pattern,
-      config.ignoredModules
-    );
+/**
+ * Creates a glob-based discovery function
+ *
+ * @param pattern - Glob pattern for coverage files (e.g., '** /build/reports/kover/report.xml')
+ * @returns Discovery function that can be called with config
+ */
+export function createGlobDiscovery(pattern: string): ModuleDiscovery {
+  return async (config: DiscoveryConfig): Promise<ModuleReference[]> => {
+    const results = await discoverModulesFromGlob(pattern, config.ignoredModules);
 
     if (results.length === 0) {
       throw new Error(
         `No coverage files found matching pattern.\n` +
-        `Pattern: ${this.pattern}\n` +
+        `Pattern: ${pattern}\n` +
         'Possible causes:\n' +
         '- Coverage reports not generated (run tests with coverage first)\n' +
         '- Pattern does not match actual file locations\n' +
         '- All matching modules are in the ignore-modules list\n' +
-        'Tip: Verify files exist by running: ls -la **/build/reports/kover/report.xml'
+        'Tip: Verify files exist by running: ls -la **/build/reports/kover/report.xml',
       );
     }
 
     return results.map(({ module, filePath }) => ({
       name: module,
-      filePath
+      filePath,
     }));
-  }
+  };
 }
 ```
 
-**Testing**: Adapt existing `discovery.test.ts` to test through interfaces
+**Testing**: Created `discovery-interfaces.test.ts` with 8 tests covering both factory functions
+
+**Migration Path**:
+1. ✅ Create `src/discovery/index.ts` with functional types and interfaces
+2. ✅ Create `src/discovery/command.ts` with `createCommandDiscovery()` factory function
+3. ✅ Create `src/discovery/glob.ts` with `createGlobDiscovery()` factory function
+4. ✅ Write comprehensive tests (8 tests, all passing)
+5. ✅ Verify all tests pass and build succeeds
+
+**✅ COMPLETED** - Discovery layer implemented with functional patterns:
+- `ModuleDiscovery` as function type (not interface for classes)
+- `createCommandDiscovery()` factory function returning closure
+- `createGlobDiscovery()` factory function returning closure
+- Parameters captured in closures instead of class fields
+- Consistent with project's functional coding style
 
 #### 3B. History Manager
 
 **Files to Create**:
 - `src/history/manager.ts`
 - `src/__tests__/history-manager.test.ts`
+
+**Design Philosophy**:
+HistoryManager uses a **class** (not functional pattern) because it genuinely needs stateful behavior:
+- Maintains mutable `history` array across load/compare/append/persist operations
+- Operations mutate internal state (`append` modifies history, `load` initializes it)
+- Lifecycle: load → mutate (compare/append) → persist
+
+This is one of the few cases where a class is justified over functional patterns.
 
 **Design**:
 ```typescript
@@ -816,6 +872,19 @@ describe('HistoryManager', () => {
 });
 ```
 
+**Migration Path**:
+1. ✅ Create `src/history/manager.ts` with HistoryManager class
+2. ✅ Write comprehensive tests (19 tests, all passing)
+3. ✅ Verify all tests pass and build succeeds
+
+**✅ COMPLETED** - History Manager implemented with:
+- `HistoryManager` class with stateful behavior (justified use of class)
+- `HistoryStore` interface for storage abstraction
+- `HistoryContext` and `CoverageSnapshot` interfaces
+- Full lifecycle support: load → compare → append → persist
+- Comprehensive test suite with `InMemoryHistoryStore` for testing
+- Integration scenarios testing retention, multiple baselines, and persistence
+
 #### 3C. Reporter Interface
 
 **Files to Create**:
@@ -823,7 +892,7 @@ describe('HistoryManager', () => {
 - `src/reporter/actions-reporter.ts`
 - `src/__tests__/reporter.test.ts`
 
-**Design**:
+**Design** (Using functional patterns):
 ```typescript
 // src/reporter/index.ts
 
@@ -835,11 +904,16 @@ export interface ReportResult {
   comparison?: HistoryComparison;
 }
 
-export interface Reporter {
-  emit(result: ReportResult, title: string): Promise<void>;
-}
+/**
+ * Reporter function type
+ * A reporter takes a result and title, and emits the report
+ */
+export type Reporter = (
+  result: ReportResult,
+  title: string,
+) => Promise<void>;
 
-export { ActionsReporter } from './actions-reporter';
+export { createActionsReporter } from './actions-reporter';
 ```
 
 ```typescript
@@ -860,12 +934,16 @@ export interface ActionsReporterOptions {
   enablePrComment: boolean;
 }
 
-export class ActionsReporter implements Reporter {
-  constructor(private readonly options: ActionsReporterOptions) {}
-
-  async emit(result: ReportResult, title: string): Promise<void> {
+/**
+ * Creates a GitHub Actions reporter function
+ *
+ * @param options - Reporter configuration with logger, core, token, etc.
+ * @returns Reporter function that emits coverage reports
+ */
+export function createActionsReporter(options: ActionsReporterOptions): Reporter {
+  return async (result: ReportResult, title: string): Promise<void> => {
     const { overall, comparison } = result;
-    const { logger, core, githubToken, enablePrComment } = this.options;
+    const { logger, core, githubToken, enablePrComment } = options;
 
     // Set GitHub Actions outputs
     core.setOutput('coverage-percentage', overall.percentage.toString());
@@ -922,11 +1000,25 @@ export class ActionsReporter implements Reporter {
     } else {
       logger.info('⏭️  PR comment posting disabled');
     }
-  }
+  };
 }
 ```
 
-**Testing**: Create spy/mock reporter for testing action runner
+**Testing**: Created `reporter.test.ts` with 14 tests covering all reporter functionality
+
+**Migration Path**:
+1. ✅ Create `src/reporter/index.ts` with Reporter type and interfaces
+2. ✅ Create `src/reporter/actions-reporter.ts` with `createActionsReporter()` factory function
+3. ✅ Write comprehensive tests (14 tests, all passing)
+4. ✅ Verify all tests pass and build succeeds
+
+**✅ COMPLETED** - Reporter interface implemented with functional patterns:
+- `Reporter` as function type (not interface for classes)
+- `createActionsReporter()` factory function returning closure
+- `ActionsReporterOptions` interface for configuration
+- Full reporting functionality: outputs, console summary, PR comments
+- Comprehensive test suite with mocked dependencies
+- Tests for all code paths including error cases and history comparison
 
 ---
 
@@ -1120,32 +1212,32 @@ import { describe, expect, test } from 'vitest';
 import { ActionRunner } from '../action-runner';
 import { SpyLogger } from '../logger';
 import type { ActionConfig } from '../config';
-import type { ModuleDiscovery, ModuleReference } from '../discovery';
+import type { ModuleDiscovery } from '../discovery';
 import type { Reporter, ReportResult } from '../reporter';
 
-class FakeDiscovery implements ModuleDiscovery {
-  constructor(private modules: ModuleReference[]) {}
-
-  async discover(): Promise<ModuleReference[]> {
-    return this.modules;
-  }
+/** Create a fake discovery function for testing */
+function createFakeDiscovery(modules: Array<{ name: string; filePath: string }>): ModuleDiscovery {
+  return async () => modules;
 }
 
-class SpyReporter implements Reporter {
-  emittedReports: Array<{ result: ReportResult; title: string }> = [];
+/** Create a spy reporter for testing */
+function createSpyReporter() {
+  const emittedReports: Array<{ result: ReportResult; title: string }> = [];
 
-  async emit(result: ReportResult, title: string): Promise<void> {
-    this.emittedReports.push({ result, title });
-  }
+  const reporter: Reporter = async (result, title) => {
+    emittedReports.push({ result, title });
+  };
+
+  return { reporter, emittedReports };
 }
 
 describe('ActionRunner', () => {
   test('executes workflow successfully', async () => {
     const logger = new SpyLogger();
-    const discovery = new FakeDiscovery([
+    const discovery = createFakeDiscovery([
       { name: ':core', filePath: './core/report.xml' }
     ]);
-    const reporter = new SpyReporter();
+    const { reporter, emittedReports } = createSpyReporter();
 
     const config: ActionConfig = {
       discoveryMode: 'glob',
@@ -1168,7 +1260,7 @@ describe('ActionRunner', () => {
     // Verify workflow executed
     expect(result.success).toBe(true);
     expect(logger.calls.info.some(m => m.includes('📊 Kover Coverage Report Action'))).toBe(true);
-    expect(reporter.emittedReports).toHaveLength(1);
+    expect(emittedReports).toHaveLength(1);
   });
 
   test('fails when coverage below minimum', async () => {
@@ -1197,11 +1289,11 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { ActionRunner } from './action-runner';
 import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './artifacts';
-import { ActionsCoreFacade, loadConfig } from './config';
-import { CommandDiscovery, GlobDiscovery } from './discovery';
+import { createCoreFacade, loadConfig } from './config';
+import { createCommandDiscovery, createGlobDiscovery } from './discovery';
 import { HistoryManager } from './history/manager';
-import { ActionsLogger, createLogger } from './logger';
-import { ActionsReporter } from './reporter/actions-reporter';
+import { createLogger } from './logger';
+import { createActionsReporter } from './reporter/actions-reporter';
 
 async function run(): Promise<void> {
   // Create logger
@@ -1209,14 +1301,14 @@ async function run(): Promise<void> {
 
   try {
     // Load configuration
-    const facade = new ActionsCoreFacade(core);
+    const facade = createCoreFacade(core);
     const config = loadConfig(facade);
 
-    // Create discovery strategy
+    // Create discovery function
     const discovery =
       config.discoveryMode === 'command'
-        ? new CommandDiscovery(config.discoveryCommand!, config.modulePathTemplate)
-        : new GlobDiscovery(config.coverageFilesPattern);
+        ? createCommandDiscovery(config.discoveryCommand!, config.modulePathTemplate)
+        : createGlobDiscovery(config.coverageFilesPattern);
 
     // Create history manager (if enabled)
     const history = config.enableHistory
@@ -1230,8 +1322,8 @@ async function run(): Promise<void> {
         )
       : undefined;
 
-    // Create reporter
-    const reporter = new ActionsReporter({
+    // Create reporter function
+    const reporter = createActionsReporter({
       logger,
       core,
       githubToken: config.githubToken,
