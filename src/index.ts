@@ -5,6 +5,7 @@ import { postCoverageComment } from './github';
 import { normalizeModuleName, resolveModulePath, resolveSecurePath } from './paths';
 import { generateMarkdownReport } from './report';
 import { parseThresholdsFromJSON } from './threshold';
+import { validateMinCoverage, validateModulePathTemplate } from './validation';
 
 /**
  * Main entry point for the GitHub Action
@@ -30,17 +31,7 @@ async function run(): Promise<void> {
     }
 
     // Validate min-coverage input
-    const minCoverage = Number.parseFloat(minCoverageInput);
-    if (Number.isNaN(minCoverage)) {
-      throw new Error(
-        `Invalid min-coverage value: "${minCoverageInput}". Must be a number between 0 and 100.`
-      );
-    }
-    if (minCoverage < 0 || minCoverage > 100) {
-      throw new Error(
-        `Invalid min-coverage value: ${minCoverage}. Must be between 0 and 100 (inclusive).`
-      );
-    }
+    const minCoverage = validateMinCoverage(minCoverageInput);
 
     // Parse ignored modules
     const ignoredModules = ignoreModulesInput
@@ -66,12 +57,7 @@ async function run(): Promise<void> {
 
     // Validate module-path-template when using command-based discovery
     if (discoveryCommand && discoveryCommand.trim().length > 0) {
-      if (!modulePathTemplate.includes('{module}')) {
-        throw new Error(
-          'module-path-template must contain "{module}" placeholder when using discovery-command. ' +
-            'Example: "{module}/build/reports/kover/report.xml"'
-        );
-      }
+      validateModulePathTemplate(modulePathTemplate);
     }
 
     // Parse and validate thresholds

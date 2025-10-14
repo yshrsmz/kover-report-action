@@ -517,6 +517,7 @@ const github_1 = __nccwpck_require__(2336);
 const paths_1 = __nccwpck_require__(9847);
 const report_1 = __nccwpck_require__(3905);
 const threshold_1 = __nccwpck_require__(3532);
+const validation_1 = __nccwpck_require__(3980);
 /**
  * Main entry point for the GitHub Action
  */
@@ -538,13 +539,7 @@ async function run() {
             core.setSecret(githubToken);
         }
         // Validate min-coverage input
-        const minCoverage = Number.parseFloat(minCoverageInput);
-        if (Number.isNaN(minCoverage)) {
-            throw new Error(`Invalid min-coverage value: "${minCoverageInput}". Must be a number between 0 and 100.`);
-        }
-        if (minCoverage < 0 || minCoverage > 100) {
-            throw new Error(`Invalid min-coverage value: ${minCoverage}. Must be between 0 and 100 (inclusive).`);
-        }
+        const minCoverage = (0, validation_1.validateMinCoverage)(minCoverageInput);
         // Parse ignored modules
         const ignoredModules = ignoreModulesInput
             .split(',')
@@ -564,10 +559,7 @@ async function run() {
         }
         // Validate module-path-template when using command-based discovery
         if (discoveryCommand && discoveryCommand.trim().length > 0) {
-            if (!modulePathTemplate.includes('{module}')) {
-                throw new Error('module-path-template must contain "{module}" placeholder when using discovery-command. ' +
-                    'Example: "{module}/build/reports/kover/report.xml"');
-            }
+            (0, validation_1.validateModulePathTemplate)(modulePathTemplate);
         }
         // Parse and validate thresholds
         let thresholds;
@@ -1230,6 +1222,63 @@ function parseThresholdsFromJSON(jsonString) {
     }
 }
 //# sourceMappingURL=threshold.js.map
+
+/***/ }),
+
+/***/ 3980:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+/**
+ * Input validation utilities
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateMinCoverage = validateMinCoverage;
+exports.validateModulePathTemplate = validateModulePathTemplate;
+exports.looksLikeToken = looksLikeToken;
+/**
+ * Validate min-coverage input value
+ * @param input - The min-coverage input string
+ * @returns Validated number
+ * @throws Error if validation fails
+ */
+function validateMinCoverage(input) {
+    const value = Number.parseFloat(input);
+    if (Number.isNaN(value)) {
+        throw new Error(`Invalid min-coverage value: "${input}". Must be a number between 0 and 100.`);
+    }
+    if (value < 0 || value > 100) {
+        throw new Error(`Invalid min-coverage value: ${value}. Must be between 0 and 100 (inclusive).`);
+    }
+    return value;
+}
+/**
+ * Validate module-path-template contains {module} placeholder
+ * @param template - The module path template
+ * @throws Error if validation fails
+ */
+function validateModulePathTemplate(template) {
+    if (!template.includes('{module}')) {
+        throw new Error('module-path-template must contain "{module}" placeholder when using discovery-command. ' +
+            'Example: "{module}/build/reports/kover/report.xml"');
+    }
+}
+/**
+ * Check if a value is a valid GitHub token format
+ * Used for testing purposes to verify token masking behavior
+ * @param value - The value to check
+ * @returns True if it looks like a token
+ */
+function looksLikeToken(value) {
+    // GitHub tokens typically start with 'ghp_', 'ghs_', 'gho_', 'ghu_', 'github_pat_'
+    // or are 40-character hex strings (classic tokens)
+    const githubTokenPrefixes = ['ghp_', 'ghs_', 'gho_', 'ghu_', 'github_pat_'];
+    const hasGitHubPrefix = githubTokenPrefixes.some((prefix) => value.startsWith(prefix));
+    const isClassicToken = /^[a-f0-9]{40}$/i.test(value);
+    return hasGitHubPrefix || isClassicToken;
+}
+//# sourceMappingURL=validation.js.map
 
 /***/ }),
 
