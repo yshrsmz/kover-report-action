@@ -43,7 +43,7 @@ describe('loadHistoryFromArtifacts', () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
     const { readFile } = await import('node:fs/promises');
 
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     // Mock artifact exists
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
@@ -52,12 +52,12 @@ describe('loadHistoryFromArtifacts', () => {
         name: 'coverage-history',
         size: 1024,
       },
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
+    });
 
     // Mock download
     vi.mocked(mockClient.downloadArtifact).mockResolvedValue({
       downloadPath: '/tmp/download',
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['downloadArtifact']>>);
+    });
 
     // Mock file read
     const historyJson = JSON.stringify([
@@ -80,12 +80,12 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should return empty array when artifact not found', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     // Mock artifact not found
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
-      artifact: null as unknown as never,
-    });
+      artifact: undefined,
+    } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
     const result = await loadHistoryFromArtifacts();
 
@@ -94,7 +94,7 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should return empty array when getArtifact throws', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     // Mock artifact API error
     vi.mocked(mockClient.getArtifact).mockRejectedValue(new Error('Artifact not found'));
@@ -106,11 +106,11 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should return empty array when download fails', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
       artifact: { id: 123, name: 'coverage-history', size: 1024 },
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
+    });
 
     // Mock download failure
     vi.mocked(mockClient.downloadArtifact).mockRejectedValue(new Error('Download failed'));
@@ -122,11 +122,11 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should use custom artifact name', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
-      artifact: null as unknown as never,
-    });
+      artifact: undefined,
+    } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
     await loadHistoryFromArtifacts('custom-history');
 
@@ -142,7 +142,7 @@ describe('saveHistoryToArtifacts', () => {
   it('should save history to artifact', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
     const { writeFile } = await import('node:fs/promises');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     const historyJson = JSON.stringify([
       {
@@ -157,7 +157,7 @@ describe('saveHistoryToArtifacts', () => {
     vi.mocked(mockClient.uploadArtifact).mockResolvedValue({
       id: 456,
       size: 1024,
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['uploadArtifact']>>);
+    });
 
     await saveHistoryToArtifacts(historyJson);
 
@@ -177,7 +177,7 @@ describe('saveHistoryToArtifacts', () => {
   it('should handle upload failure gracefully', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
     const { writeFile } = await import('node:fs/promises');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     vi.mocked(writeFile).mockResolvedValue(undefined);
     vi.mocked(mockClient.uploadArtifact).mockRejectedValue(new Error('Upload failed'));
@@ -188,12 +188,12 @@ describe('saveHistoryToArtifacts', () => {
 
   it('should use custom artifact name', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.uploadArtifact).mockResolvedValue({
       id: 456,
       size: 1024,
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['uploadArtifact']>>);
+    });
 
     await saveHistoryToArtifacts('{}', 'custom-history');
 
@@ -209,14 +209,14 @@ describe('saveHistoryToArtifacts', () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
     const { mkdir } = await import('node:fs/promises');
     const { existsSync } = await import('node:fs');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     // Mock directory doesn't exist
     vi.mocked(existsSync).mockReturnValue(false);
     vi.mocked(mockClient.uploadArtifact).mockResolvedValue({
       id: 456,
       size: 1024,
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['uploadArtifact']>>);
+    });
 
     await saveHistoryToArtifacts('{}');
 
@@ -225,12 +225,12 @@ describe('saveHistoryToArtifacts', () => {
 
   it('should set 90-day retention', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const mockClient = new DefaultArtifactClient() as unknown as DefaultArtifactClient;
+    const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.uploadArtifact).mockResolvedValue({
       id: 456,
       size: 1024,
-    } as unknown as Awaited<ReturnType<DefaultArtifactClient['uploadArtifact']>>);
+    });
 
     await saveHistoryToArtifacts('{}');
 
