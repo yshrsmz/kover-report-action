@@ -78,11 +78,18 @@ export class ConfigError extends Error {
 
 /**
  * Wrap a function to convert errors to ConfigError
+ *
+ * If the error is already a ConfigError, it is rethrown as-is to avoid
+ * double-wrapping with duplicate prefixes.
  */
 const wrapError = <T>(fn: () => T, errorPrefix?: string): T => {
   try {
     return fn();
   } catch (error) {
+    // If already a ConfigError, don't wrap again
+    if (error instanceof ConfigError) {
+      throw error;
+    }
     const message = error instanceof Error ? error.message : String(error);
     const prefix = errorPrefix ? `${errorPrefix}: ` : '';
     throw new ConfigError(`${prefix}${message}`);
