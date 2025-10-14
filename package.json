@@ -9,9 +9,12 @@
     "format:check": "biome format .",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "package": "npm run build",
-    "test": "echo \"No tests specified yet\"",
-    "all": "npm run format && npm run lint && npm run build"
+    "package": "pnpm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "all": "pnpm run format && pnpm run lint && pnpm run build"
   },
   "keywords": ["github-action", "coverage", "kover", "kotlin", "testing"],
   "author": "yshrsmz",
@@ -24,6 +27,8 @@
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.7.2",
     "@vercel/ncc": "^0.38.4",
-    "typescript": "^5.9.3"
+    "@vitest/ui": "^3.2.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }

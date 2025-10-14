@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Invalid/malformed XML - missing closing tag -->
+<report name="Kover report">
+  <counter type="INSTRUCTION" missed="145" covered="855"/>
+  <counter type="LINE" missed="50" covered="200"

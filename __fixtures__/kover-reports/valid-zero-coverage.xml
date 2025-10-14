@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample Kover XML report with 0% coverage -->
+<report name="Kover report">
+  <counter type="INSTRUCTION" missed="1000" covered="0"/>
+  <counter type="LINE" missed="250" covered="0"/>
+  <counter type="BRANCH" missed="100" covered="0"/>
+</report>
