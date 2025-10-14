@@ -8,6 +8,61 @@ This is a GitHub Action that parses Kover (Kotlin code coverage tool) XML report
 
 **Important**: This project uses **pnpm** as the package manager, not npm. All commands should use `pnpm` instead of `npm`.
 
+## Coding Style
+
+### Prefer Simple, Functional Patterns Over Heavy Classes
+
+This codebase favors **lightweight, functional patterns** over heavy class-based implementations:
+
+**✅ Preferred Patterns:**
+- **Factory functions** returning plain objects: `createCoreFacade()` returns `{ getInput, setSecret }`
+- **Type aliases** for structural types: `type CoreFacade = { ... }`
+- **Plain functions** for pure logic: `loadConfig(facade)`, `parseThresholds(json)`
+- **Simple interfaces** for true abstractions with multiple implementations: `interface Logger`
+
+**❌ Avoid:**
+- **Heavy classes** with constructors, private fields, and methods when a simple object/function would suffice
+- **Class-based adapters** - use factory functions that return plain objects instead
+- **Unnecessary OOP patterns** - prefer composition via functions over inheritance
+
+**Examples:**
+
+```typescript
+// ✅ Good: Factory function returning plain object
+export function createCoreFacade(core: typeof import('@actions/core')): CoreFacade {
+  return {
+    getInput: core.getInput.bind(core),
+    setSecret: core.setSecret.bind(core),
+  };
+}
+
+// ❌ Avoid: Class with boilerplate
+export class ActionsCoreFacade {
+  constructor(private readonly core: ...) {}
+  getInput(name: string) { return this.core.getInput(name); }
+  setSecret(secret: string) { this.core.setSecret(secret); }
+}
+
+// ✅ Good: Type alias derived from actual types
+export type CoreFacade = {
+  getInput: typeof core.getInput;
+  setSecret: typeof core.setSecret;
+};
+
+// ✅ Good: Interface for true abstraction (multiple implementations)
+export interface Logger {
+  info(message: string): void;
+  debug(message: string): void;
+}
+```
+
+**When to use classes:**
+- When you need actual stateful behavior (e.g., `SpyLogger` with internal state tracking)
+- When building test doubles that implement interfaces (e.g., `FakeCoreFacade`)
+- When inheritance genuinely simplifies the design (rare)
+
+**Rationale:** Simple patterns are easier to understand, test, and maintain. Classes add complexity and boilerplate without benefit when plain objects and functions suffice.
+
 ## Build System
 
 The build process has two stages:

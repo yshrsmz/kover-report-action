@@ -1,8 +1,15 @@
 # Refactoring Plan: Architecture Improvements
 
-**Status**: Proposed
-**Date**: 2025-10-14
+**Status**: In Progress (Phase 1 & 2 Complete)
+**Date**: Started 2025-10-14 | Updated: 2025-10-14
 **Goal**: Transform monolithic entrypoint into maintainable, testable, composable architecture
+
+**Progress**:
+- ✅ Phase 1: Logger Abstraction - **COMPLETE**
+- ✅ Phase 2: Configuration Layer - **COMPLETE**
+- ⏳ Phase 3: Manager Interfaces - Not started
+- ⏳ Phase 4: Action Runner - Not started
+- ⏳ Phase 5: Slim Entrypoint - Not started
 
 ---
 
@@ -235,10 +242,12 @@ describe('SpyLogger', () => {
 ```
 
 **Migration Path**:
-1. Create `src/logger.ts` with interfaces and implementations
-2. Add tests for logger implementations
-3. **Do NOT modify existing code yet** - this is foundation only
-4. Verify tests pass before Phase 2
+1. ✅ Create `src/logger.ts` with interfaces and implementations
+2. ✅ Add tests for logger implementations (20 tests, all passing)
+3. ✅ **Do NOT modify existing code yet** - this is foundation only
+4. ✅ Verify tests pass before Phase 2
+
+**✅ COMPLETED** - Logger abstraction implemented with `Logger` interface, `ActionsLogger` class, `SpyLogger` for testing, and `createLogger()` factory function.
 
 ---
 
@@ -250,15 +259,18 @@ describe('SpyLogger', () => {
 - `src/config.ts`
 - `src/__tests__/config.test.ts`
 
-**Design**:
+**Design** (Using functional patterns):
 ```typescript
 // src/config.ts
 
 /** Facade for @actions/core input methods */
-export interface CoreFacade {
-  getInput(name: string): string;
-  setSecret(secret: string): void;
-}
+export type CoreFacade = {
+  getInput: typeof core.getInput;  // ← Uses actual @actions/core types
+  setSecret: typeof core.setSecret;
+};
+
+/** Input options re-exported from @actions/core */
+export type InputOptions = Parameters<typeof core.getInput>[1];
 
 /** Typed action configuration */
 export interface ActionConfig {
@@ -295,12 +307,79 @@ export class ConfigError extends Error {
   }
 }
 
+/**
+ * Generic error wrapper for DRY error handling
+ * Converts any error to ConfigError with optional prefix
+ */
+const wrapError = <T>(fn: () => T, errorPrefix?: string): T => {
+  try {
+    return fn();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const prefix = errorPrefix ? `${errorPrefix}: ` : '';
+    throw new ConfigError(`${prefix}${message}`);
+  }
+};
+
+/** Parse and validate minimum coverage (functional) */
+const parseMinCoverage = (input: string): number =>
+  wrapError(() => validateMinCoverage(input));
+
+/** Parse and validate history retention (functional) */
+const parseHistoryRetention = (input: string): number => {
+  const value = Number.parseInt(input, 10);
+  if (Number.isNaN(value) || value < 1) {
+    throw new ConfigError(
+      `Invalid history-retention value: "${input}". Must be a positive integer.`
+    );
+  }
+  return value;
+};
+
+/** Parse and normalize ignored modules using functional pipeline */
+const parseIgnoredModules = (input: string): string[] =>
+  input
+    .split(',')
+    .map((m) => m.trim())
+    .filter((m) => m.length > 0)
+    .map((entry) =>
+      wrapError(() => normalizeModuleName(entry), 'Invalid module name in ignore-modules')
+    );
+
+/** Parse thresholds JSON with helpful error message */
+const parseThresholds = (input: string): Record<string, number> =>
+  wrapError(
+    () => parseThresholdsFromJSON(input),
+    'Failed to parse thresholds JSON: ' +
+      'Expected format: {"core": 80, "data": 75, ":specific:module": 90, "default": 60}\n' +
+      'See https://github.com/yshrsmz/kover-report-action#threshold-configuration for examples.'
+  );
+
+/** Determine discovery mode from command input */
+const getDiscoveryMode = (command: string): 'command' | 'glob' =>
+  command && command.trim().length > 0 ? 'command' : 'glob';
+
+/** Validate module path template when in command mode */
+const validateCommandModeTemplate = (mode: 'command' | 'glob', template: string): void => {
+  if (mode === 'command') {
+    wrapError(() => validateModulePathTemplate(template));
+  }
+};
+
+/** Mask GitHub token if provided */
+const maskToken = (facade: CoreFacade, token: string | undefined): void => {
+  if (token) {
+    facade.setSecret(token);
+  }
+};
+
 /** Load and validate configuration from GitHub Actions inputs */
 export function loadConfig(facade: CoreFacade): ActionConfig {
-  // Read all inputs
+  // Read all inputs (pure data extraction)
   const discoveryCommand = facade.getInput('discovery-command');
   const coverageFiles = facade.getInput('coverage-files') || '**/build/reports/kover/report.xml';
-  const modulePathTemplate = facade.getInput('module-path-template') || '{module}/build/reports/kover/report.xml';
+  const modulePathTemplate =
+    facade.getInput('module-path-template') || '{module}/build/reports/kover/report.xml';
   const ignoreModulesInput = facade.getInput('ignore-modules') || '';
   const thresholdsInput = facade.getInput('thresholds') || '{"default": 60}';
   const minCoverageInput = facade.getInput('min-coverage') || '0';
@@ -308,52 +387,25 @@ export function loadConfig(facade: CoreFacade): ActionConfig {
   const githubToken = facade.getInput('github-token');
   const enablePrComment = facade.getInput('enable-pr-comment') !== 'false';
   const enableHistory = facade.getInput('enable-history') === 'true';
-  const historyRetentionInput = facade.getInput('history-retention') || '50';
-  const baselineBranch = facade.getInput('baseline-branch') || 'main';
+  const historyRetentionInput =
+    facade.getInput('history-retention') || String(DEFAULT_HISTORY_RETENTION);
+  const baselineBranch = facade.getInput('baseline-branch') || DEFAULT_BASELINE_BRANCH;
   const debug = facade.getInput('debug') === 'true';
 
-  // Mask token
-  if (githubToken) {
-    facade.setSecret(githubToken);
-  }
+  // Side effect: mask token
+  maskToken(facade, githubToken);
 
-  // Validate and parse min-coverage
-  const minCoverage = validateMinCoverage(minCoverageInput);
+  // Parse and validate (pure transformations)
+  const minCoverage = parseMinCoverage(minCoverageInput);
+  const historyRetention = parseHistoryRetention(historyRetentionInput);
+  const ignoredModules = parseIgnoredModules(ignoreModulesInput);
+  const thresholds = parseThresholds(thresholdsInput);
+  const discoveryMode = getDiscoveryMode(discoveryCommand);
 
-  // Validate and parse history retention
-  const historyRetention = Number.parseInt(historyRetentionInput, 10);
-  if (Number.isNaN(historyRetention) || historyRetention < 1) {
-    throw new ConfigError(
-      `Invalid history-retention value: "${historyRetentionInput}". Must be a positive integer.`
-    );
-  }
+  // Validate constraints
+  validateCommandModeTemplate(discoveryMode, modulePathTemplate);
 
-  // Parse and normalize ignored modules
-  const ignoredModules = ignoreModulesInput
-    .split(',')
-    .map((m) => m.trim())
-    .filter((m) => m.length > 0)
-    .map((m) => normalizeModuleName(m));
-
-  // Validate module-path-template when using command-based discovery
-  const discoveryMode: 'command' | 'glob' = discoveryCommand && discoveryCommand.trim().length > 0 ? 'command' : 'glob';
-  if (discoveryMode === 'command') {
-    validateModulePathTemplate(modulePathTemplate);
-  }
-
-  // Parse thresholds
-  let thresholds: Record<string, number>;
-  try {
-    thresholds = parseThresholdsFromJSON(thresholdsInput);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new ConfigError(
-      `Failed to parse thresholds JSON: ${message}\n` +
-      'Expected format: {"core": 80, "data": 75, ":specific:module": 90, "default": 60}\n' +
-      'See https://github.com/yshrsmz/kover-report-action#threshold-configuration for examples.'
-    );
-  }
-
+  // Build and return config object
   return {
     discoveryMode,
     discoveryCommand: discoveryMode === 'command' ? discoveryCommand : undefined,
@@ -368,45 +420,52 @@ export function loadConfig(facade: CoreFacade): ActionConfig {
     enableHistory,
     historyRetention,
     baselineBranch,
-    debug
+    debug,
   };
 }
 
-/** Adapter for @actions/core */
-export class ActionsCoreFacade implements CoreFacade {
-  constructor(private readonly core: typeof import('@actions/core')) {}
-
-  getInput(name: string): string {
-    return this.core.getInput(name);
-  }
-
-  setSecret(secret: string): void {
-    this.core.setSecret(secret);
-  }
+/** Factory function for @actions/core facade (functional pattern) */
+export function createCoreFacade(core: typeof import('@actions/core')): CoreFacade {
+  return {
+    getInput: core.getInput.bind(core),
+    setSecret: core.setSecret.bind(core),
+  };
 }
 ```
 
-**Testing**:
+**Testing** (Using Vitest mocks):
 ```typescript
 // src/__tests__/config.test.ts
-import { describe, expect, test } from 'vitest';
-import { ConfigError, loadConfig, type CoreFacade } from '../config';
+import { describe, expect, test, vi } from 'vitest';
+import { ConfigError, type CoreFacade, type InputOptions, loadConfig } from '../config';
 
-class FakeCoreFacade implements CoreFacade {
-  constructor(private inputs: Record<string, string> = {}) {}
+/**
+ * Create a mock CoreFacade for testing
+ * Uses Vitest mocks instead of a custom class implementation.
+ */
+function createMockCoreFacade(inputs: Record<string, string> = {}): CoreFacade {
+  return {
+    getInput: vi.fn((name: string, options?: InputOptions) => {
+      const value = inputs[name] || '';
 
-  getInput(name: string): string {
-    return this.inputs[name] || '';
-  }
+      // Handle trimWhitespace option (default: true)
+      const trimWhitespace = options?.trimWhitespace !== false;
+      const trimmedValue = trimWhitespace ? value.trim() : value;
 
-  setSecret(_secret: string): void {
-    // No-op for testing
-  }
+      // Handle required option
+      if (options?.required && !trimmedValue) {
+        throw new Error(`Input required and not supplied: ${name}`);
+      }
+
+      return trimmedValue;
+    }),
+    setSecret: vi.fn(),
+  };
 }
 
 describe('loadConfig', () => {
   test('loads default configuration', () => {
-    const facade = new FakeCoreFacade();
+    const facade = createMockCoreFacade();
     const config = loadConfig(facade);
 
     expect(config.discoveryMode).toBe('glob');
@@ -417,7 +476,7 @@ describe('loadConfig', () => {
   });
 
   test('parses command discovery mode', () => {
-    const facade = new FakeCoreFacade({
+    const facade = createMockCoreFacade({
       'discovery-command': './gradlew -q projects'
     });
     const config = loadConfig(facade);
@@ -427,7 +486,7 @@ describe('loadConfig', () => {
   });
 
   test('throws ConfigError for invalid min-coverage', () => {
-    const facade = new FakeCoreFacade({
+    const facade = createMockCoreFacade({
       'min-coverage': 'invalid'
     });
 
@@ -435,23 +494,50 @@ describe('loadConfig', () => {
   });
 
   test('parses ignored modules', () => {
-    const facade = new FakeCoreFacade({
+    const facade = createMockCoreFacade({
       'ignore-modules': ':core, :test, build-logic'
     });
     const config = loadConfig(facade);
 
-    expect(config.ignoredModules).toEqual([':core', ':test', 'build-logic']);
+    expect(config.ignoredModules).toEqual([':core', ':test', ':build-logic']);
   });
 
-  // Add more tests for each validation case...
+  test('wraps normalizeModuleName errors in ConfigError', () => {
+    const facade = createMockCoreFacade({
+      'ignore-modules': ':core, ::invalid, :test'
+    });
+
+    expect(() => loadConfig(facade)).toThrow(ConfigError);
+    expect(() => loadConfig(facade)).toThrow('Invalid module name in ignore-modules');
+  });
+
+  test('masks token using setSecret', () => {
+    const facade = createMockCoreFacade({
+      'github-token': 'ghp_test123456',
+    });
+    loadConfig(facade);
+
+    expect(facade.setSecret).toHaveBeenCalledWith('ghp_test123456');
+  });
+
+  // 49 comprehensive tests covering all validation cases
 });
 ```
 
 **Migration Path**:
-1. Create `src/config.ts` with all configuration logic
-2. Write comprehensive tests covering all validation cases
-3. Verify tests pass
-4. **Do NOT modify index.ts yet** - config layer is standalone
+1. ✅ Create `src/config.ts` with all configuration logic (using functional patterns)
+2. ✅ Write comprehensive tests covering all validation cases (49 tests, all passing)
+3. ✅ Verify tests pass
+4. ✅ **Do NOT modify index.ts yet** - config layer is standalone
+
+**✅ COMPLETED** - Configuration layer implemented with:
+- Functional patterns throughout (factory functions, small pure functions, no imperative loops)
+- `CoreFacade` as type (not interface) derived from `@actions/core` types
+- `createCoreFacade()` factory function (not class)
+- `wrapError()` helper for DRY error handling
+- Vitest mocks instead of custom test classes
+- Full `InputOptions` support (required, trimWhitespace)
+- Consistent `ConfigError` wrapping for all validation failures
 
 ---
 
