@@ -1,7 +1,9 @@
 import * as core from '@actions/core';
 import { aggregateCoverage, getFailedModules, getMissingCoverageModules } from './aggregator';
 import { discoverModulesFromCommand, discoverModulesFromGlob } from './discovery';
+import { postCoverageComment } from './github';
 import { normalizeModuleName, resolveModulePath, resolveSecurePath } from './paths';
+import { generateMarkdownReport } from './report';
 import { parseThresholdsFromJSON } from './threshold';
 
 /**
@@ -18,6 +20,8 @@ async function run(): Promise<void> {
     const thresholdsInput = core.getInput('thresholds') || '{"default": 60}';
     const minCoverage = Number.parseFloat(core.getInput('min-coverage') || '0');
     const title = core.getInput('title') || 'Code Coverage Report';
+    const githubToken = core.getInput('github-token');
+    const enablePrComment = core.getInput('enable-pr-comment') !== 'false'; // Default true
     const debug = core.getInput('debug') === 'true';
 
     // Parse ignored modules
@@ -36,7 +40,7 @@ async function run(): Promise<void> {
     }
 
     // Parse and validate thresholds
-    let thresholds: Record<string, number>;
+    let thresholds: ReturnType<typeof parseThresholdsFromJSON>;
     try {
       thresholds = parseThresholdsFromJSON(thresholdsInput);
       core.info(`✅ Thresholds configured: ${Object.keys(thresholds).length} rules`);
@@ -147,6 +151,17 @@ async function run(): Promise<void> {
     }
 
     core.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    // Generate and post PR comment if enabled
+    if (enablePrComment) {
+      core.info('📝 Generating coverage report...');
+      const report = generateMarkdownReport(overall, title);
+
+      core.info('💬 Posting coverage report to PR...');
+      await postCoverageComment(githubToken, report);
+    } else {
+      core.info('⏭️  PR comment posting disabled');
+    }
 
     // Check minimum coverage threshold
     if (overall.percentage < minCoverage) {
