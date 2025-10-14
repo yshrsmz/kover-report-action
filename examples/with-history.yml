@@ -1,0 +1,66 @@
+# Example: Coverage with History & Trend Tracking
+#
+# This workflow demonstrates using kover-report-action
+# with coverage history tracking enabled to show trends
+# and compare against a baseline branch.
+
+name: Coverage Report with History
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # Required for PR comments
+      actions: write        # Required for artifacts
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Kover
+        run: ./gradlew koverXmlReport
+
+      - name: Generate coverage report with history
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          # Module discovery
+          discovery-command: './gradlew -q projects'
+          module-path-template: '{module}/build/reports/kover/report.xml'
+          ignore-modules: ':core,:data,:feature,:build-logic'
+
+          # Threshold configuration
+          thresholds: |
+            {
+              "core": 80,
+              "data": 75,
+              "feature": 70,
+              "default": 60
+            }
+
+          # Basic settings
+          min-coverage: '65'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Code Coverage Report'
+
+          # Enable history tracking
+          enable-history: 'true'
+          baseline-branch: 'main'       # Compare against main branch
+          history-retention: '50'        # Keep last 50 entries
+
+          # Optional: enable debug logging
+          debug: 'false'

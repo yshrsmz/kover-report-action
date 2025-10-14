@@ -11,7 +11,8 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
 - 🔍 **Flexible Discovery** - Command-based (Gradle) or glob pattern module discovery
 - 🎯 **Configurable Thresholds** - Per-module type and per-module name threshold configuration
 - 💬 **PR Integration** - Post coverage reports as PR comments with automatic updates
-- 📈 **Coverage Outputs** - Export coverage data for use in other workflow steps
+- 📈 **Coverage History & Trends** - Track coverage over time with trend indicators (↑↓→) and comparison against baseline
+- 🔄 **Coverage Outputs** - Export coverage data for use in other workflow steps
 - ⚡ **Fast & Secure** - Parallel parsing with path traversal and command injection prevention
 
 ## Quick Start
@@ -57,6 +58,23 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
     coverage-files: '**/build/reports/kover/report.xml'
     thresholds: '{"default": 65}'
     github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### With Coverage History & Trends
+
+```yaml
+- name: Run tests with coverage
+  run: ./gradlew koverXmlReport
+
+- name: Generate coverage report
+  uses: yshrsmz/kover-report-action@v1
+  with:
+    coverage-files: '**/build/reports/kover/report.xml'
+    thresholds: '{"default": 65}'
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    enable-history: 'true'
+    baseline-branch: 'main'
+    history-retention: '50'
 ```
 
 ## Inputs
@@ -106,6 +124,34 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
 | `github-token` | GitHub token for PR comments | - | No |
 | `title` | Report title | `Code Coverage Report` | No |
 | `enable-pr-comment` | Post report as PR comment | `true` | No |
+
+### History & Trends
+
+| Input | Description | Default | Required |
+|-------|-------------|---------|----------|
+| `enable-history` | Enable coverage history tracking and trend indicators | `false` | No |
+| `baseline-branch` | Branch to use as baseline for trend comparison | `main` | No |
+| `history-retention` | Number of history entries to keep | `50` | No |
+
+**How it works:**
+- When enabled, coverage history is stored in GitHub Artifacts with 90-day retention
+- Each workflow run adds a new history entry with timestamp, branch, commit, and coverage data
+- Reports show trend indicators (↑↓→) comparing current coverage vs baseline branch
+- History persists across workflow runs and is automatically managed
+
+**Trend Indicators:**
+- ↑ Green: Coverage improved by >0.1%
+- ↓ Red: Coverage decreased by >0.1%
+- → Gray: Coverage stable (within ±0.1%)
+
+**Example:**
+```yaml
+- uses: yshrsmz/kover-report-action@v1
+  with:
+    enable-history: 'true'
+    baseline-branch: 'main'      # Compare against main branch
+    history-retention: '50'       # Keep last 50 entries
+```
 
 ### Advanced
 
@@ -215,6 +261,8 @@ permissions:
 
 ### Example PR Comment
 
+Without history tracking:
+
 ```markdown
 ## 📊 Code Coverage Report
 
@@ -233,6 +281,31 @@ permissions:
 - ✅ Coverage meets threshold
 - ❌ Coverage below threshold
 - ⚠️ No coverage report found
+```
+
+With history tracking enabled:
+
+```markdown
+## 📊 Code Coverage Report
+
+**Overall Coverage: 85.5%** ↑ +2.3%
+
+### Module Coverage
+
+| Module | Coverage | Threshold | Change | Status |
+|--------|----------|-----------|--------|--------|
+| :core:common | 85.5% | 80% | ↑ +1.5% | ✅ |
+| :core:testing | N/A | 0% | → +0.0% | ⚠️ |
+| :data:repository | 78.2% | 75% | → -0.1% | ✅ |
+| :feature:auth | 65.8% | 70% | ↓ -3.2% | ❌ |
+
+### Legend
+- ✅ Coverage meets threshold
+- ❌ Coverage below threshold
+- ⚠️ No coverage report found
+- ↑ Coverage improved
+- ↓ Coverage decreased
+- → Coverage stable
 ```
 
 ## Troubleshooting
@@ -309,6 +382,43 @@ Example debug command:
 3. Check for trailing commas (invalid in JSON)
 4. Ensure values are 0-100
 
+### History not showing trends
+
+**Symptoms:** No trend indicators (↑↓→) in PR comments
+
+**Solutions:**
+1. Verify `enable-history: 'true'` is set
+2. Check baseline branch has history data:
+   - First run on baseline creates history
+   - Second run can show trends
+3. Verify artifact permissions:
+   ```yaml
+   permissions:
+     contents: read
+     actions: write  # Required for artifacts
+   ```
+4. Enable `debug: 'true'` to see history loading logs
+
+### History artifact not found
+
+**Symptoms:** Warning "Could not load history artifact"
+
+**Expected on:**
+- First run of the action (no history yet)
+- After changing `baseline-branch` to a new branch
+- After 90 days (artifact retention expires)
+
+**Not an error:** This is expected behavior. History will be created automatically.
+
+### Invalid history-retention value
+
+**Symptoms:** Action fails with "Invalid history-retention value"
+
+**Solutions:**
+1. Must be a positive integer: `'50'` not `'50.5'`
+2. Quote the value in YAML: `'50'` not `50`
+3. Minimum value is 1
+
 ## Debug Mode
 
 Enable detailed logging:
@@ -326,6 +436,9 @@ Debug mode logs:
 - Threshold matching decisions
 - Module type extraction
 - Parsed XML structure
+- History loading and comparison (when `enable-history: 'true'`)
+- Artifact download/upload operations
+- Baseline branch comparison results
 
 ## Security
 
@@ -416,6 +529,9 @@ pnpm test:coverage
 │   ├── threshold.ts      # Threshold matching
 │   ├── report.ts         # Markdown generation
 │   ├── github.ts         # PR comment posting
+│   ├── history.ts        # Coverage history & comparison
+│   ├── artifacts.ts      # GitHub Artifacts API integration
+│   ├── graphs.ts         # ASCII graph visualization
 │   └── paths.ts          # Path resolution
 ├── __tests__/            # Test files
 ├── __fixtures__/         # Test fixtures

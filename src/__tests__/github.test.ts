@@ -44,12 +44,10 @@ describe('postCoverageComment', () => {
   it('should create a new comment when none exists', async () => {
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [], // No existing comments
-      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    } as any);
+    });
     mockOctokit.rest.issues.createComment.mockResolvedValue({
       data: { id: 456 },
-      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    } as any);
+    });
 
     const report = '<!-- kover-coverage-report -->\n## Coverage Report';
     await postCoverageComment('test-token', report);
@@ -76,12 +74,10 @@ describe('postCoverageComment', () => {
         { id: 200, body: '<!-- kover-coverage-report -->\nOld report' },
         { id: 300, body: 'Another comment' },
       ],
-      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    } as any);
+    });
     mockOctokit.rest.issues.updateComment.mockResolvedValue({
       data: { id: 200 },
-      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    } as any);
+    });
 
     const report = '<!-- kover-coverage-report -->\n## New Coverage Report';
     await postCoverageComment('test-token', report);
@@ -149,10 +145,8 @@ describe('postCoverageComment', () => {
 
   it('should mask token in logs', async () => {
     const token = 'ghp_secret_token_12345';
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] } as any);
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    mockOctokit.rest.issues.createComment.mockResolvedValue({ data: { id: 456 } } as any);
+    mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] });
+    mockOctokit.rest.issues.createComment.mockResolvedValue({ data: { id: 456 } });
 
     await postCoverageComment(token, 'report');
 
@@ -160,8 +154,7 @@ describe('postCoverageComment', () => {
   });
 
   it('should handle create comment failure', async () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] } as any);
+    mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] });
     mockOctokit.rest.issues.createComment.mockRejectedValue(new Error('Create failed'));
 
     await expect(postCoverageComment('test-token', 'report')).resolves.not.toThrow();
@@ -172,8 +165,7 @@ describe('postCoverageComment', () => {
   it('should handle update comment failure', async () => {
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [{ id: 200, body: '<!-- kover-coverage-report -->\nOld' }],
-      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
-    } as any);
+    });
     mockOctokit.rest.issues.updateComment.mockRejectedValue(new Error('Update failed'));
 
     await expect(postCoverageComment('test-token', 'report')).resolves.not.toThrow();
