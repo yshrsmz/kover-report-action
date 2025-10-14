@@ -147,3 +147,7 @@ dist/sourcemap-register.js
 .devcontainer/runtime.env
 .env
 .pnpm-store/
+
+.claude/settings.local.json
+
+*.local.md
