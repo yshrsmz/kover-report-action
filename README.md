@@ -144,14 +144,47 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
 - ↓ Red: Coverage decreased by >0.1%
 - → Gray: Coverage stable (within ±0.1%)
 
-**Example:**
+**Setup:**
+
+To enable history tracking, you need to run the action with `enable-history: 'true'` on **both your baseline branch (e.g., main) AND feature branches**:
+
 ```yaml
-- uses: yshrsmz/kover-report-action@v1
-  with:
-    enable-history: 'true'
-    baseline-branch: 'main'      # Compare against main branch
-    history-retention: '50'       # Keep last 50 entries
+name: Coverage
+
+on:
+  push:
+    branches: [main]  # Run on baseline branch
+  pull_request:       # Run on PRs
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: write        # Required for artifacts
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        run: ./gradlew koverXmlReport
+
+      - name: Coverage report
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          coverage-files: '**/build/reports/kover/report.xml'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-history: 'true'      # Enable on ALL branches
+          baseline-branch: 'main'     # Compare against main
+          history-retention: '50'
 ```
+
+**How baseline comparison works:**
+1. **First run on main branch**: Creates initial history entry (no comparison yet)
+2. **Subsequent runs on main**: Updates history, can show trends vs previous main commits
+3. **PR branches**: Compare against most recent main branch history entry
+4. **Result**: PR comments show how coverage changed compared to main (↑↓→ indicators)
 
 ### Advanced
 

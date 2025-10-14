@@ -3,13 +3,17 @@
 # This workflow demonstrates using kover-report-action
 # with coverage history tracking enabled to show trends
 # and compare against a baseline branch.
+#
+# IMPORTANT: For history tracking to work, this workflow must run on:
+# 1. push to baseline branches (main, develop) - Creates/updates baseline history
+# 2. pull_request events - Compares PR coverage against baseline history
 
 name: Coverage Report with History
 
 on:
   pull_request:
   push:
-    branches: [main, develop]
+    branches: [main, develop]  # Must include your baseline branch
 
 jobs:
   coverage:
