@@ -1,0 +1,63 @@
+# Example: Multi-Module Project with Gradle Discovery
+#
+# This workflow demonstrates using kover-report-action
+# with a multi-module project using Gradle's `projects` command
+# to discover modules.
+
+name: Coverage Report (Multi-Module with Gradle)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # Required for PR comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Kover
+        run: ./gradlew koverXmlReport
+
+      - name: Generate coverage report
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          # Use Gradle to discover all modules
+          discovery-command: './gradlew -q projects'
+
+          # Path template for module coverage files
+          module-path-template: '{module}/build/reports/kover/report.xml'
+
+          # Threshold configuration
+          thresholds: |
+            {
+              "core": 80,
+              "data": 75,
+              "feature": 70,
+              ":core:testing": 0,
+              "default": 60
+            }
+
+          # Ignore parent modules and build-logic
+          ignore-modules: ':core,:data,:feature,:build-logic'
+
+          # Minimum overall coverage
+          min-coverage: '65'
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Code Coverage Report'

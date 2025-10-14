@@ -1,0 +1,50 @@
+# Example: Multi-Module Project with Glob Pattern Discovery
+#
+# This workflow demonstrates using kover-report-action
+# with a multi-module project using glob patterns
+# to discover coverage files.
+
+name: Coverage Report (Multi-Module with Glob)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # Required for PR comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Kover
+        run: ./gradlew koverXmlReport
+
+      - name: Generate coverage report
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          # Use glob pattern to find all coverage files
+          coverage-files: '**/build/reports/kover/report.xml'
+
+          # Threshold configuration (same as Gradle discovery)
+          thresholds: '{"core": 80, "feature": 70, "default": 60}'
+
+          # Minimum overall coverage
+          min-coverage: '65'
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Code Coverage Report'
