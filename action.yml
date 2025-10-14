@@ -36,7 +36,7 @@ inputs:
 
   # Reporting
   github-token:
-    description: 'GitHub token for PR comments (typically ${{ secrets.GITHUB_TOKEN }})'
+    description: 'GitHub token for PR comments (typically secrets.GITHUB_TOKEN'
     required: false
 
   title:
