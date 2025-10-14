@@ -132,6 +132,141 @@ function getMissingCoverageModules(overall) {
 
 /***/ }),
 
+/***/ 6684:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+/**
+ * GitHub Artifacts integration for coverage history storage
+ * Handles loading and saving coverage history using local file storage
+ *
+ * Note: Full GitHub Artifacts integration will be added in a future update.
+ * For now, history is stored in a local file that can be committed to the repository.
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HISTORY_DIR = exports.HISTORY_FILENAME = exports.COVERAGE_HISTORY_ARTIFACT_NAME = void 0;
+exports.loadHistoryFromArtifacts = loadHistoryFromArtifacts;
+exports.saveHistoryToArtifacts = saveHistoryToArtifacts;
+exports.isGitHubActions = isGitHubActions;
+const core = __importStar(__nccwpck_require__(6966));
+const promises_1 = __nccwpck_require__(1455);
+const node_path_1 = __nccwpck_require__(6760);
+const node_fs_1 = __nccwpck_require__(3024);
+/**
+ * Default artifact name for coverage history
+ */
+exports.COVERAGE_HISTORY_ARTIFACT_NAME = 'coverage-history';
+/**
+ * Default filename for history JSON
+ */
+exports.HISTORY_FILENAME = 'coverage-history.json';
+/**
+ * Default directory for coverage history
+ */
+exports.HISTORY_DIR = '.coverage-history';
+/**
+ * Load coverage history from local file
+ * Returns empty array if file doesn't exist or can't be loaded
+ * @param artifactName Name of the artifact (default: 'coverage-history')
+ * @returns JSON string of history data
+ */
+async function loadHistoryFromArtifacts(_artifactName = exports.COVERAGE_HISTORY_ARTIFACT_NAME) {
+    try {
+        const historyDir = (0, node_path_1.join)(process.cwd(), exports.HISTORY_DIR);
+        const historyPath = (0, node_path_1.join)(historyDir, exports.HISTORY_FILENAME);
+        if (!(0, node_fs_1.existsSync)(historyPath)) {
+            core.debug(`History file not found: ${historyPath}`);
+            return '[]';
+        }
+        core.debug(`Loading history from: ${historyPath}`);
+        const historyJson = await (0, promises_1.readFile)(historyPath, 'utf-8');
+        core.debug(`Loaded history: ${historyJson.length} bytes`);
+        return historyJson;
+    }
+    catch (error) {
+        // File might not exist on first run - this is expected
+        if (error instanceof Error) {
+            core.debug(`Could not load history file: ${error.message}`);
+        }
+        else {
+            core.debug('Could not load history file: unknown error');
+        }
+        return '[]'; // Return empty array
+    }
+}
+/**
+ * Save coverage history to local file
+ * @param historyJson JSON string of history data
+ * @param artifactName Name of the artifact (default: 'coverage-history')
+ */
+async function saveHistoryToArtifacts(historyJson, _artifactName = exports.COVERAGE_HISTORY_ARTIFACT_NAME) {
+    try {
+        const historyDir = (0, node_path_1.join)(process.cwd(), exports.HISTORY_DIR);
+        const historyPath = (0, node_path_1.join)(historyDir, exports.HISTORY_FILENAME);
+        // Create directory if it doesn't exist
+        if (!(0, node_fs_1.existsSync)(historyDir)) {
+            await (0, promises_1.mkdir)(historyDir, { recursive: true });
+        }
+        // Write history to file
+        await (0, promises_1.writeFile)(historyPath, historyJson, 'utf-8');
+        core.info(`💾 Saved coverage history to: ${historyPath}`);
+        core.info(`   (You can commit this file to track history in your repository)`);
+    }
+    catch (error) {
+        // Log error but don't fail the action
+        if (error instanceof Error) {
+            core.warning(`Failed to save history file: ${error.message}`);
+        }
+        else {
+            core.warning('Failed to save history file: unknown error');
+        }
+    }
+}
+/**
+ * Check if running in GitHub Actions environment
+ * @returns true if running in GitHub Actions
+ */
+function isGitHubActions() {
+    return !!process.env.GITHUB_ACTIONS;
+}
+//# sourceMappingURL=artifacts.js.map
+
+/***/ }),
+
 /***/ 281:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -665,9 +800,12 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(6966));
+const github = __importStar(__nccwpck_require__(4903));
 const aggregator_1 = __nccwpck_require__(3190);
+const artifacts_1 = __nccwpck_require__(6684);
 const discovery_1 = __nccwpck_require__(281);
 const github_1 = __nccwpck_require__(2336);
+const history_1 = __nccwpck_require__(8331);
 const paths_1 = __nccwpck_require__(9847);
 const report_1 = __nccwpck_require__(3905);
 const threshold_1 = __nccwpck_require__(3532);
@@ -687,6 +825,9 @@ async function run() {
         const title = core.getInput('title') || 'Code Coverage Report';
         const githubToken = core.getInput('github-token');
         const enablePrComment = core.getInput('enable-pr-comment') !== 'false'; // Default true
+        const enableHistory = core.getInput('enable-history') === 'true'; // Default false
+        const historyRetentionInput = core.getInput('history-retention') || String(history_1.DEFAULT_HISTORY_RETENTION);
+        const baselineBranch = core.getInput('baseline-branch') || history_1.DEFAULT_BASELINE_BRANCH;
         const debug = core.getInput('debug') === 'true';
         // Mask sensitive token to prevent exposure in logs
         if (githubToken) {
@@ -694,6 +835,11 @@ async function run() {
         }
         // Validate min-coverage input
         const minCoverage = (0, validation_1.validateMinCoverage)(minCoverageInput);
+        // Validate history retention input
+        const historyRetention = Number.parseInt(historyRetentionInput, 10);
+        if (Number.isNaN(historyRetention) || historyRetention < 1) {
+            throw new Error(`Invalid history-retention value: "${historyRetentionInput}". Must be a positive integer.`);
+        }
         // Parse ignored modules
         const ignoredModules = ignoreModulesInput
             .split(',')
@@ -703,6 +849,9 @@ async function run() {
         core.info('📊 Kover Coverage Report Action');
         core.info(`🎯 Minimum coverage requirement: ${minCoverage}%`);
         core.info(`📝 Report title: ${title}`);
+        if (enableHistory) {
+            core.info(`📈 History tracking enabled (baseline: ${baselineBranch}, retention: ${historyRetention})`);
+        }
         if (debug) {
             core.info('🐛 Debug mode enabled');
             core.debug(`Discovery command: ${discoveryCommand || '(not set)'}`);
@@ -822,10 +971,82 @@ async function run() {
             }
         }
         core.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        // Load and compare with history if enabled
+        let comparison;
+        if (enableHistory) {
+            try {
+                core.info('📊 Loading coverage history...');
+                const historyJson = await (0, artifacts_1.loadHistoryFromArtifacts)();
+                const history = (0, history_1.loadHistory)(historyJson);
+                if (debug) {
+                    core.debug(`Loaded ${history.length} history entries`);
+                }
+                if (history.length > 0) {
+                    // Get current branch and commit
+                    const currentBranch = github.context.ref.replace('refs/heads/', '');
+                    const currentCommit = github.context.sha;
+                    if (debug) {
+                        core.debug(`Current branch: ${currentBranch}`);
+                        core.debug(`Current commit: ${currentCommit}`);
+                        core.debug(`Baseline branch: ${baselineBranch}`);
+                    }
+                    // Build module coverage map for comparison
+                    const currentModuleCoverage = {};
+                    for (const { module, coverage } of overall.modules) {
+                        if (coverage !== null) {
+                            currentModuleCoverage[module] = coverage.percentage;
+                        }
+                    }
+                    // Compare with baseline
+                    const baselineComparison = (0, history_1.compareWithBaseline)(history, currentModuleCoverage, overall.percentage, baselineBranch);
+                    comparison = baselineComparison ?? undefined;
+                    if (comparison) {
+                        core.info(`📈 Comparing with baseline (${comparison.baseline.timestamp})`);
+                        core.info(`   Overall change: ${comparison.overallDelta > 0 ? '+' : ''}${comparison.overallDelta.toFixed(1)}%`);
+                        if (debug) {
+                            const improvements = Object.entries(comparison.moduleDelta).filter(([, delta]) => delta !== null && delta > 0.1).length;
+                            const regressions = Object.entries(comparison.moduleDelta).filter(([, delta]) => delta !== null && delta < -0.1).length;
+                            core.debug(`   Modules improved: ${improvements}`);
+                            core.debug(`   Modules regressed: ${regressions}`);
+                        }
+                    }
+                    else {
+                        core.info(`⚠️  No baseline found for branch: ${baselineBranch}`);
+                    }
+                }
+                else {
+                    core.info('ℹ️  No history data available (first run)');
+                }
+                // Create new history entry
+                const timestamp = new Date().toISOString();
+                const currentBranch = github.context.ref.replace('refs/heads/', '');
+                const currentCommit = github.context.sha;
+                const newEntry = (0, history_1.createHistoryEntry)(timestamp, currentBranch, currentCommit, overall.percentage, overall.covered, overall.total, Object.fromEntries(overall.modules
+                    .filter(({ coverage }) => coverage !== null)
+                    .map(({ module, coverage }) => [module, coverage.percentage])));
+                // Add new entry and trim to retention limit
+                const updatedHistory = (0, history_1.trimHistory)((0, history_1.addHistoryEntry)(history, newEntry), historyRetention);
+                // Save updated history
+                core.info('💾 Saving coverage history...');
+                const updatedHistoryJson = (0, history_1.saveHistory)(updatedHistory);
+                await (0, artifacts_1.saveHistoryToArtifacts)(updatedHistoryJson);
+                if (debug) {
+                    core.debug(`Saved ${updatedHistory.length} history entries`);
+                }
+            }
+            catch (error) {
+                // Log warning but don't fail action
+                const message = error instanceof Error ? error.message : String(error);
+                core.warning(`Failed to process coverage history: ${message}`);
+                if (debug && error instanceof Error && error.stack) {
+                    core.debug(error.stack);
+                }
+            }
+        }
         // Generate and post PR comment if enabled
         if (enablePrComment) {
             core.info('📝 Generating coverage report...');
-            const report = (0, report_1.generateMarkdownReport)(overall, title);
+            const report = (0, report_1.generateMarkdownReport)(overall, title, comparison);
             if (debug) {
                 core.debug(`Generated report (${report.length} characters)`);
             }

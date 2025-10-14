@@ -140,6 +140,9 @@ vite.config.ts.timestamp-*
 # Build output for GitHub Actions
 lib/
 
+# Coverage history temp directory
+.coverage-history/
+
 .devcontainer/runtime.env
 .env
 .pnpm-store/
