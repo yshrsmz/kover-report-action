@@ -1,0 +1,88 @@
+# Example: Advanced Usage with Outputs
+#
+# This workflow demonstrates using kover-report-action
+# with output values and conditional logic.
+
+name: Coverage Report (Advanced with Outputs)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # Required for PR comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Kover
+        run: ./gradlew koverXmlReport
+
+      - name: Generate coverage report
+        id: coverage  # Important: Set ID to access outputs
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          coverage-files: '**/build/reports/kover/report.xml'
+          thresholds: '{"core": 80, "feature": 70, "default": 65}'
+          min-coverage: '70'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          debug: 'true'  # Enable debug logging
+
+      - name: Display coverage summary
+        run: |
+          echo "📊 Coverage Summary"
+          echo "===================="
+          echo "Overall Coverage: ${{ steps.coverage.outputs.coverage-percentage }}%"
+          echo "Instructions Covered: ${{ steps.coverage.outputs.instructions-covered }}"
+          echo "Total Instructions: ${{ steps.coverage.outputs.instructions-total }}"
+          echo ""
+          echo "Module Coverage:"
+          echo '${{ steps.coverage.outputs.modules-coverage-json }}' | jq '.'
+
+      - name: Check for failing modules
+        if: steps.coverage.outputs.modules-below-threshold != ''
+        run: |
+          echo "⚠️  Modules below threshold:"
+          echo "${{ steps.coverage.outputs.modules-below-threshold }}"
+
+      - name: Post to Slack (on failure)
+        if: failure()
+        run: |
+          # Example: Post coverage failure to Slack
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "❌ Coverage check failed!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Coverage Check Failed* ❌\n\nOverall Coverage: ${{ steps.coverage.outputs.coverage-percentage }}%\nRequired: 70%"
+                  }
+                }
+              ]
+            }'
+
+      - name: Create coverage badge
+        run: |
+          # Example: Create a coverage badge using shields.io
+          COVERAGE=${{ steps.coverage.outputs.coverage-percentage }}
+          COLOR=$(awk -v cov="$COVERAGE" 'BEGIN {if (cov >= 80) print "brightgreen"; else if (cov >= 60) print "yellow"; else print "red"}')
+
+          echo "Coverage badge: ![Coverage](https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR})"

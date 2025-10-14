@@ -1,0 +1,42 @@
+# Example: Single Module Project
+#
+# This workflow demonstrates using kover-report-action
+# with a simple single-module Kotlin project.
+
+name: Coverage Report (Single Module)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # Required for PR comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Kover
+        run: ./gradlew koverXmlReport
+
+      - name: Generate coverage report
+        uses: yshrsmz/kover-report-action@v1
+        with:
+          coverage-files: 'build/reports/kover/report.xml'
+          min-coverage: '70'
+          title: 'Code Coverage Report'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
