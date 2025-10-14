@@ -27,7 +27,7 @@ async function run(): Promise<void> {
       .filter((m) => m.length > 0)
       .map((m) => normalizeModuleName(m));
 
-    core.info(`📊 Kover Coverage Report Action`);
+    core.info('📊 Kover Coverage Report Action');
     core.info(`🎯 Minimum coverage requirement: ${minCoverage}%`);
     core.info(`📝 Report title: ${title}`);
 
@@ -36,7 +36,7 @@ async function run(): Promise<void> {
     }
 
     // Parse and validate thresholds
-    let thresholds;
+    let thresholds: Record<string, number>;
     try {
       thresholds = parseThresholdsFromJSON(thresholdsInput);
       core.info(`✅ Thresholds configured: ${Object.keys(thresholds).length} rules`);
@@ -131,7 +131,7 @@ async function run(): Promise<void> {
       core.info(`❌ Failing modules: ${failedModules.length}`);
       for (const module of failedModules) {
         const moduleCov = overall.modules.find((m) => m.module === module);
-        if (moduleCov && moduleCov.coverage) {
+        if (moduleCov?.coverage) {
           core.warning(`  ${module}: ${moduleCov.coverage.percentage}% < ${moduleCov.threshold}%`);
         }
       }
@@ -156,7 +156,7 @@ async function run(): Promise<void> {
       return;
     }
 
-    core.info(`✅ Coverage check passed!`);
+    core.info('✅ Coverage check passed!');
   } catch (error) {
     // Handle errors
     if (error instanceof Error) {

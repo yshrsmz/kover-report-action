@@ -145,7 +145,7 @@ describe('validateThresholds', () => {
 
   it('should throw error for non-numeric threshold', () => {
     const thresholds = {
-      core: 'eighty' as any,
+      core: 'eighty' as unknown as number,
     };
     expect(() => validateThresholds(thresholds)).toThrow('must be a number');
   });
@@ -166,18 +166,14 @@ describe('validateThresholds', () => {
     const thresholds = {
       'core:common': 80, // Should be ':core:common' for full module name
     };
-    expect(() => validateThresholds(thresholds)).toThrow(
-      'module types cannot contain colons'
-    );
+    expect(() => validateThresholds(thresholds)).toThrow('module types cannot contain colons');
   });
 
   it('should reject module name with empty segments', () => {
     const thresholds = {
       ':core::testing': 80,
     };
-    expect(() => validateThresholds(thresholds)).toThrow(
-      'cannot contain empty segments'
-    );
+    expect(() => validateThresholds(thresholds)).toThrow('cannot contain empty segments');
   });
 
   it('should reject incomplete module name (trailing colon)', () => {

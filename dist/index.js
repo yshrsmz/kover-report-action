@@ -175,10 +175,10 @@ exports.discoverModulesFromCommand = discoverModulesFromCommand;
 exports.parseGradleProjects = parseGradleProjects;
 exports.discoverModulesFromGlob = discoverModulesFromGlob;
 exports.extractModuleName = extractModuleName;
+const node_path_1 = __nccwpck_require__(6760);
 const core = __importStar(__nccwpck_require__(6966));
 const exec_1 = __nccwpck_require__(2851);
 const glob_1 = __nccwpck_require__(8949);
-const node_path_1 = __nccwpck_require__(6760);
 // Regex pattern to extract module names from Gradle-style output
 const GRADLE_PROJECT_REGEX = /Project '([^']+)'/g;
 /**
@@ -232,9 +232,9 @@ function parseGradleProjects(output) {
         return [];
     }
     const modules = [];
-    let match;
     const regex = new RegExp(GRADLE_PROJECT_REGEX);
-    while ((match = regex.exec(output)) !== null) {
+    let match = regex.exec(output);
+    while (match !== null) {
         const moduleName = match[1];
         // Filter out Root project entries
         if (!moduleName.includes('Root project')) {
@@ -242,6 +242,7 @@ function parseGradleProjects(output) {
             const normalized = moduleName.startsWith(':') ? moduleName : `:${moduleName}`;
             modules.push(normalized);
         }
+        match = regex.exec(output);
     }
     return modules;
 }
@@ -398,7 +399,7 @@ async function run() {
             .map((m) => m.trim())
             .filter((m) => m.length > 0)
             .map((m) => (0, paths_1.normalizeModuleName)(m));
-        core.info(`📊 Kover Coverage Report Action`);
+        core.info('📊 Kover Coverage Report Action');
         core.info(`🎯 Minimum coverage requirement: ${minCoverage}%`);
         core.info(`📝 Report title: ${title}`);
         if (debug) {
@@ -481,7 +482,7 @@ async function run() {
             core.info(`❌ Failing modules: ${failedModules.length}`);
             for (const module of failedModules) {
                 const moduleCov = overall.modules.find((m) => m.module === module);
-                if (moduleCov && moduleCov.coverage) {
+                if (moduleCov?.coverage) {
                     core.warning(`  ${module}: ${moduleCov.coverage.percentage}% < ${moduleCov.threshold}%`);
                 }
             }
@@ -500,7 +501,7 @@ async function run() {
             core.setFailed(`❌ Overall coverage ${overall.percentage}% is below minimum required ${minCoverage}%`);
             return;
         }
-        core.info(`✅ Coverage check passed!`);
+        core.info('✅ Coverage check passed!');
     }
     catch (error) {
         // Handle errors
@@ -619,8 +620,12 @@ async function parseCoverageFile(filePath) {
  */
 function extractInstructionCounter(xmlData) {
     try {
-        // Navigate to report.counter (could be single object or array)
-        const report = xmlData?.report;
+        // Type guard to check if xmlData has the expected structure
+        if (!xmlData || typeof xmlData !== 'object') {
+            return null;
+        }
+        const data = xmlData;
+        const report = data.report;
         if (!report) {
             return null;
         }

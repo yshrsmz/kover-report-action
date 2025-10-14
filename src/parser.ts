@@ -75,14 +75,37 @@ export async function parseCoverageFile(filePath: string): Promise<CoverageResul
 }
 
 /**
+ * Represents a parsed XML counter element
+ */
+interface XmlCounter {
+  '@_type'?: string;
+  '@_missed'?: string;
+  '@_covered'?: string;
+}
+
+/**
+ * Represents the parsed XML report structure
+ */
+interface XmlReport {
+  report?: {
+    counter?: XmlCounter | XmlCounter[];
+  };
+}
+
+/**
  * Extract INSTRUCTION counter from parsed XML data
  * @param xmlData Parsed XML object
  * @returns Coverage result or null if INSTRUCTION counter not found
  */
-function extractInstructionCounter(xmlData: any): CoverageResult | null {
+function extractInstructionCounter(xmlData: unknown): CoverageResult | null {
   try {
-    // Navigate to report.counter (could be single object or array)
-    const report = xmlData?.report;
+    // Type guard to check if xmlData has the expected structure
+    if (!xmlData || typeof xmlData !== 'object') {
+      return null;
+    }
+
+    const data = xmlData as XmlReport;
+    const report = data.report;
     if (!report) {
       return null;
     }
@@ -99,7 +122,7 @@ function extractInstructionCounter(xmlData: any): CoverageResult | null {
 
     // Find INSTRUCTION counter
     const instructionCounter = counters.find(
-      (counter: any) => counter?.['@_type'] === 'INSTRUCTION'
+      (counter: XmlCounter) => counter?.['@_type'] === 'INSTRUCTION'
     );
 
     if (!instructionCounter) {

@@ -1,7 +1,7 @@
+import { isAbsolute, relative, sep } from 'node:path';
 import * as core from '@actions/core';
 import { exec } from '@actions/exec';
 import { glob } from 'glob';
-import { isAbsolute, relative, sep } from 'node:path';
 
 // Regex pattern to extract module names from Gradle-style output
 const GRADLE_PROJECT_REGEX = /Project '([^']+)'/g;
@@ -71,10 +71,10 @@ export function parseGradleProjects(output: string): string[] {
   }
 
   const modules: string[] = [];
-  let match: RegExpExecArray | null;
   const regex = new RegExp(GRADLE_PROJECT_REGEX);
 
-  while ((match = regex.exec(output)) !== null) {
+  let match = regex.exec(output);
+  while (match !== null) {
     const moduleName = match[1];
     // Filter out Root project entries
     if (!moduleName.includes('Root project')) {
@@ -82,6 +82,7 @@ export function parseGradleProjects(output: string): string[] {
       const normalized = moduleName.startsWith(':') ? moduleName : `:${moduleName}`;
       modules.push(normalized);
     }
+    match = regex.exec(output);
   }
 
   return modules;
@@ -159,9 +160,7 @@ export function extractModuleName(filePath: string): string {
 
     // If relative path starts with .., it's outside workspace
     if (modulePath.startsWith(`..${sep}`)) {
-      core.warning(
-        `Coverage file outside workspace: ${filePath}. Using filename only.`
-      );
+      core.warning(`Coverage file outside workspace: ${filePath}. Using filename only.`);
       // Use just the filename portion as fallback
       modulePath = filePath.split(sep).slice(-4, -3).join(sep) || 'unknown';
     }
