@@ -87,3 +87,44 @@ jobs:
     title: 'Module B Coverage'
     min-coverage: '80'
 ```
+
+## With Coverage History & Trends
+
+```yaml
+- name: Generate coverage report with history
+  uses: yshrsmz/kover-report-action@v1
+  with:
+    coverage-files: '**/build/reports/kover/report.xml'
+    min-coverage: '70'
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    # Enable history tracking
+    enable-history: 'true'
+    baseline-branch: 'main'      # Compare against main branch
+    history-retention: '50'       # Keep last 50 entries
+```
+
+This will:
+- Track coverage history across workflow runs
+- Show trend indicators (↑↓→) in PR comments
+- Compare current coverage against baseline branch
+- Store history in GitHub Artifacts (90-day retention)
+
+**Note:** Requires `actions: write` permission:
+
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+  actions: write  # Required for artifacts
+```
+
+## Example Files
+
+This directory contains complete workflow examples:
+
+- [`single-module.yml`](single-module.yml) - Simple single-module project
+- [`multi-module-glob.yml`](multi-module-glob.yml) - Multi-module with glob pattern discovery
+- [`multi-module-gradle.yml`](multi-module-gradle.yml) - Multi-module with Gradle discovery
+- [`advanced-with-outputs.yml`](advanced-with-outputs.yml) - Using action outputs in subsequent steps
+- [`with-history.yml`](with-history.yml) - Coverage history and trend tracking
