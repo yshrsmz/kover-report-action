@@ -121,7 +121,6 @@ function extractInstructionCounter(xmlData: unknown): CoverageResult | null {
     }
 
     // Find INSTRUCTION counter
-    // biome-ignore lint/suspicious/noExplicitAny: XML counter structure is dynamic
     const instructionCounter = counters.find(
       (counter: XmlCounter) => counter?.['@_type'] === 'INSTRUCTION'
     );

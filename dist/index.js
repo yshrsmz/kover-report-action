@@ -789,8 +789,9 @@ function extractInstructionCounter(xmlData) {
             counters = [counters];
         }
         // Find INSTRUCTION counter
+        const instructionCounter = counters.find(
         // biome-ignore lint/suspicious/noExplicitAny: XML counter structure is dynamic
-        const instructionCounter = counters.find((counter) => counter?.['@_type'] === 'INSTRUCTION');
+        (counter) => counter?.['@_type'] === 'INSTRUCTION');
         if (!instructionCounter) {
             return null;
         }

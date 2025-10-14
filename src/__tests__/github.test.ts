@@ -42,13 +42,13 @@ describe('postCoverageComment', () => {
   });
 
   it('should create a new comment when none exists', async () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [], // No existing comments
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     } as any);
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.createComment.mockResolvedValue({
       data: { id: 456 },
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     } as any);
 
     const report = '<!-- kover-coverage-report -->\n## Coverage Report';
@@ -70,17 +70,17 @@ describe('postCoverageComment', () => {
   });
 
   it('should update existing comment when found', async () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [
         { id: 100, body: 'Some other comment' },
         { id: 200, body: '<!-- kover-coverage-report -->\nOld report' },
         { id: 300, body: 'Another comment' },
       ],
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     } as any);
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.updateComment.mockResolvedValue({
       data: { id: 200 },
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     } as any);
 
     const report = '<!-- kover-coverage-report -->\n## New Coverage Report';
@@ -170,9 +170,9 @@ describe('postCoverageComment', () => {
   });
 
   it('should handle update comment failure', async () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     mockOctokit.rest.issues.listComments.mockResolvedValue({
       data: [{ id: 200, body: '<!-- kover-coverage-report -->\nOld' }],
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type casting
     } as any);
     mockOctokit.rest.issues.updateComment.mockRejectedValue(new Error('Update failed'));
 
