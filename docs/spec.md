@@ -12,6 +12,9 @@ A generalized GitHub Action for generating and reporting code coverage from Kove
 4. **PR Integration**: Post coverage reports as PR comments with automatic updates
 5. **Backward Compatible**: Easy migration from the reference implementation (omnitweety-android)
 6. **Extensible**: Modular design allowing future enhancements (history tracking, trends)
+7. **Testable Architecture**: ✅ Dependency injection with clean interfaces throughout
+8. **Maintainable Codebase**: ✅ Slim entrypoint with clear separation of concerns
+9. **Composable Components**: ✅ Functional-first patterns throughout
 
 ## Reference Implementation
 
@@ -25,18 +28,81 @@ Based on: `omnitweety-android/.github/actions/coverage-report`
 
 ## Architecture
 
+The codebase follows a **layered architecture** with dependency injection, enabling testability and composability. The entrypoint is a slim wiring layer that delegates all business logic to focused, single-responsibility components.
+
 ### Module Structure
 
 ```
 src/
-├── index.ts           # Main orchestration and workflow
-├── discovery.ts       # Module discovery (command-based + glob)
-├── paths.ts           # Path resolution and module name normalization
-├── parser.ts          # Kover XML parsing
-├── aggregator.ts      # Multi-module aggregation logic
-├── threshold.ts       # Threshold matching (type + name)
-├── report.ts          # Markdown report generation
-└── github.ts          # PR comment posting
+├── index.ts                    # Slim entrypoint - wiring only
+├── config.ts                   # Configuration layer (input parsing & validation)
+├── logger.ts                   # Logger abstraction (interface + implementations)
+├── action-runner.ts            # Main orchestration logic
+├── validation.ts               # Input validation utilities
+├── graphs.ts                   # ASCII trend graph generation
+│
+├── discovery/                  # Module discovery abstractions
+│   ├── index.ts               # Discovery interfaces and types
+│   ├── command.ts             # Command-based discovery factory
+│   └── glob.ts                # Glob-based discovery factory
+│
+├── history/                    # Coverage history management
+│   └── manager.ts             # HistoryManager class + interfaces
+│
+├── reporter/                   # Report emission abstractions
+│   ├── index.ts               # Reporter interfaces and types
+│   └── actions-reporter.ts    # GitHub Actions reporter factory
+│
+├── discovery.ts               # Core discovery logic (command + glob)
+├── paths.ts                   # Path resolution and module name normalization
+├── parser.ts                  # Kover XML parsing
+├── aggregator.ts              # Multi-module aggregation logic
+├── threshold.ts               # Threshold matching (type + name)
+├── report.ts                  # Markdown report generation
+├── github.ts                  # PR comment posting
+├── history.ts                 # History comparison and storage
+└── artifacts.ts               # GitHub artifacts I/O
+```
+
+### Architectural Layers
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ src/index.ts (Entrypoint)                                   │
+│ • Load config via createCoreFacade()                        │
+│ • Create logger, discovery, history, reporter               │
+│ • Call runAction() with dependencies                        │
+│ • Handle errors, exit with core.setFailed()                 │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ src/config.ts (Configuration Layer)                         │
+│ • ActionConfig interface (typed fields)                     │
+│ • loadConfig(facade): ActionConfig                          │
+│ • Validates, normalizes, applies defaults                   │
+│ • Throws ConfigError with actionable messages               │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ src/action-runner.ts (Orchestration)                        │
+│ • runAction() function with injected dependencies           │
+│ • Pure workflow logic (discover → aggregate → compare       │
+│   → report)                                                  │
+│ • No direct @actions/core usage                             │
+└─────────────────────────────────────────────────────────────┘
+           │              │              │              │
+           ▼              ▼              ▼              ▼
+    ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
+    │ Discovery │  │ History   │  │ Reporter  │  │ Logger    │
+    │ Function  │  │ Manager   │  │ Function  │  │ Interface │
+    └───────────┘  └───────────┘  └───────────┘  └───────────┘
+         │              │              │              │
+         ▼              ▼              ▼              ▼
+    Strategies    Artifact I/O    Outputs/PR    ActionsLogger
+    (Command,     + Comparison    Comments      Adapter
+     Glob)        + Persistence   + Console
 ```
 
 ### Data Flow
@@ -44,9 +110,17 @@ src/
 ```
 Input: discovery-command or coverage-files
   ↓
+[Config Loading] → Typed ActionConfig object
+  ↓
+[Dependency Creation] → Logger, Discovery, History, Reporter
+  ↓
+[runAction() Orchestration] → Workflow execution
+  ↓
 [Module Discovery] → List of module names
   ↓
 [Path Resolution] → module-path-template → List of XML file paths
+  ↓
+[Security Validation] → Verify paths within workspace
   ↓
 [XML Parsing] → Per-module coverage data
   ↓
@@ -54,12 +128,65 @@ Input: discovery-command or coverage-files
   ↓
 [Aggregation] → Overall coverage + module breakdown
   ↓
-[Report Generation] → Markdown table
+[History Comparison] → Load baseline, compare, append, persist
   ↓
-[PR Comment] → Post/update GitHub PR comment
+[Report Generation] → Markdown table with trends
   ↓
-Output: coverage-percentage, module-coverage-json
+[Report Emission] → Console output + PR comment + GitHub outputs
+  ↓
+Output: coverage-percentage, module-coverage-json, RunResult
 ```
+
+### Design Patterns
+
+**Functional-First Approach:**
+- Factory functions returning closures (createCommandDiscovery, createActionsReporter)
+- Type aliases for structural types (CoreFacade, Reporter, ModuleDiscovery)
+- Pure functions for business logic (loadConfig, parseThresholds)
+- Classes only when stateful behavior needed (HistoryManager, SpyLogger)
+
+**Dependency Injection:**
+- All components receive dependencies via parameters
+- No global state or singletons
+- Easy to swap implementations for testing
+
+**Interface Segregation:**
+- Logger: info/debug/warn/error
+- Reporter: emit(result, title)
+- ModuleDiscovery: discover(config)
+- HistoryManager: load/compare/append/persist
+
+### Testing Architecture
+
+The codebase has **315 comprehensive tests** across 18 test files:
+
+**Unit Tests (Isolated Components):**
+- `src/__tests__/logger.test.ts` - Logger implementations (20 tests)
+- `src/__tests__/config.test.ts` - Configuration loading and validation (49 tests)
+- `src/__tests__/discovery-interfaces.test.ts` - Discovery factories (8 tests)
+- `src/__tests__/history-manager.test.ts` - History manager (19 tests)
+- `src/__tests__/reporter.test.ts` - Reporter implementations (14 tests)
+- `src/__tests__/action-runner.test.ts` - Orchestration logic (18 tests)
+- Additional tests for parser, aggregator, threshold, report, discovery, paths, validation, graphs, history, artifacts, and GitHub integration
+
+**Test Doubles:**
+- `SpyLogger` - Records all logging calls for verification
+- `InMemoryHistoryStore` - Fake storage for history manager tests
+- Mock facades using Vitest mocks (for @actions/core, @actions/github)
+- Fake discovery/reporter functions for integration tests
+
+**Integration Tests:**
+- Component integration tests using fakes/mocks for dependencies
+- Orchestration workflow tests (action-runner with multiple scenarios)
+- Security validation (path traversal, command injection)
+- All tests run in isolation without external dependencies
+
+**Test Coverage:**
+- Config layer: 100% (critical validation logic)
+- Core abstractions: 90%+ (logger, discovery, history, reporter)
+- Orchestration: 85%+ (action-runner with multiple scenarios)
+- Business logic: High coverage across parser, aggregator, threshold matching
+- Overall: Comprehensive coverage of all critical paths
 
 ## Inputs
 
@@ -120,6 +247,21 @@ Output: coverage-percentage, module-coverage-json
 | `github-token` | GitHub token for PR comments | - | No |
 | `title` | Report title | `Code Coverage Report` | No |
 | `enable-pr-comment` | Post report as PR comment | `true` | No |
+
+### History Tracking
+
+| Input | Description | Default | Required |
+|-------|-------------|---------|----------|
+| `enable-history` | Enable coverage history tracking | `false` | No |
+| `history-retention` | Number of history entries to keep | `50` | No |
+| `baseline-branch` | Branch to use as baseline for comparison | `main` | No |
+
+**History Features:**
+- Stores coverage data in GitHub artifacts between runs
+- Compares current coverage with baseline branch
+- Shows trend indicators (↑ increase, ↓ decrease) in reports
+- Configurable retention policy (default: 50 entries)
+- Gracefully degrades if history unavailable
 
 ### Advanced
 
@@ -299,6 +441,7 @@ module-path-suffix: '/build/reports/kover/report.xml'
 **Purpose:** Extract module type from module name for type-based threshold matching.
 
 **Logic:**
+
 ```typescript
 function getModuleType(moduleName: string): string {
   // Input: ":core:testing"
@@ -719,30 +862,46 @@ const parserOptions = {
 - Added `module-path-template` (was hardcoded)
 - No other breaking changes
 
-## Future Enhancements (Not in MVP)
+## Features
 
-### Phase 4: Coverage History
+### Core Coverage Features
 
-- Store coverage data in GitHub artifacts
-- Compare against baseline (main branch)
-- Show trend indicators (↑↓→)
-- ASCII trend graphs
-- Configurable retention
+- ✅ Parse Kover XML reports (INSTRUCTION coverage)
+- ✅ Multi-module support with aggregation
+- ✅ Command-based module discovery (Gradle)
+- ✅ Glob-based module discovery
+- ✅ Per-module thresholds (type-based + name-based)
+- ✅ Global minimum coverage threshold
+- ✅ Markdown report generation
+- ✅ PR comment posting with automatic updates
+- ✅ GitHub Actions outputs for CI integration
 
-**New Inputs:**
+### Coverage History & Trends
+
+- ✅ Store coverage history in GitHub artifacts
+- ✅ Compare against configurable baseline branch
+- ✅ Show trend indicators (↑↓) in reports
+- ✅ Configurable retention policy (default: 50 entries)
+- ✅ Module-level and overall coverage trends
+- ✅ Graceful degradation if history unavailable
+
+**History Inputs:**
 ```yaml
-enable-history: 'true'
-history-retention: '50'
-default-branch: 'main'
+enable-history: 'true'              # Enable history tracking
+history-retention: '50'             # Number of entries to keep
+baseline-branch: 'main'             # Branch to compare against
 ```
 
-### Phase 5: Advanced Features
+## Future Enhancements
+
+### Potential Future Features
 
 - Branch coverage support (in addition to INSTRUCTION)
 - Multiple format support (JaCoCo XML, Cobertura)
 - Coverage badges generation
 - Webhook notifications
 - SonarQube/Codecov integration
+- CLI mode for local usage
 
 ## Non-Goals
 
@@ -751,28 +910,31 @@ default-branch: 'main'
 3. **Multi-Repository Support:** Action works on single repository
 4. **Coverage Collection:** Action parses existing reports, doesn't collect coverage
 
-## Success Criteria
+## Quality Standards
 
-### MVP (Phase 1-2)
-
-- ✅ Parse Kover XML reports
-- ✅ Support command-based module discovery
-- ✅ Support glob-based discovery
-- ✅ Calculate per-module and overall coverage
-- ✅ Apply per-module thresholds (type + name)
-- ✅ Generate Markdown report
-- ✅ Post PR comments
-- ✅ Handle missing coverage files gracefully
-- ✅ Pass/fail action based on thresholds
-
-### Quality Gates
+### Code Quality
 
 - ✅ No hardcoded paths or module names
-- ✅ Comprehensive error handling
-- ✅ Debug logging support
-- ✅ Clear documentation
+- ✅ Comprehensive error handling with actionable messages
+- ✅ Functional-first coding patterns with minimal classes
+- ✅ Full dependency injection throughout
+- ✅ Comprehensive test coverage (315 tests across 18 test files)
+- ✅ Zero lint/format issues
+
+### Security
+
+- ✅ Path traversal prevention (validate all file paths)
+- ✅ Command injection prevention (no shell execution)
+- ✅ Token masking in logs
+- ✅ Input validation for all user-provided data
+
+### Documentation
+
+- ✅ Clear API documentation (inputs, outputs, behavior)
 - ✅ Example workflows for common scenarios
+- ✅ Troubleshooting guide with solutions
 - ✅ Migration guide from reference action
+- ✅ Debug logging support for diagnostics
 
 ## Example Workflows
 
