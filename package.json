@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "all": "pnpm run format && pnpm run lint && pnpm run build"
+    "all": "pnpm run format && pnpm run lint && pnpm run build",
+    "prepare": "lefthook install"
   },
   "keywords": [
     "github-action",
@@ -39,6 +40,7 @@
     "@vercel/ncc": "^0.38.4",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
+    "lefthook": "^1.13.6",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }

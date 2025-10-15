@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: false
+  commands:
+    lint-and-format:
+      glob: "*.{ts,js,json,yml,yaml,md}"
+      run: pnpm run lint:fix
+      stage_fixed: true
+
+pre-push:
+  parallel: false
+  commands:
+    test:
+      run: pnpm run test
+    build:
+      run: pnpm run build
+    check-diff:
+      run: |
+        if ! git diff --quiet; then
+          echo "Error: There are uncommitted changes after running pre-push hooks"
+          echo "Please review and commit these changes:"
+          git diff --name-only
+          exit 1
+        fi
