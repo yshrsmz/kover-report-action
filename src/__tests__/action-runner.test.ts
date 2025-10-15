@@ -4,7 +4,7 @@ import type { ActionConfig } from '../config';
 import type { DiscoveryConfig, ModuleReference } from '../discovery/index';
 import type { HistoryManager } from '../history/manager';
 import { SpyLogger } from '../logger';
-import type { ReportResult, Reporter } from '../reporter';
+import type { Reporter, ReportResult } from '../reporter';
 
 /**
  * Create a fake discovery function for testing
@@ -442,8 +442,7 @@ describe('runAction', () => {
   test('handles unknown error types', async () => {
     const logger = new SpyLogger();
     const discovery = async () => {
-      // biome-ignore lint/style/noThrow: testing error handling
-      throw 'string error'; // Non-Error object
+      throw 'string error'; // Non-Error object for testing
     };
     const { reporter } = createSpyReporter();
 

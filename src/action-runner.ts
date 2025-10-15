@@ -5,7 +5,7 @@ import type { HistoryComparison } from './history';
 import type { CoverageSnapshot, HistoryContext, HistoryManager } from './history/manager';
 import type { Logger } from './logger';
 import { resolveSecurePath } from './paths';
-import type { ReportResult, Reporter } from './reporter';
+import type { Reporter, ReportResult } from './reporter';
 
 export interface RunResult {
   success: boolean;
@@ -117,7 +117,7 @@ export async function runAction(
           modules: Object.fromEntries(
             overall.modules
               .filter((m) => m.coverage !== null)
-              .map((m) => [m.module, m.coverage!.percentage])
+              .map((m) => [m.module, m.coverage?.percentage ?? 0])
           ),
         };
 
