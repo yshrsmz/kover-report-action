@@ -17,10 +17,13 @@ async function run(): Promise<void> {
   // Create logger
   const logger = createLogger(core);
 
+  // Hoist config for error handling
+  let config: ReturnType<typeof loadConfig> | undefined;
+
   try {
     // Load configuration
     const facade = createCoreFacade(core);
-    const config = loadConfig(facade);
+    config = loadConfig(facade);
 
     // Create discovery function based on mode
     const discovery =
@@ -64,7 +67,7 @@ async function run(): Promise<void> {
     // Catch any unhandled errors and mark action as failed
     if (error instanceof Error) {
       core.setFailed(`❌ Action failed: ${error.message}`);
-      if (error.stack) {
+      if (config?.debug && error.stack) {
         logger.debug(error.stack);
       }
     } else {
