@@ -8,7 +8,7 @@
 - ✅ Phase 1: Logger Abstraction - **COMPLETE**
 - ✅ Phase 2: Configuration Layer - **COMPLETE**
 - ✅ Phase 3: Manager Interfaces - **COMPLETE** (3A, 3B, & 3C all complete)
-- ⏳ Phase 4: Action Runner - Not started
+- ✅ Phase 4: Action Runner - **COMPLETE**
 - ⏳ Phase 5: Slim Entrypoint - Not started
 
 ---
@@ -1271,6 +1271,28 @@ describe('ActionRunner', () => {
   // More tests for error handling, history integration, etc...
 });
 ```
+
+**Migration Path**:
+1. ✅ Create `src/action-runner.ts` with `runAction()` function
+2. ✅ Create `HistoryManager` interface for dependency injection compatibility
+3. ✅ Rename class to `DefaultHistoryManager` (clean naming: interface gets simple name)
+4. ✅ Write comprehensive tests (18 tests, all passing)
+5. ✅ Fix coverage percentage regression in error handling
+6. ✅ Verify all tests pass and build succeeds
+
+**✅ COMPLETED** - Action Runner implemented with:
+- `runAction()` **function** (not class) - consistent with functional-first approach
+- `HistoryManager` interface exported from `history/manager.ts` for type safety
+- `DefaultHistoryManager` class implements `HistoryManager` interface
+- `RunResult` interface for structured return values
+- Full error handling with graceful degradation for history failures
+- **Coverage percentage preserved on failure** - returns actual coverage even when action fails
+- Path security validation integrated into workflow
+- Debug mode logging throughout
+- Comprehensive test suite covering success/failure paths, history integration, error handling
+- All 18 tests passing with proper mocking using `HistoryManager` interface
+
+**Note**: Initially implemented as `ActionRunner` class, then refactored to `runAction()` function to align with the functional-first architectural pattern. Since the orchestrator has no mutable state, a simple function with dependency injection is more appropriate than a class. Interface naming follows clean pattern: `HistoryManager` (interface) vs `DefaultHistoryManager` (implementation).
 
 ---
 

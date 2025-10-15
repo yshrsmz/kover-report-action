@@ -47,7 +47,19 @@ export interface CoverageSnapshot {
 }
 
 /**
- * History Manager - Coordinates coverage history operations
+ * Interface for history management operations
+ * Used for dependency injection in runAction and testing
+ */
+export interface HistoryManager {
+  load(): Promise<void>;
+  compare(snapshot: CoverageSnapshot): HistoryComparison | null;
+  append(context: HistoryContext, snapshot: CoverageSnapshot): void;
+  persist(): Promise<void>;
+  getEntryCount(): number;
+}
+
+/**
+ * Default implementation of HistoryManager
  *
  * Manages the lifecycle of coverage history:
  * 1. load() - Initialize from storage
@@ -55,7 +67,7 @@ export interface CoverageSnapshot {
  * 3. append() - Add new entry to history
  * 4. persist() - Save to storage
  */
-export class HistoryManager {
+export class DefaultHistoryManager implements HistoryManager {
   private history: HistoryEntry[] = [];
 
   constructor(

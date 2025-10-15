@@ -73,7 +73,7 @@ export function createActionsReporter(options: ActionsReporterOptions): Reporter
       } else {
         logger.warn(
           '⚠️  Cannot post PR comment: github-token not provided. ' +
-            'To enable PR comments, add: github-token: ${{ secrets.GITHUB_TOKEN }}'
+            `To enable PR comments, add: github-token: \${{ secrets.GITHUB_TOKEN }}`
         );
       }
     } else {

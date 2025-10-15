@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { HistoryManager, type HistoryStore } from '../history/manager';
+import { DefaultHistoryManager, type HistoryStore } from '../history/manager';
 
 /**
  * In-memory implementation of HistoryStore for testing
@@ -39,7 +39,7 @@ describe('HistoryManager', () => {
   describe('initialization', () => {
     test('starts with empty history', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       await manager.load();
 
@@ -59,7 +59,7 @@ describe('HistoryManager', () => {
       ]);
       await store.save(existingHistory);
 
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
       await manager.load();
 
       expect(manager.getEntryCount()).toBe(1);
@@ -69,7 +69,7 @@ describe('HistoryManager', () => {
       const store = new InMemoryHistoryStore();
       await store.save('invalid json {');
 
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
       await manager.load();
 
       expect(manager.getEntryCount()).toBe(0);
@@ -79,7 +79,7 @@ describe('HistoryManager', () => {
       const store = new InMemoryHistoryStore();
       await store.save(JSON.stringify({ not: 'an array' }));
 
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
       await manager.load();
 
       expect(manager.getEntryCount()).toBe(0);
@@ -89,7 +89,7 @@ describe('HistoryManager', () => {
   describe('append', () => {
     test('appends new entry to empty history', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       manager.append(
         { branch: 'main', commit: 'abc123', timestamp: '2025-01-01T00:00:00Z' },
@@ -101,7 +101,7 @@ describe('HistoryManager', () => {
 
     test('prepends new entry to existing history', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add first entry
       manager.append(
@@ -131,7 +131,7 @@ describe('HistoryManager', () => {
 
     test('trims history beyond retention limit', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 3, 'main'); // Only keep 3 entries
+      const manager = new DefaultHistoryManager(store, 3, 'main'); // Only keep 3 entries
 
       // Add 5 entries
       for (let i = 1; i <= 5; i++) {
@@ -152,7 +152,7 @@ describe('HistoryManager', () => {
   describe('compare', () => {
     test('returns null when history is empty', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       const comparison = manager.compare({
         overall: 80,
@@ -166,7 +166,7 @@ describe('HistoryManager', () => {
 
     test('returns null when no baseline branch entry exists', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add entry for different branch
       manager.append(
@@ -186,7 +186,7 @@ describe('HistoryManager', () => {
 
     test('compares with baseline and calculates positive delta', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add baseline entry
       manager.append(
@@ -211,7 +211,7 @@ describe('HistoryManager', () => {
 
     test('compares with baseline and calculates negative delta', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add baseline entry
       manager.append(
@@ -234,7 +234,7 @@ describe('HistoryManager', () => {
 
     test('handles new modules (not in baseline)', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add baseline with only :core
       manager.append(
@@ -257,7 +257,7 @@ describe('HistoryManager', () => {
 
     test('uses most recent baseline entry when multiple exist', () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       // Add older baseline
       manager.append(
@@ -287,7 +287,7 @@ describe('HistoryManager', () => {
   describe('persist', () => {
     test('saves empty history to store', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       await manager.persist();
 
@@ -298,7 +298,7 @@ describe('HistoryManager', () => {
 
     test('saves appended entries to store', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
 
       manager.append(
         { branch: 'main', commit: 'abc123', timestamp: '2025-01-01T00:00:00Z' },
@@ -318,7 +318,7 @@ describe('HistoryManager', () => {
 
     test('persisted data can be loaded by new manager instance', async () => {
       const store = new InMemoryHistoryStore();
-      const manager1 = new HistoryManager(store, 50, 'main');
+      const manager1 = new DefaultHistoryManager(store, 50, 'main');
 
       manager1.append(
         { branch: 'main', commit: 'abc123', timestamp: '2025-01-01T00:00:00Z' },
@@ -328,7 +328,7 @@ describe('HistoryManager', () => {
       await manager1.persist();
 
       // Create new manager instance with same store
-      const manager2 = new HistoryManager(store, 50, 'main');
+      const manager2 = new DefaultHistoryManager(store, 50, 'main');
       await manager2.load();
 
       expect(manager2.getEntryCount()).toBe(1);
@@ -362,7 +362,7 @@ describe('HistoryManager', () => {
       await store.save(existingHistory);
 
       // Load history
-      const manager = new HistoryManager(store, 50, 'main');
+      const manager = new DefaultHistoryManager(store, 50, 'main');
       await manager.load();
       expect(manager.getEntryCount()).toBe(1);
 
@@ -399,7 +399,7 @@ describe('HistoryManager', () => {
 
     test('retention trimming across multiple appends', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 5, 'main'); // Keep only 5
+      const manager = new DefaultHistoryManager(store, 5, 'main'); // Keep only 5
 
       // Add 10 entries
       for (let i = 1; i <= 10; i++) {
@@ -432,7 +432,7 @@ describe('HistoryManager', () => {
 
     test('handles multiple baseline branches correctly', async () => {
       const store = new InMemoryHistoryStore();
-      const manager = new HistoryManager(store, 50, 'develop'); // Baseline is 'develop'
+      const manager = new DefaultHistoryManager(store, 50, 'develop'); // Baseline is 'develop'
 
       // Add entries for main, develop, and feature branches
       manager.append(

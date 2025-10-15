@@ -17,17 +17,12 @@
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     },
     "codex": {
       "type": "stdio",
       "command": "codex",
-      "args": [
-        "mcp-server"
-      ],
+      "args": ["mcp-server"],
       "env": {}
     }
   }
