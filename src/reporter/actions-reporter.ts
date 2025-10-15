@@ -11,6 +11,7 @@ export interface ActionsReporterOptions {
   };
   githubToken?: string;
   enablePrComment: boolean;
+  debug?: boolean;
 }
 
 /**
@@ -22,7 +23,7 @@ export interface ActionsReporterOptions {
 export function createActionsReporter(options: ActionsReporterOptions): Reporter {
   return async (result: ReportResult, title: string): Promise<void> => {
     const { overall, comparison } = result;
-    const { logger, core, githubToken, enablePrComment } = options;
+    const { logger, core, githubToken, enablePrComment, debug } = options;
 
     // Set GitHub Actions outputs
     core.setOutput('coverage-percentage', overall.percentage.toString());
@@ -58,6 +59,11 @@ export function createActionsReporter(options: ActionsReporterOptions): Reporter
 
     if (missingModules.length > 0) {
       logger.info(`⚠️  Missing coverage: ${missingModules.length} modules`);
+      if (debug) {
+        for (const module of missingModules) {
+          logger.debug(`  ${module}: No coverage file found`);
+        }
+      }
     }
 
     logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -66,6 +72,9 @@ export function createActionsReporter(options: ActionsReporterOptions): Reporter
     if (enablePrComment) {
       logger.info('📝 Generating coverage report...');
       const report = generateMarkdownReport(overall, title, comparison);
+      if (debug) {
+        logger.debug(`Generated report (${report.length} characters)`);
+      }
 
       if (githubToken) {
         logger.info('💬 Posting coverage report to PR...');

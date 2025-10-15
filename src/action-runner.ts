@@ -151,6 +151,9 @@ export async function runAction(
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         logger.warn(`Failed to process coverage history: ${message}`);
+        if (config.debug && error instanceof Error && error.stack) {
+          logger.debug(error.stack);
+        }
       }
     }
 

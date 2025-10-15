@@ -49,6 +49,7 @@ async function run(): Promise<void> {
       core,
       githubToken: config.githubToken,
       enablePrComment: config.enablePrComment,
+      debug: config.debug,
     });
 
     // Run action workflow
