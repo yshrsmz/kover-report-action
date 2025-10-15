@@ -6,8 +6,6 @@ set -euo pipefail
 
 echo "Running on-create setup..."
 
-git config --global commit.gpgSign false
-
 # Example: ensure workspace directory exists
 if [ ! -d "/home/vscode/workspace" ]; then
   mkdir -p /home/vscode/workspace

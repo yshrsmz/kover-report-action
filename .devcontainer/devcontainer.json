@@ -37,5 +37,6 @@
     "-c",
     "cd ${localWorkspaceFolder} && if [ ! -f .devcontainer/runtime.env ]; then cp .devcontainer/runtime.env.template .devcontainer/runtime.env; fi"
   ],
-  "onCreateCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-create.sh"]
+  "onCreateCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-create.sh"],
+  "postStartCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-post-start.sh"]
 }
