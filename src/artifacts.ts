@@ -7,9 +7,9 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DefaultArtifactClient } from '@actions/artifact';
-import * as core from '@actions/core';
 import * as toolCache from '@actions/tool-cache';
 import { downloadArtifactArchive, findArtifactFromBaseline } from './github';
+import type { Logger } from './logger';
 
 /**
  * Default artifact name for coverage history
@@ -35,12 +35,14 @@ const HISTORY_TEMP_DIR = '.coverage-history-temp';
  * 2. Otherwise try to load from current run (for same-branch reruns without baseline comparison)
  * 3. Otherwise return empty array
  *
+ * @param logger Logger for output
  * @param artifactName Name of the artifact (default: 'coverage-history')
  * @param githubToken Optional GitHub token for cross-run artifact search
  * @param baselineBranch Optional baseline branch to search (e.g., 'main')
  * @returns JSON string of history data
  */
 export async function loadHistoryFromArtifacts(
+  logger: Logger,
   artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME,
   githubToken?: string,
   baselineBranch?: string
@@ -48,7 +50,7 @@ export async function loadHistoryFromArtifacts(
   const artifactClient = new DefaultArtifactClient();
 
   try {
-    core.debug(`Looking for artifact: ${artifactName}`);
+    logger.debug(`Looking for artifact: ${artifactName}`);
 
     let artifactId: number | undefined;
     let artifactNameFound: string | undefined;
@@ -58,7 +60,7 @@ export async function loadHistoryFromArtifacts(
     // If we have a token + baseline branch, always load from baseline
     // This ensures we compare against the baseline branch history, not current run
     if (githubToken && baselineBranch) {
-      core.debug(`Searching for artifact on baseline branch: ${baselineBranch}`);
+      logger.debug(`Searching for artifact on baseline branch: ${baselineBranch}`);
       const baselineArtifact = await findArtifactFromBaseline(
         githubToken,
         artifactName,
@@ -70,7 +72,9 @@ export async function loadHistoryFromArtifacts(
         artifactNameFound = baselineArtifact.name;
         downloadUrl = baselineArtifact.archive_download_url;
         isFromBaseline = true;
-        core.debug(`Found artifact from baseline branch: ${artifactNameFound} (ID: ${artifactId})`);
+        logger.debug(
+          `Found artifact from baseline branch: ${artifactNameFound} (ID: ${artifactId})`
+        );
       }
     } else {
       // No baseline configured, try current run (for same-branch reruns)
@@ -79,18 +83,18 @@ export async function loadHistoryFromArtifacts(
         if (artifact?.artifact) {
           artifactId = artifact.artifact.id;
           artifactNameFound = artifact.artifact.name;
-          core.debug(`Found artifact in current run: ${artifactNameFound} (ID: ${artifactId})`);
+          logger.debug(`Found artifact in current run: ${artifactNameFound} (ID: ${artifactId})`);
         }
       } catch (error) {
         // Artifact not in current run - this is expected
         const message = error instanceof Error ? error.message : String(error);
-        core.debug(`Artifact not found in current workflow run: ${message}`);
+        logger.debug(`Artifact not found in current workflow run: ${message}`);
       }
     }
 
     // If no artifact found, return empty array
     if (!artifactId) {
-      core.debug(`Artifact not found: ${artifactName}`);
+      logger.debug(`Artifact not found: ${artifactName}`);
       return '[]';
     }
 
@@ -112,29 +116,29 @@ export async function loadHistoryFromArtifacts(
       await toolCache.extractZip(zipPath, tempDir);
 
       downloadPath = tempDir;
-      core.debug(`Extracted baseline artifact to: ${downloadPath}`);
+      logger.debug(`Extracted baseline artifact to: ${downloadPath}`);
     } else {
       // Current run artifact can use the runtime token
       const downloadResponse = await artifactClient.downloadArtifact(artifactId, {
         path: tempDir,
       });
       downloadPath = downloadResponse.downloadPath || tempDir;
-      core.debug(`Downloaded current run artifact to: ${downloadPath}`);
+      logger.debug(`Downloaded current run artifact to: ${downloadPath}`);
     }
 
     // Read history file
     const historyPath = join(downloadPath, HISTORY_FILENAME);
     const historyJson = await readFile(historyPath, 'utf-8');
 
-    core.debug(`Loaded history: ${historyJson.length} bytes`);
+    logger.debug(`Loaded history: ${historyJson.length} bytes`);
 
     return historyJson;
   } catch (error) {
     // Artifact might not exist on first run - this is expected
     if (error instanceof Error) {
-      core.debug(`Could not load history artifact: ${error.message}`);
+      logger.debug(`Could not load history artifact: ${error.message}`);
     } else {
-      core.debug('Could not load history artifact: unknown error');
+      logger.debug('Could not load history artifact: unknown error');
     }
     return '[]'; // Return empty array
   }
@@ -142,10 +146,12 @@ export async function loadHistoryFromArtifacts(
 
 /**
  * Save coverage history to GitHub artifacts
+ * @param logger Logger for output
  * @param historyJson JSON string of history data
  * @param artifactName Name of the artifact (default: 'coverage-history')
  */
 export async function saveHistoryToArtifacts(
+  logger: Logger,
   historyJson: string,
   artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
 ): Promise<void> {
@@ -162,7 +168,7 @@ export async function saveHistoryToArtifacts(
     const historyPath = join(tempDir, HISTORY_FILENAME);
     await writeFile(historyPath, historyJson, 'utf-8');
 
-    core.debug(`Wrote history to: ${historyPath}`);
+    logger.debug(`Wrote history to: ${historyPath}`);
 
     // Upload artifact
     // Note: v2 API automatically handles replacing existing artifacts with the same name
@@ -176,16 +182,16 @@ export async function saveHistoryToArtifacts(
     );
 
     if (uploadResponse.id) {
-      core.info(`💾 Uploaded coverage history artifact (ID: ${uploadResponse.id})`);
+      logger.info(`💾 Uploaded coverage history artifact (ID: ${uploadResponse.id})`);
     } else {
-      core.info('💾 Uploaded coverage history artifact');
+      logger.info('💾 Uploaded coverage history artifact');
     }
   } catch (error) {
     // Log error but don't fail the action
     if (error instanceof Error) {
-      core.warning(`Failed to save history artifact: ${error.message}`);
+      logger.warn(`Failed to save history artifact: ${error.message}`);
     } else {
-      core.warning('Failed to save history artifact: unknown error');
+      logger.warn('Failed to save history artifact: unknown error');
     }
   }
 }

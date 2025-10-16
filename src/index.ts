@@ -37,11 +37,12 @@ async function run(): Promise<void> {
           {
             load: () =>
               loadHistoryFromArtifacts(
+                logger,
                 undefined, // Use default artifact name
                 config?.githubToken,
                 config?.baselineBranch
               ),
-            save: (data) => saveHistoryToArtifacts(data),
+            save: (data) => saveHistoryToArtifacts(logger, data),
           },
           config.historyRetention,
           config.baselineBranch

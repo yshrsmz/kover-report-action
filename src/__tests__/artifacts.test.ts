@@ -1,6 +1,7 @@
 import type { DefaultArtifactClient } from '@actions/artifact';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HISTORY_FILENAME, loadHistoryFromArtifacts, saveHistoryToArtifacts } from '../artifacts';
+import { SpyLogger } from '../logger';
 
 // Mock @actions/artifact
 vi.mock('@actions/artifact', () => {
@@ -46,8 +47,11 @@ vi.mock('@actions/tool-cache', () => ({
 }));
 
 describe('loadHistoryFromArtifacts', () => {
+  let logger: SpyLogger;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    logger = new SpyLogger();
   });
 
   it('should load history from existing artifact', async () => {
@@ -82,7 +86,7 @@ describe('loadHistoryFromArtifacts', () => {
     ]);
     vi.mocked(readFile).mockResolvedValue(historyJson);
 
-    const result = await loadHistoryFromArtifacts();
+    const result = await loadHistoryFromArtifacts(logger);
 
     expect(result).toBe(historyJson);
     expect(mockClient.getArtifact).toHaveBeenCalledWith('coverage-history');
@@ -98,7 +102,7 @@ describe('loadHistoryFromArtifacts', () => {
       artifact: undefined,
     } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
-    const result = await loadHistoryFromArtifacts();
+    const result = await loadHistoryFromArtifacts(logger);
 
     expect(result).toBe('[]');
   });
@@ -110,7 +114,7 @@ describe('loadHistoryFromArtifacts', () => {
     // Mock artifact API error
     vi.mocked(mockClient.getArtifact).mockRejectedValue(new Error('Artifact not found'));
 
-    const result = await loadHistoryFromArtifacts();
+    const result = await loadHistoryFromArtifacts(logger);
 
     expect(result).toBe('[]');
   });
@@ -126,7 +130,7 @@ describe('loadHistoryFromArtifacts', () => {
     // Mock download failure
     vi.mocked(mockClient.downloadArtifact).mockRejectedValue(new Error('Download failed'));
 
-    const result = await loadHistoryFromArtifacts();
+    const result = await loadHistoryFromArtifacts(logger);
 
     expect(result).toBe('[]');
   });
@@ -139,7 +143,7 @@ describe('loadHistoryFromArtifacts', () => {
       artifact: undefined,
     } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
-    await loadHistoryFromArtifacts('custom-history');
+    await loadHistoryFromArtifacts(logger, 'custom-history');
 
     expect(mockClient.getArtifact).toHaveBeenCalledWith('custom-history');
   });
@@ -169,7 +173,7 @@ describe('loadHistoryFromArtifacts', () => {
     const historyJson = JSON.stringify([{ timestamp: '2025-01-15T10:30:00Z' }]);
     vi.mocked(readFile).mockResolvedValue(historyJson);
 
-    const result = await loadHistoryFromArtifacts('coverage-history', 'test-token', 'main');
+    const result = await loadHistoryFromArtifacts(logger, 'coverage-history', 'test-token', 'main');
 
     expect(result).toBe(historyJson);
     expect(findArtifactFromBaseline).toHaveBeenCalledWith('test-token', 'coverage-history', 'main');
@@ -195,7 +199,7 @@ describe('loadHistoryFromArtifacts', () => {
       artifact: undefined,
     } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
-    const result = await loadHistoryFromArtifacts('coverage-history', undefined, 'main');
+    const result = await loadHistoryFromArtifacts(logger, 'coverage-history', undefined, 'main');
 
     expect(result).toBe('[]');
     expect(findArtifactFromBaseline).not.toHaveBeenCalled();
@@ -210,7 +214,12 @@ describe('loadHistoryFromArtifacts', () => {
       artifact: undefined,
     } as unknown as Awaited<ReturnType<DefaultArtifactClient['getArtifact']>>);
 
-    const result = await loadHistoryFromArtifacts('coverage-history', 'test-token', undefined);
+    const result = await loadHistoryFromArtifacts(
+      logger,
+      'coverage-history',
+      'test-token',
+      undefined
+    );
 
     expect(result).toBe('[]');
     expect(findArtifactFromBaseline).not.toHaveBeenCalled();
@@ -239,7 +248,7 @@ describe('loadHistoryFromArtifacts', () => {
     const historyJson = JSON.stringify([{ timestamp: '2025-01-15T10:30:00Z' }]);
     vi.mocked(readFile).mockResolvedValue(historyJson);
 
-    const result = await loadHistoryFromArtifacts('coverage-history', 'test-token', 'main');
+    const result = await loadHistoryFromArtifacts(logger, 'coverage-history', 'test-token', 'main');
 
     expect(result).toBe(historyJson);
     // Should always search baseline when token + branch provided (for comparing against baseline)
@@ -266,7 +275,7 @@ describe('loadHistoryFromArtifacts', () => {
     // Mock baseline search returns null
     vi.mocked(findArtifactFromBaseline).mockResolvedValue(null);
 
-    const result = await loadHistoryFromArtifacts('coverage-history', 'test-token', 'main');
+    const result = await loadHistoryFromArtifacts(logger, 'coverage-history', 'test-token', 'main');
 
     expect(result).toBe('[]');
     expect(findArtifactFromBaseline).toHaveBeenCalledWith('test-token', 'coverage-history', 'main');
@@ -274,8 +283,11 @@ describe('loadHistoryFromArtifacts', () => {
 });
 
 describe('saveHistoryToArtifacts', () => {
+  let logger: SpyLogger;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    logger = new SpyLogger();
   });
 
   it('should save history to artifact', async () => {
@@ -298,7 +310,7 @@ describe('saveHistoryToArtifacts', () => {
       size: 1024,
     });
 
-    await saveHistoryToArtifacts(historyJson);
+    await saveHistoryToArtifacts(logger, historyJson);
 
     expect(writeFile).toHaveBeenCalledWith(
       expect.stringContaining(HISTORY_FILENAME),
@@ -322,7 +334,7 @@ describe('saveHistoryToArtifacts', () => {
     vi.mocked(mockClient.uploadArtifact).mockRejectedValue(new Error('Upload failed'));
 
     // Should not throw
-    await expect(saveHistoryToArtifacts('{}')).resolves.toBeUndefined();
+    await expect(saveHistoryToArtifacts(logger, '{}')).resolves.toBeUndefined();
   });
 
   it('should use custom artifact name', async () => {
@@ -334,7 +346,7 @@ describe('saveHistoryToArtifacts', () => {
       size: 1024,
     });
 
-    await saveHistoryToArtifacts('{}', 'custom-history');
+    await saveHistoryToArtifacts(logger, '{}', 'custom-history');
 
     expect(mockClient.uploadArtifact).toHaveBeenCalledWith(
       'custom-history',
@@ -357,7 +369,7 @@ describe('saveHistoryToArtifacts', () => {
       size: 1024,
     });
 
-    await saveHistoryToArtifacts('{}');
+    await saveHistoryToArtifacts(logger, '{}');
 
     expect(mkdir).toHaveBeenCalledWith(expect.any(String), { recursive: true });
   });
@@ -371,7 +383,7 @@ describe('saveHistoryToArtifacts', () => {
       size: 1024,
     });
 
-    await saveHistoryToArtifacts('{}');
+    await saveHistoryToArtifacts(logger, '{}');
 
     expect(mockClient.uploadArtifact).toHaveBeenCalledWith(
       expect.any(String),
