@@ -1,4 +1,4 @@
-import * as core from '@actions/core';
+import type { Logger } from './logger';
 
 /**
  * Threshold configuration object
@@ -41,26 +41,28 @@ export function getModuleType(moduleName: string): string {
  * 3. 'default' key in thresholds
  * 4. minCoverage parameter
  * 5. Hard default: 0
+ * @param logger Logger for output
  * @param moduleName Module name (e.g., ':core:testing')
  * @param thresholds Threshold configuration
  * @param minCoverage Global minimum coverage (fallback)
  * @returns Threshold percentage for the module
  */
 export function getThresholdForModule(
+  logger: Logger,
   moduleName: string,
   thresholds: ThresholdConfig,
   minCoverage: number
 ): number {
   // 1. Try exact module name match
   if (moduleName in thresholds) {
-    core.debug(`Threshold for ${moduleName}: ${thresholds[moduleName]} (exact match)`);
+    logger.debug(`Threshold for ${moduleName}: ${thresholds[moduleName]} (exact match)`);
     return thresholds[moduleName];
   }
 
   // 2. Try module type match
   const moduleType = getModuleType(moduleName);
   if (moduleType !== 'default' && moduleType in thresholds) {
-    core.debug(
+    logger.debug(
       `Threshold for ${moduleName}: ${thresholds[moduleType]} (type match: ${moduleType})`
     );
     return thresholds[moduleType];
@@ -68,12 +70,12 @@ export function getThresholdForModule(
 
   // 3. Try 'default' key
   if ('default' in thresholds) {
-    core.debug(`Threshold for ${moduleName}: ${thresholds.default} (default)`);
+    logger.debug(`Threshold for ${moduleName}: ${thresholds.default} (default)`);
     return thresholds.default;
   }
 
   // 4. Use minCoverage parameter
-  core.debug(`Threshold for ${moduleName}: ${minCoverage} (min-coverage)`);
+  logger.debug(`Threshold for ${moduleName}: ${minCoverage} (min-coverage)`);
   return minCoverage;
 }
 
