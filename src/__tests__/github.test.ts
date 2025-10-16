@@ -7,7 +7,7 @@ vi.mock('@actions/core');
 vi.mock('@actions/github');
 
 // Import after mocking
-import { postCoverageComment } from '../github';
+import { findArtifactFromBaseline, postCoverageComment } from '../github';
 
 describe('postCoverageComment', () => {
   const mockOctokit = {
@@ -171,5 +171,375 @@ describe('postCoverageComment', () => {
     await expect(postCoverageComment('test-token', 'report')).resolves.not.toThrow();
 
     expect(core.warning).toHaveBeenCalledWith('Failed to post coverage comment: Update failed');
+  });
+});
+
+describe('findArtifactFromBaseline', () => {
+  const mockOctokit = {
+    rest: {
+      actions: {
+        listWorkflowRunsForRepo: vi.fn(),
+        listWorkflowRunArtifacts: vi.fn(),
+      },
+    },
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(core.debug).mockImplementation(() => {});
+
+    // @ts-expect-error - mocking github context
+    github.context = {
+      repo: { owner: 'test-owner', repo: 'test-repo' },
+    };
+
+    // biome-ignore lint/suspicious/noExplicitAny: Mock type casting for test setup
+    vi.mocked(github.getOctokit).mockReturnValue(mockOctokit as any);
+  });
+
+  it('should find artifact from baseline branch', async () => {
+    // Mock workflow runs
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [
+          { id: 1001, name: 'CI', conclusion: 'success' },
+          { id: 1002, name: 'CI', conclusion: 'success' },
+        ],
+      },
+    });
+
+    // Mock artifacts for first run
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'coverage-history',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+          {
+            id: 5002,
+            name: 'other-artifact',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toEqual({
+      id: 5001,
+      name: 'coverage-history',
+      archive_download_url: expect.any(String),
+    });
+    expect(mockOctokit.rest.actions.listWorkflowRunsForRepo).toHaveBeenCalledWith({
+      owner: 'test-owner',
+      repo: 'test-repo',
+      branch: 'main',
+      status: 'completed',
+      per_page: 100,
+      page: 1,
+    });
+    expect(mockOctokit.rest.actions.listWorkflowRunArtifacts).toHaveBeenCalledWith({
+      owner: 'test-owner',
+      repo: 'test-repo',
+      run_id: 1001,
+      per_page: 100,
+    });
+  });
+
+  it('should paginate through workflow runs until artifact is found', async () => {
+    // Mock first page - no artifact
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValueOnce({
+      data: {
+        workflow_runs: [{ id: 1001, name: 'CI', conclusion: 'success' }],
+      },
+    });
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'other-artifact',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+        ],
+      },
+    });
+
+    // Mock second page - artifact found
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValueOnce({
+      data: {
+        workflow_runs: [{ id: 1002, name: 'CI', conclusion: 'success' }],
+      },
+    });
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5002,
+            name: 'coverage-history',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toEqual({
+      id: 5002,
+      name: 'coverage-history',
+      archive_download_url:
+        'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+    });
+    expect(mockOctokit.rest.actions.listWorkflowRunsForRepo).toHaveBeenCalledTimes(2);
+    expect(mockOctokit.rest.actions.listWorkflowRunsForRepo).toHaveBeenNthCalledWith(1, {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      branch: 'main',
+      status: 'completed',
+      per_page: 100,
+      page: 1,
+    });
+    expect(mockOctokit.rest.actions.listWorkflowRunsForRepo).toHaveBeenNthCalledWith(2, {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      branch: 'main',
+      status: 'completed',
+      per_page: 100,
+      page: 2,
+    });
+  });
+
+  it('should skip expired artifacts', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [
+          { id: 1001, name: 'CI', conclusion: 'success' },
+          { id: 1002, name: 'CI', conclusion: 'success' },
+        ],
+      },
+    });
+
+    // First run has expired artifact
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'coverage-history',
+            expired: true,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+        ],
+      },
+    });
+
+    // Second run has valid artifact
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5002,
+            name: 'coverage-history',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toEqual({
+      id: 5002,
+      name: 'coverage-history',
+      archive_download_url:
+        'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+    });
+  });
+
+  it('should return null when artifact not found', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [{ id: 1001, name: 'CI', conclusion: 'success' }],
+      },
+    });
+
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValue({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'other-artifact',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toBeNull();
+  });
+
+  it('should return null when no workflow runs exist', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toBeNull();
+    expect(mockOctokit.rest.actions.listWorkflowRunArtifacts).not.toHaveBeenCalled();
+  });
+
+  it('should handle API errors gracefully', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockRejectedValue(new Error('API Error'));
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toBeNull();
+    expect(core.warning).toHaveBeenCalledWith('Failed to search for baseline artifact: API Error');
+  });
+
+  it('should handle artifact listing errors for specific runs', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [
+          { id: 1001, name: 'CI', conclusion: 'success' },
+          { id: 1002, name: 'CI', conclusion: 'success' },
+        ],
+      },
+    });
+
+    // First run errors
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockRejectedValueOnce(
+      new Error('Artifact list failed')
+    );
+
+    // Second run succeeds
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValueOnce({
+      data: {
+        artifacts: [
+          {
+            id: 5002,
+            name: 'coverage-history',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toEqual({
+      id: 5002,
+      name: 'coverage-history',
+      archive_download_url:
+        'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+    });
+    expect(core.debug).toHaveBeenCalledWith(
+      'Could not list artifacts for run #1001: Artifact list failed'
+    );
+  });
+
+  it('should stop after max pages', async () => {
+    // Always return runs to simulate many pages
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [{ id: 1001, name: 'CI', conclusion: 'success' }],
+      },
+    });
+
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValue({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'other-artifact',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toBeNull();
+    // Should stop at max pages (5 with increased per_page)
+    expect(mockOctokit.rest.actions.listWorkflowRunsForRepo).toHaveBeenCalledTimes(5);
+  });
+
+  it('should check multiple artifacts in a single run', async () => {
+    mockOctokit.rest.actions.listWorkflowRunsForRepo.mockResolvedValue({
+      data: {
+        workflow_runs: [{ id: 1001, name: 'CI', conclusion: 'success' }],
+      },
+    });
+
+    mockOctokit.rest.actions.listWorkflowRunArtifacts.mockResolvedValue({
+      data: {
+        artifacts: [
+          {
+            id: 5001,
+            name: 'artifact1',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5001/zip',
+          },
+          {
+            id: 5002,
+            name: 'artifact2',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
+          },
+          {
+            id: 5003,
+            name: 'coverage-history',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5003/zip',
+          },
+          {
+            id: 5004,
+            name: 'artifact4',
+            expired: false,
+            archive_download_url:
+              'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5004/zip',
+          },
+        ],
+      },
+    });
+
+    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+
+    expect(result).toEqual({
+      id: 5003,
+      name: 'coverage-history',
+      archive_download_url:
+        'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5003/zip',
+    });
   });
 });

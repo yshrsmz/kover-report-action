@@ -35,7 +35,12 @@ async function run(): Promise<void> {
     const history = config.enableHistory
       ? new DefaultHistoryManager(
           {
-            load: () => loadHistoryFromArtifacts(),
+            load: () =>
+              loadHistoryFromArtifacts(
+                undefined, // Use default artifact name
+                config?.githubToken,
+                config?.baselineBranch
+              ),
             save: (data) => saveHistoryToArtifacts(data),
           },
           config.historyRetention,

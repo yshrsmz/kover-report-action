@@ -8,6 +8,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DefaultArtifactClient } from '@actions/artifact';
 import * as core from '@actions/core';
+import * as toolCache from '@actions/tool-cache';
+import { downloadArtifactArchive, findArtifactFromBaseline } from './github';
 
 /**
  * Default artifact name for coverage history
@@ -27,26 +29,70 @@ const HISTORY_TEMP_DIR = '.coverage-history-temp';
 /**
  * Load coverage history from GitHub artifacts
  * Returns empty array if artifact doesn't exist or can't be loaded
+ *
+ * Strategy:
+ * 1. If token + baseline branch provided, always load from baseline branch (for comparing against baseline)
+ * 2. Otherwise try to load from current run (for same-branch reruns without baseline comparison)
+ * 3. Otherwise return empty array
+ *
  * @param artifactName Name of the artifact (default: 'coverage-history')
+ * @param githubToken Optional GitHub token for cross-run artifact search
+ * @param baselineBranch Optional baseline branch to search (e.g., 'main')
  * @returns JSON string of history data
  */
 export async function loadHistoryFromArtifacts(
-  artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME
+  artifactName: string = COVERAGE_HISTORY_ARTIFACT_NAME,
+  githubToken?: string,
+  baselineBranch?: string
 ): Promise<string> {
   const artifactClient = new DefaultArtifactClient();
 
   try {
     core.debug(`Looking for artifact: ${artifactName}`);
 
-    // First, get the artifact metadata to obtain its ID
-    const artifact = await artifactClient.getArtifact(artifactName);
+    let artifactId: number | undefined;
+    let artifactNameFound: string | undefined;
+    let downloadUrl: string | undefined;
+    let isFromBaseline = false;
 
-    if (!artifact || !artifact.artifact) {
+    // If we have a token + baseline branch, always load from baseline
+    // This ensures we compare against the baseline branch history, not current run
+    if (githubToken && baselineBranch) {
+      core.debug(`Searching for artifact on baseline branch: ${baselineBranch}`);
+      const baselineArtifact = await findArtifactFromBaseline(
+        githubToken,
+        artifactName,
+        baselineBranch
+      );
+
+      if (baselineArtifact) {
+        artifactId = baselineArtifact.id;
+        artifactNameFound = baselineArtifact.name;
+        downloadUrl = baselineArtifact.archive_download_url;
+        isFromBaseline = true;
+        core.debug(`Found artifact from baseline branch: ${artifactNameFound} (ID: ${artifactId})`);
+      }
+    } else {
+      // No baseline configured, try current run (for same-branch reruns)
+      try {
+        const artifact = await artifactClient.getArtifact(artifactName);
+        if (artifact?.artifact) {
+          artifactId = artifact.artifact.id;
+          artifactNameFound = artifact.artifact.name;
+          core.debug(`Found artifact in current run: ${artifactNameFound} (ID: ${artifactId})`);
+        }
+      } catch (error) {
+        // Artifact not in current run - this is expected
+        const message = error instanceof Error ? error.message : String(error);
+        core.debug(`Artifact not found in current workflow run: ${message}`);
+      }
+    }
+
+    // If no artifact found, return empty array
+    if (!artifactId) {
       core.debug(`Artifact not found: ${artifactName}`);
       return '[]';
     }
-
-    core.debug(`Found artifact: ${artifact.artifact.name} (ID: ${artifact.artifact.id})`);
 
     // Create temp directory for download
     const tempDir = join(process.cwd(), HISTORY_TEMP_DIR);
@@ -54,13 +100,27 @@ export async function loadHistoryFromArtifacts(
       await mkdir(tempDir, { recursive: true });
     }
 
-    // Download artifact using its ID
-    const downloadResponse = await artifactClient.downloadArtifact(artifact.artifact.id, {
-      path: tempDir,
-    });
+    let downloadPath: string;
 
-    const downloadPath = downloadResponse.downloadPath || tempDir;
-    core.debug(`Downloaded artifact to: ${downloadPath}`);
+    // Download artifact - use GitHub API for baseline artifacts, runtime client for current run
+    if (isFromBaseline && downloadUrl && githubToken) {
+      // Cross-run download requires GitHub API with provided token
+      const zipPath = join(tempDir, `${artifactName}.zip`);
+      await downloadArtifactArchive(githubToken, downloadUrl, zipPath);
+
+      // Extract the ZIP file using cross-platform tool-cache
+      await toolCache.extractZip(zipPath, tempDir);
+
+      downloadPath = tempDir;
+      core.debug(`Extracted baseline artifact to: ${downloadPath}`);
+    } else {
+      // Current run artifact can use the runtime token
+      const downloadResponse = await artifactClient.downloadArtifact(artifactId, {
+        path: tempDir,
+      });
+      downloadPath = downloadResponse.downloadPath || tempDir;
+      core.debug(`Downloaded current run artifact to: ${downloadPath}`);
+    }
 
     // Read history file
     const historyPath = join(downloadPath, HISTORY_FILENAME);
