@@ -62,6 +62,7 @@ export async function loadHistoryFromArtifacts(
     if (githubToken && baselineBranch) {
       logger.debug(`Searching for artifact on baseline branch: ${baselineBranch}`);
       const baselineArtifact = await findArtifactFromBaseline(
+        logger,
         githubToken,
         artifactName,
         baselineBranch
@@ -110,7 +111,7 @@ export async function loadHistoryFromArtifacts(
     if (isFromBaseline && downloadUrl && githubToken) {
       // Cross-run download requires GitHub API with provided token
       const zipPath = join(tempDir, `${artifactName}.zip`);
-      await downloadArtifactArchive(githubToken, downloadUrl, zipPath);
+      await downloadArtifactArchive(logger, githubToken, downloadUrl, zipPath);
 
       // Extract the ZIP file using cross-platform tool-cache
       await toolCache.extractZip(zipPath, tempDir);

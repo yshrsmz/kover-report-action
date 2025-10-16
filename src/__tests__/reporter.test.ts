@@ -26,6 +26,7 @@ beforeEach(() => {
 function createMockCore() {
   return {
     setOutput: vi.fn(),
+    setSecret: vi.fn(),
   };
 }
 
@@ -334,6 +335,8 @@ describe('createActionsReporter', () => {
 
     expect(logger.hasMessage('info', '💬 Posting coverage report to PR...')).toBe(true);
     expect(postCoverageComment).toHaveBeenCalledWith(
+      logger,
+      expect.any(Function),
       'ghp_test123',
       '# Mock Markdown Report\n\nCoverage: 80%'
     );

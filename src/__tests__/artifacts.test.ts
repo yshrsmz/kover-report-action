@@ -176,8 +176,14 @@ describe('loadHistoryFromArtifacts', () => {
     const result = await loadHistoryFromArtifacts(logger, 'coverage-history', 'test-token', 'main');
 
     expect(result).toBe(historyJson);
-    expect(findArtifactFromBaseline).toHaveBeenCalledWith('test-token', 'coverage-history', 'main');
+    expect(findArtifactFromBaseline).toHaveBeenCalledWith(
+      logger,
+      'test-token',
+      'coverage-history',
+      'main'
+    );
     expect(downloadArtifactArchive).toHaveBeenCalledWith(
+      logger,
       'test-token',
       'https://api.github.com/repos/owner/repo/actions/artifacts/999/zip',
       expect.stringContaining('coverage-history.zip')
@@ -252,10 +258,16 @@ describe('loadHistoryFromArtifacts', () => {
 
     expect(result).toBe(historyJson);
     // Should always search baseline when token + branch provided (for comparing against baseline)
-    expect(findArtifactFromBaseline).toHaveBeenCalledWith('test-token', 'coverage-history', 'main');
+    expect(findArtifactFromBaseline).toHaveBeenCalledWith(
+      logger,
+      'test-token',
+      'coverage-history',
+      'main'
+    );
     // Should NOT check current run when baseline is configured
     expect(mockClient.getArtifact).not.toHaveBeenCalled();
     expect(downloadArtifactArchive).toHaveBeenCalledWith(
+      logger,
       'test-token',
       'https://api.github.com/repos/owner/repo/actions/artifacts/999/zip',
       expect.stringContaining('coverage-history.zip')
@@ -278,7 +290,12 @@ describe('loadHistoryFromArtifacts', () => {
     const result = await loadHistoryFromArtifacts(logger, 'coverage-history', 'test-token', 'main');
 
     expect(result).toBe('[]');
-    expect(findArtifactFromBaseline).toHaveBeenCalledWith('test-token', 'coverage-history', 'main');
+    expect(findArtifactFromBaseline).toHaveBeenCalledWith(
+      logger,
+      'test-token',
+      'coverage-history',
+      'main'
+    );
   });
 });
 

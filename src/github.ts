@@ -1,5 +1,5 @@
-import * as core from '@actions/core';
 import * as github from '@actions/github';
+import type { Logger } from './logger';
 import { COMMENT_IDENTIFIER } from './report';
 
 /**
@@ -18,27 +18,34 @@ type Octokit = ReturnType<typeof github.getOctokit>;
  * - Errors are logged as warnings (doesn't fail action)
  *
  * Security:
- * - Token is masked in logs via core.setSecret()
+ * - Token is masked in logs via setSecret()
  * - Token never appears in error messages or reports
  *
+ * @param logger Logger for output
+ * @param setSecret Function to mask secret in logs
  * @param token GitHub token for API access (empty string to skip)
  * @param report Markdown-formatted coverage report with COMMENT_IDENTIFIER
  */
-export async function postCoverageComment(token: string, report: string): Promise<void> {
+export async function postCoverageComment(
+  logger: Logger,
+  setSecret: (secret: string) => void,
+  token: string,
+  report: string
+): Promise<void> {
   try {
     // Check if token is provided
     if (!token) {
-      core.info('No GitHub token provided. Skipping PR comment posting.');
+      logger.info('No GitHub token provided. Skipping PR comment posting.');
       return;
     }
 
     // Mask token in logs for security
-    core.setSecret(token);
+    setSecret(token);
 
     // Check if running in PR context
     const pullRequest = github.context.payload.pull_request;
     if (!pullRequest) {
-      core.info('Not running in a pull request context. Skipping PR comment.');
+      logger.info('Not running in a pull request context. Skipping PR comment.');
       return;
     }
 
@@ -46,36 +53,36 @@ export async function postCoverageComment(token: string, report: string): Promis
     const { owner, repo } = github.context.repo;
     const prNumber = pullRequest.number;
 
-    core.info(`Posting coverage comment to PR #${prNumber}`);
+    logger.info(`Posting coverage comment to PR #${prNumber}`);
 
     // Search for existing comment
     const existingCommentId = await findExistingComment(octokit, owner, repo, prNumber);
 
     if (existingCommentId) {
       // Update existing comment
-      core.info(`Updating existing comment (ID: ${existingCommentId})`);
+      logger.info(`Updating existing comment (ID: ${existingCommentId})`);
       await octokit.rest.issues.updateComment({
         owner,
         repo,
         comment_id: existingCommentId,
         body: report,
       });
-      core.info('Coverage comment updated successfully');
+      logger.info('Coverage comment updated successfully');
     } else {
       // Create new comment
-      core.info('Creating new coverage comment');
+      logger.info('Creating new coverage comment');
       await octokit.rest.issues.createComment({
         owner,
         repo,
         issue_number: prNumber,
         body: report,
       });
-      core.info('Coverage comment created successfully');
+      logger.info('Coverage comment created successfully');
     }
   } catch (error) {
     // Don't fail the action if comment posting fails
     const errorMessage = error instanceof Error ? error.message : String(error);
-    core.warning(`Failed to post coverage comment: ${errorMessage}`);
+    logger.warn(`Failed to post coverage comment: ${errorMessage}`);
   }
 }
 
@@ -118,12 +125,14 @@ async function findExistingComment(
  * This is necessary because the Artifact API v2's getArtifact() only searches the current
  * workflow run, not across runs on other branches.
  *
+ * @param logger Logger for output
  * @param token GitHub token for API access
  * @param artifactName Name of the artifact to find (e.g., 'coverage-history')
  * @param baselineBranch Branch to search for artifacts (e.g., 'main')
  * @returns Artifact object with download URL if found, null otherwise
  */
 export async function findArtifactFromBaseline(
+  logger: Logger,
   token: string,
   artifactName: string,
   baselineBranch: string
@@ -132,7 +141,7 @@ export async function findArtifactFromBaseline(
     const octokit = github.getOctokit(token);
     const { owner, repo } = github.context.repo;
 
-    core.debug(`Searching for artifact "${artifactName}" on branch "${baselineBranch}"`);
+    logger.debug(`Searching for artifact "${artifactName}" on branch "${baselineBranch}"`);
 
     // Paginate through workflow runs on baseline branch
     let page = 1;
@@ -140,7 +149,7 @@ export async function findArtifactFromBaseline(
     const maxPages = 5; // Limit to 500 runs total to avoid excessive API calls
 
     while (page <= maxPages) {
-      core.debug(`Checking workflow runs page ${page}...`);
+      logger.debug(`Checking workflow runs page ${page}...`);
 
       // Get workflow runs for the baseline branch
       const { data: runs } = await octokit.rest.actions.listWorkflowRunsForRepo({
@@ -154,15 +163,15 @@ export async function findArtifactFromBaseline(
 
       // If no more runs, we're done
       if (runs.workflow_runs.length === 0) {
-        core.debug('No more workflow runs to check');
+        logger.debug('No more workflow runs to check');
         break;
       }
 
-      core.debug(`Found ${runs.workflow_runs.length} workflow runs on page ${page}`);
+      logger.debug(`Found ${runs.workflow_runs.length} workflow runs on page ${page}`);
 
       // Check each workflow run for the artifact
       for (const run of runs.workflow_runs) {
-        core.debug(`Checking run #${run.id} (${run.name}, status: ${run.conclusion})`);
+        logger.debug(`Checking run #${run.id} (${run.name}, status: ${run.conclusion})`);
 
         try {
           const { data: artifacts } = await octokit.rest.actions.listWorkflowRunArtifacts({
@@ -175,7 +184,7 @@ export async function findArtifactFromBaseline(
           const artifact = artifacts.artifacts.find((a) => a.name === artifactName);
 
           if (artifact && !artifact.expired) {
-            core.debug(`Found artifact: ${artifact.name} (ID: ${artifact.id})`);
+            logger.debug(`Found artifact: ${artifact.name} (ID: ${artifact.id})`);
             return {
               id: artifact.id,
               name: artifact.name,
@@ -185,18 +194,18 @@ export async function findArtifactFromBaseline(
         } catch (error) {
           // Log but continue if we can't get artifacts for a specific run
           const message = error instanceof Error ? error.message : String(error);
-          core.debug(`Could not list artifacts for run #${run.id}: ${message}`);
+          logger.debug(`Could not list artifacts for run #${run.id}: ${message}`);
         }
       }
 
       page++;
     }
 
-    core.debug(`Artifact "${artifactName}" not found on baseline branch "${baselineBranch}"`);
+    logger.debug(`Artifact "${artifactName}" not found on baseline branch "${baselineBranch}"`);
     return null;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    core.warning(`Failed to search for baseline artifact: ${message}`);
+    logger.warn(`Failed to search for baseline artifact: ${message}`);
     return null;
   }
 }
@@ -208,12 +217,14 @@ export async function findArtifactFromBaseline(
  * This is necessary for cross-run downloads, as the DefaultArtifactClient uses
  * a runtime token scoped only to the current workflow run.
  *
+ * @param logger Logger for output
  * @param token GitHub token with appropriate permissions
  * @param downloadUrl Archive download URL from the artifact metadata
  * @param downloadPath Path to save the downloaded artifact
  * @returns Path to the downloaded file
  */
 export async function downloadArtifactArchive(
+  logger: Logger,
   token: string,
   downloadUrl: string,
   downloadPath: string
@@ -221,7 +232,7 @@ export async function downloadArtifactArchive(
   const octokit = github.getOctokit(token);
   const { owner, repo } = github.context.repo;
 
-  core.debug(`Downloading artifact from: ${downloadUrl}`);
+  logger.debug(`Downloading artifact from: ${downloadUrl}`);
 
   // Extract artifact ID from URL
   const match = downloadUrl.match(/\/artifacts\/(\d+)\//);
@@ -243,7 +254,7 @@ export async function downloadArtifactArchive(
   const fs = await import('node:fs/promises');
   await fs.writeFile(downloadPath, buffer);
 
-  core.debug(`Downloaded artifact to: ${downloadPath} (${buffer.length} bytes)`);
+  logger.debug(`Downloaded artifact to: ${downloadPath} (${buffer.length} bytes)`);
 
   return downloadPath;
 }

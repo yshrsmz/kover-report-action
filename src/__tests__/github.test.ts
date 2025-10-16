@@ -1,15 +1,16 @@
-import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { SpyLogger } from '../logger';
 
 // Mock the modules
-vi.mock('@actions/core');
 vi.mock('@actions/github');
 
 // Import after mocking
 import { findArtifactFromBaseline, postCoverageComment } from '../github';
 
 describe('postCoverageComment', () => {
+  let logger: SpyLogger;
+  let setSecret: ReturnType<typeof vi.fn>;
   const mockOctokit = {
     rest: {
       issues: {
@@ -24,10 +25,8 @@ describe('postCoverageComment', () => {
     // Reset all mocks before each test
     vi.clearAllMocks();
 
-    // Setup default mocks
-    vi.mocked(core.info).mockImplementation(() => {});
-    vi.mocked(core.warning).mockImplementation(() => {});
-    vi.mocked(core.setSecret).mockImplementation(() => {});
+    logger = new SpyLogger();
+    setSecret = vi.fn();
 
     // @ts-expect-error - mocking github context
     github.context = {
@@ -50,9 +49,9 @@ describe('postCoverageComment', () => {
     });
 
     const report = '<!-- kover-coverage-report -->\n## Coverage Report';
-    await postCoverageComment('test-token', report);
+    await postCoverageComment(logger, setSecret, 'test-token', report);
 
-    expect(core.setSecret).toHaveBeenCalledWith('test-token');
+    expect(setSecret).toHaveBeenCalledWith('test-token');
     expect(mockOctokit.rest.issues.listComments).toHaveBeenCalledWith({
       owner: 'test-owner',
       repo: 'test-repo',
@@ -80,9 +79,9 @@ describe('postCoverageComment', () => {
     });
 
     const report = '<!-- kover-coverage-report -->\n## New Coverage Report';
-    await postCoverageComment('test-token', report);
+    await postCoverageComment(logger, setSecret, 'test-token', report);
 
-    expect(core.setSecret).toHaveBeenCalledWith('test-token');
+    expect(setSecret).toHaveBeenCalledWith('test-token');
     expect(mockOctokit.rest.issues.listComments).toHaveBeenCalledWith({
       owner: 'test-owner',
       repo: 'test-repo',
@@ -98,11 +97,9 @@ describe('postCoverageComment', () => {
   });
 
   it('should handle missing token gracefully', async () => {
-    await postCoverageComment('', 'report');
+    await postCoverageComment(logger, setSecret, '', 'report');
 
-    expect(core.info).toHaveBeenCalledWith(
-      'No GitHub token provided. Skipping PR comment posting.'
-    );
+    expect(logger.calls.info).toContain('No GitHub token provided. Skipping PR comment posting.');
     expect(mockOctokit.rest.issues.listComments).not.toHaveBeenCalled();
     expect(mockOctokit.rest.issues.createComment).not.toHaveBeenCalled();
     expect(mockOctokit.rest.issues.updateComment).not.toHaveBeenCalled();
@@ -115,9 +112,9 @@ describe('postCoverageComment', () => {
       payload: {}, // No pull_request
     };
 
-    await postCoverageComment('test-token', 'report');
+    await postCoverageComment(logger, setSecret, 'test-token', 'report');
 
-    expect(core.info).toHaveBeenCalledWith(
+    expect(logger.calls.info).toContain(
       'Not running in a pull request context. Skipping PR comment.'
     );
     expect(mockOctokit.rest.issues.listComments).not.toHaveBeenCalled();
@@ -127,20 +124,20 @@ describe('postCoverageComment', () => {
     mockOctokit.rest.issues.listComments.mockRejectedValue(new Error('API Error'));
 
     const report = '<!-- kover-coverage-report -->\n## Coverage Report';
-    await expect(postCoverageComment('test-token', report)).resolves.not.toThrow();
+    await expect(
+      postCoverageComment(logger, setSecret, 'test-token', report)
+    ).resolves.not.toThrow();
 
-    expect(core.warning).toHaveBeenCalledWith('Failed to post coverage comment: API Error');
+    expect(logger.calls.warn).toContain('Failed to post coverage comment: API Error');
   });
 
   it('should handle rate limit errors gracefully', async () => {
     const rateLimitError = new Error('Rate limit exceeded');
     mockOctokit.rest.issues.listComments.mockRejectedValue(rateLimitError);
 
-    await postCoverageComment('test-token', 'report');
+    await postCoverageComment(logger, setSecret, 'test-token', 'report');
 
-    expect(core.warning).toHaveBeenCalledWith(
-      'Failed to post coverage comment: Rate limit exceeded'
-    );
+    expect(logger.calls.warn).toContain('Failed to post coverage comment: Rate limit exceeded');
   });
 
   it('should mask token in logs', async () => {
@@ -148,18 +145,20 @@ describe('postCoverageComment', () => {
     mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] });
     mockOctokit.rest.issues.createComment.mockResolvedValue({ data: { id: 456 } });
 
-    await postCoverageComment(token, 'report');
+    await postCoverageComment(logger, setSecret, token, 'report');
 
-    expect(core.setSecret).toHaveBeenCalledWith(token);
+    expect(setSecret).toHaveBeenCalledWith(token);
   });
 
   it('should handle create comment failure', async () => {
     mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] });
     mockOctokit.rest.issues.createComment.mockRejectedValue(new Error('Create failed'));
 
-    await expect(postCoverageComment('test-token', 'report')).resolves.not.toThrow();
+    await expect(
+      postCoverageComment(logger, setSecret, 'test-token', 'report')
+    ).resolves.not.toThrow();
 
-    expect(core.warning).toHaveBeenCalledWith('Failed to post coverage comment: Create failed');
+    expect(logger.calls.warn).toContain('Failed to post coverage comment: Create failed');
   });
 
   it('should handle update comment failure', async () => {
@@ -168,13 +167,16 @@ describe('postCoverageComment', () => {
     });
     mockOctokit.rest.issues.updateComment.mockRejectedValue(new Error('Update failed'));
 
-    await expect(postCoverageComment('test-token', 'report')).resolves.not.toThrow();
+    await expect(
+      postCoverageComment(logger, setSecret, 'test-token', 'report')
+    ).resolves.not.toThrow();
 
-    expect(core.warning).toHaveBeenCalledWith('Failed to post coverage comment: Update failed');
+    expect(logger.calls.warn).toContain('Failed to post coverage comment: Update failed');
   });
 });
 
 describe('findArtifactFromBaseline', () => {
+  let logger: SpyLogger;
   const mockOctokit = {
     rest: {
       actions: {
@@ -186,7 +188,7 @@ describe('findArtifactFromBaseline', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(core.debug).mockImplementation(() => {});
+    logger = new SpyLogger();
 
     // @ts-expect-error - mocking github context
     github.context = {
@@ -230,7 +232,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toEqual({
       id: 5001,
@@ -294,7 +296,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toEqual({
       id: 5002,
@@ -361,7 +363,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toEqual({
       id: 5002,
@@ -392,7 +394,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toBeNull();
   });
@@ -404,7 +406,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toBeNull();
     expect(mockOctokit.rest.actions.listWorkflowRunArtifacts).not.toHaveBeenCalled();
@@ -413,10 +415,10 @@ describe('findArtifactFromBaseline', () => {
   it('should handle API errors gracefully', async () => {
     mockOctokit.rest.actions.listWorkflowRunsForRepo.mockRejectedValue(new Error('API Error'));
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toBeNull();
-    expect(core.warning).toHaveBeenCalledWith('Failed to search for baseline artifact: API Error');
+    expect(logger.calls.warn).toContain('Failed to search for baseline artifact: API Error');
   });
 
   it('should handle artifact listing errors for specific runs', async () => {
@@ -449,7 +451,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toEqual({
       id: 5002,
@@ -457,7 +459,7 @@ describe('findArtifactFromBaseline', () => {
       archive_download_url:
         'https://api.github.com/repos/test-owner/test-repo/actions/artifacts/5002/zip',
     });
-    expect(core.debug).toHaveBeenCalledWith(
+    expect(logger.calls.debug).toContain(
       'Could not list artifacts for run #1001: Artifact list failed'
     );
   });
@@ -484,7 +486,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toBeNull();
     // Should stop at max pages (5 with increased per_page)
@@ -533,7 +535,7 @@ describe('findArtifactFromBaseline', () => {
       },
     });
 
-    const result = await findArtifactFromBaseline('test-token', 'coverage-history', 'main');
+    const result = await findArtifactFromBaseline(logger, 'test-token', 'coverage-history', 'main');
 
     expect(result).toEqual({
       id: 5003,
