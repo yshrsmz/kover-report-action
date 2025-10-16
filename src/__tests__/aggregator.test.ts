@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { aggregateCoverage } from '../aggregator';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 import type { CoverageResult } from '../parser';
 
 // Mock the parser module

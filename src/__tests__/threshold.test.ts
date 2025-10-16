@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 import {
   checkThreshold,
   getModuleType,

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { SpyLogger } from '../common/logger';
+import * as pathsModule from '../common/paths';
 import * as discoveryModule from '../discovery';
 import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index';
-import { SpyLogger } from '../logger';
-import * as pathsModule from '../paths';
 
 // Mock the old discovery module functions
 vi.mock('../discovery', () => ({
@@ -10,8 +10,8 @@ vi.mock('../discovery', () => ({
   discoverModulesFromGlob: vi.fn(),
 }));
 
-vi.mock('../paths', async () => {
-  const actual = await vi.importActual('../paths');
+vi.mock('../common/paths', async () => {
+  const actual = await vi.importActual('../common/paths');
   return {
     ...actual,
     resolveModulePath: vi.fn(),

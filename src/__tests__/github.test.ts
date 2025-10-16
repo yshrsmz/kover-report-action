@@ -1,6 +1,6 @@
 import * as github from '@actions/github';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 
 // Mock the modules
 vi.mock('@actions/github');

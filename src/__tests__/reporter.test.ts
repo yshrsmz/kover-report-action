@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 import { createActionsReporter } from '../reporter/actions-reporter';
 import type { ReportResult } from '../reporter/index';
 

@@ -8,8 +8,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DefaultArtifactClient } from '@actions/artifact';
 import * as toolCache from '@actions/tool-cache';
+import type { Logger } from './common/logger';
 import { downloadArtifactArchive, findArtifactFromBaseline } from './github';
-import type { Logger } from './logger';
 
 /**
  * Default artifact name for coverage history

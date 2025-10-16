@@ -1,10 +1,10 @@
 import { aggregateCoverage } from './aggregator';
+import type { Logger } from './common/logger';
+import { resolveSecurePath } from './common/paths';
 import type { ActionConfig } from './config';
 import type { ModuleDiscovery } from './discovery/index';
 import type { HistoryComparison } from './history';
 import type { CoverageSnapshot, HistoryContext, HistoryManager } from './history/manager';
-import type { Logger } from './logger';
-import { resolveSecurePath } from './paths';
 import type { Reporter, ReportResult } from './reporter';
 
 export interface RunResult {

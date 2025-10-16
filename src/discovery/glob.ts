@@ -5,8 +5,8 @@
  * then extracting module names from the file paths.
  */
 
+import type { Logger } from '../common/logger';
 import { discoverModulesFromGlob } from '../discovery';
-import type { Logger } from '../logger';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
 
 /**

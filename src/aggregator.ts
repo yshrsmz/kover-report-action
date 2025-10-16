@@ -1,4 +1,4 @@
-import type { Logger } from './logger';
+import type { Logger } from './common/logger';
 import { type CoverageResult, parseCoverageFile } from './parser';
 import { checkThreshold, getThresholdForModule, type ThresholdConfig } from './threshold';
 

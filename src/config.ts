@@ -6,8 +6,8 @@
  */
 
 import type * as core from '@actions/core';
+import { normalizeModuleName } from './common/paths';
 import { DEFAULT_BASELINE_BRANCH, DEFAULT_HISTORY_RETENTION } from './history';
-import { normalizeModuleName } from './paths';
 import { parseThresholdsFromJSON } from './threshold';
 import { validateMinCoverage, validateModulePathTemplate } from './validation';
 

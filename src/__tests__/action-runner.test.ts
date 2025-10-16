@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { runAction } from '../action-runner';
+import { SpyLogger } from '../common/logger';
 import type { ActionConfig } from '../config';
 import type { DiscoveryConfig, ModuleReference } from '../discovery/index';
 import type { HistoryManager } from '../history/manager';
-import { SpyLogger } from '../logger';
 import type { Reporter, ReportResult } from '../reporter';
 
 /**

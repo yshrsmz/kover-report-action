@@ -1,7 +1,7 @@
 import type { DefaultArtifactClient } from '@actions/artifact';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HISTORY_FILENAME, loadHistoryFromArtifacts, saveHistoryToArtifacts } from '../artifacts';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 
 // Mock @actions/artifact
 vi.mock('@actions/artifact', () => {
