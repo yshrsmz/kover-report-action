@@ -1,6 +1,7 @@
 import type { Logger } from './common/logger';
+import type { ThresholdConfig } from './config/thresholds';
 import { type CoverageResult, parseCoverageFile } from './parser';
-import { checkThreshold, getThresholdForModule, type ThresholdConfig } from './threshold';
+import { checkThreshold, getThresholdForModule } from './threshold';
 
 /**
  * Module coverage information with threshold and pass/fail status

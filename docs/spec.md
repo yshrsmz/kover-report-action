@@ -35,16 +35,22 @@ The codebase follows a **layered architecture** with dependency injection, enabl
 ```
 src/
 ├── index.ts                    # Slim entrypoint - wiring only
-├── config.ts                   # Configuration layer (input parsing & validation)
-├── logger.ts                   # Logger abstraction (interface + implementations)
 ├── action-runner.ts            # Main orchestration logic
-├── validation.ts               # Input validation utilities
-├── graphs.ts                   # ASCII trend graph generation
+│
+├── common/                     # Shared utilities
+│   ├── logger.ts              # Logger abstraction (interface + implementations)
+│   └── paths.ts               # Path resolution and module name normalization
+│
+├── config/                     # Configuration layer
+│   ├── index.ts               # Configuration loading (input parsing & validation)
+│   ├── validation.ts          # Input validation utilities
+│   └── thresholds.ts          # Threshold configuration parsing & validation
 │
 ├── discovery/                  # Module discovery abstractions
 │   ├── index.ts               # Discovery interfaces and types
 │   ├── command.ts             # Command-based discovery factory
-│   └── glob.ts                # Glob-based discovery factory
+│   ├── glob.ts                # Glob-based discovery factory
+│   └── utils.ts               # Core discovery logic (command + glob)
 │
 ├── history/                    # Coverage history management
 │   └── manager.ts             # HistoryManager class + interfaces
@@ -53,14 +59,13 @@ src/
 │   ├── index.ts               # Reporter interfaces and types
 │   └── actions-reporter.ts    # GitHub Actions reporter factory
 │
-├── discovery.ts               # Core discovery logic (command + glob)
-├── paths.ts                   # Path resolution and module name normalization
 ├── parser.ts                  # Kover XML parsing
 ├── aggregator.ts              # Multi-module aggregation logic
-├── threshold.ts               # Threshold matching (type + name)
+├── threshold.ts               # Threshold enforcement (type + name matching)
 ├── report.ts                  # Markdown report generation
+├── graphs.ts                  # ASCII trend graph generation
 ├── github.ts                  # PR comment posting
-├── history.ts                 # History comparison and storage
+├── history.ts                 # History types and interfaces
 └── artifacts.ts               # GitHub artifacts I/O
 ```
 
@@ -77,9 +82,10 @@ src/
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ src/config.ts (Configuration Layer)                         │
-│ • ActionConfig interface (typed fields)                     │
-│ • loadConfig(facade): ActionConfig                          │
+│ src/config/ (Configuration Layer)                           │
+│ • config/index.ts: ActionConfig interface + loadConfig()    │
+│ • config/validation.ts: Input validation utilities          │
+│ • config/thresholds.ts: Threshold config parsing            │
 │ • Validates, normalizes, applies defaults                   │
 │ • Throws ConfigError with actionable messages               │
 └─────────────────────────────────────────────────────────────┘

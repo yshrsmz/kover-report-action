@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { looksLikeToken, validateMinCoverage, validateModulePathTemplate } from '../validation';
+import {
+  looksLikeToken,
+  validateMinCoverage,
+  validateModulePathTemplate,
+} from '../config/validation';
 
 describe('validateMinCoverage', () => {
   it('should accept valid integer coverage values', () => {
