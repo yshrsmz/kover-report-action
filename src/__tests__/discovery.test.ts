@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { extractModuleName, parseGradleProjects } from '../discovery';
+import { SpyLogger } from '../logger';
 import { loadFixture } from './helpers';
 
 describe('parseGradleProjects', () => {
@@ -50,23 +51,29 @@ describe('parseGradleProjects', () => {
 });
 
 describe('extractModuleName', () => {
+  let logger: SpyLogger;
+
+  beforeEach(() => {
+    logger = new SpyLogger();
+  });
+
   it('should extract module name from two-level module path', () => {
-    const moduleName = extractModuleName('core/common/build/reports/kover/report.xml');
+    const moduleName = extractModuleName(logger, 'core/common/build/reports/kover/report.xml');
     expect(moduleName).toBe(':core:common');
   });
 
   it('should handle single-level modules', () => {
-    const moduleName = extractModuleName('app/build/reports/kover/report.xml');
+    const moduleName = extractModuleName(logger, 'app/build/reports/kover/report.xml');
     expect(moduleName).toBe(':app');
   });
 
   it('should handle three-level modules', () => {
-    const moduleName = extractModuleName('feature/auth/ui/build/reports/kover/report.xml');
+    const moduleName = extractModuleName(logger, 'feature/auth/ui/build/reports/kover/report.xml');
     expect(moduleName).toBe(':feature:auth:ui');
   });
 
   it('should handle alternative path patterns', () => {
-    const moduleName = extractModuleName('core/common/kover/report.xml');
+    const moduleName = extractModuleName(logger, 'core/common/kover/report.xml');
     expect(moduleName).toBe(':core:common');
   });
 
@@ -76,6 +83,7 @@ describe('extractModuleName', () => {
     process.env.GITHUB_WORKSPACE = '/home/user/workspace';
 
     const moduleName = extractModuleName(
+      logger,
       '/home/user/workspace/core/common/build/reports/kover/report.xml'
     );
     expect(moduleName).toBe(':core:common');
@@ -85,12 +93,12 @@ describe('extractModuleName', () => {
   });
 
   it('should handle Windows-style backslashes', () => {
-    const moduleName = extractModuleName('core\\common\\build\\reports\\kover\\report.xml');
+    const moduleName = extractModuleName(logger, 'core\\common\\build\\reports\\kover\\report.xml');
     expect(moduleName).toBe(':core:common');
   });
 
   it('should handle mixed path separators', () => {
-    const moduleName = extractModuleName('core/common\\build/reports\\kover/report.xml');
+    const moduleName = extractModuleName(logger, 'core/common\\build/reports\\kover/report.xml');
     expect(moduleName).toBe(':core:common');
   });
 });

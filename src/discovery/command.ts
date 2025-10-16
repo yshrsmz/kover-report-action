@@ -6,19 +6,25 @@
  */
 
 import { discoverModulesFromCommand } from '../discovery';
+import type { Logger } from '../logger';
 import { resolveModulePath } from '../paths';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
 
 /**
  * Creates a command-based discovery function
  *
+ * @param logger Logger for output
  * @param command - Command to execute (e.g., './gradlew -q projects')
  * @param pathTemplate - Path template with {module} placeholder
  * @returns Discovery function that can be called with config
  */
-export function createCommandDiscovery(command: string, pathTemplate: string): ModuleDiscovery {
+export function createCommandDiscovery(
+  logger: Logger,
+  command: string,
+  pathTemplate: string
+): ModuleDiscovery {
   return async (config: DiscoveryConfig): Promise<ModuleReference[]> => {
-    const moduleNames = await discoverModulesFromCommand(command, config.ignoredModules);
+    const moduleNames = await discoverModulesFromCommand(logger, command, config.ignoredModules);
 
     if (moduleNames.length === 0) {
       throw new Error(

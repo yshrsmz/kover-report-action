@@ -6,17 +6,19 @@
  */
 
 import { discoverModulesFromGlob } from '../discovery';
+import type { Logger } from '../logger';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
 
 /**
  * Creates a glob-based discovery function
  *
+ * @param logger Logger for output
  * @param pattern - Glob pattern for coverage files (e.g., '** /build/reports/kover/report.xml')
  * @returns Discovery function that can be called with config
  */
-export function createGlobDiscovery(pattern: string): ModuleDiscovery {
+export function createGlobDiscovery(logger: Logger, pattern: string): ModuleDiscovery {
   return async (config: DiscoveryConfig): Promise<ModuleReference[]> => {
-    const results = await discoverModulesFromGlob(pattern, config.ignoredModules);
+    const results = await discoverModulesFromGlob(logger, pattern, config.ignoredModules);
 
     if (results.length === 0) {
       throw new Error(

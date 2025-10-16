@@ -1,10 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { aggregateCoverage } from '../aggregator';
+import { SpyLogger } from '../logger';
 import type { CoverageResult } from '../parser';
 
 // Mock the parser module
 vi.mock('../parser', () => ({
-  parseCoverageFile: vi.fn((filePath: string): Promise<CoverageResult | null> => {
+  parseCoverageFile: vi.fn((_logger: unknown, filePath: string): Promise<CoverageResult | null> => {
     // Simulate different coverage results based on path
     if (filePath.includes('core-common')) {
       return Promise.resolve({
@@ -47,6 +48,12 @@ vi.mock('../parser', () => ({
 }));
 
 describe('aggregateCoverage', () => {
+  let logger: SpyLogger;
+
+  beforeEach(() => {
+    logger = new SpyLogger();
+  });
+
   it('should aggregate coverage from multiple modules', async () => {
     const modules = [
       { name: ':core:common', filePath: 'core-common/report.xml' },
@@ -59,7 +66,7 @@ describe('aggregateCoverage', () => {
       default: 60,
     };
 
-    const result = await aggregateCoverage(modules, thresholds, 70);
+    const result = await aggregateCoverage(logger, modules, thresholds, 70);
 
     // Overall: (850 + 390) / (1000 + 500) = 1240/1500 = 82.67%
     expect(result.percentage).toBeCloseTo(82.67, 1);
@@ -80,7 +87,7 @@ describe('aggregateCoverage', () => {
       default: 60,
     };
 
-    const result = await aggregateCoverage(modules, thresholds, 60);
+    const result = await aggregateCoverage(logger, modules, thresholds, 60);
 
     expect(result.modules[0].passed).toBe(true); // core:common passes
     expect(result.modules[1].passed).toBe(false); // feature:auth fails
@@ -93,7 +100,7 @@ describe('aggregateCoverage', () => {
       { name: ':data:repository', filePath: 'data-repository/report.xml' },
     ];
 
-    const result = await aggregateCoverage(modules, {}, 0);
+    const result = await aggregateCoverage(logger, modules, {}, 0);
 
     // Null coverage should not contribute to overall calculation
     // Overall: (850 + 390) / (1000 + 500) = 1240/1500 = 82.67%
@@ -104,7 +111,7 @@ describe('aggregateCoverage', () => {
   });
 
   it('should handle empty module list', async () => {
-    const result = await aggregateCoverage([], {}, 0);
+    const result = await aggregateCoverage(logger, [], {}, 0);
 
     expect(result.percentage).toBe(0);
     expect(result.covered).toBe(0);
@@ -118,7 +125,7 @@ describe('aggregateCoverage', () => {
       { name: ':parent2', filePath: 'parent2/report.xml' },
     ];
 
-    const result = await aggregateCoverage(modules, {}, 0);
+    const result = await aggregateCoverage(logger, modules, {}, 0);
 
     expect(result.percentage).toBe(0);
     expect(result.covered).toBe(0);
@@ -141,7 +148,7 @@ describe('aggregateCoverage', () => {
       data: 75,
     };
 
-    const result = await aggregateCoverage(modules, thresholds, 60);
+    const result = await aggregateCoverage(logger, modules, thresholds, 60);
 
     expect(result.modules[0].threshold).toBe(80); // Type match
     expect(result.modules[1].threshold).toBe(0); // Exact match
@@ -163,7 +170,7 @@ describe('aggregateCoverage', () => {
       { name: ':feature:auth', filePath: 'feature-auth/report.xml' },
     ];
 
-    await aggregateCoverage(modules, {}, 0);
+    await aggregateCoverage(logger, modules, {}, 0);
 
     const duration = Date.now() - startTime;
 

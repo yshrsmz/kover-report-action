@@ -8,6 +8,7 @@ export interface ActionsReporterOptions {
   logger: Logger;
   core: {
     setOutput(name: string, value: string): void;
+    setSecret(secret: string): void;
   };
   githubToken?: string;
   enablePrComment: boolean;
@@ -78,7 +79,7 @@ export function createActionsReporter(options: ActionsReporterOptions): Reporter
 
       if (githubToken) {
         logger.info('💬 Posting coverage report to PR...');
-        await postCoverageComment(githubToken, report);
+        await postCoverageComment(logger, core.setSecret.bind(core), githubToken, report);
       } else {
         logger.warn(
           '⚠️  Cannot post PR comment: github-token not provided. ' +

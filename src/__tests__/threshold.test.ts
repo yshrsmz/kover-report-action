@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { SpyLogger } from '../logger';
 import {
   checkThreshold,
   getModuleType,
@@ -33,6 +34,12 @@ describe('getModuleType', () => {
 });
 
 describe('getThresholdForModule', () => {
+  let logger: SpyLogger;
+
+  beforeEach(() => {
+    logger = new SpyLogger();
+  });
+
   const thresholds = {
     core: 80,
     data: 75,
@@ -41,27 +48,27 @@ describe('getThresholdForModule', () => {
   };
 
   it('should use exact name match first', () => {
-    expect(getThresholdForModule(':core:testing', thresholds, 50)).toBe(0);
+    expect(getThresholdForModule(logger, ':core:testing', thresholds, 50)).toBe(0);
   });
 
   it('should use type match if no exact match', () => {
-    expect(getThresholdForModule(':core:common', thresholds, 50)).toBe(80);
+    expect(getThresholdForModule(logger, ':core:common', thresholds, 50)).toBe(80);
   });
 
   it('should use default if no type match', () => {
-    expect(getThresholdForModule(':feature:auth', thresholds, 50)).toBe(60);
+    expect(getThresholdForModule(logger, ':feature:auth', thresholds, 50)).toBe(60);
   });
 
   it('should use minCoverage if no default', () => {
-    expect(getThresholdForModule(':unknown', {}, 70)).toBe(70);
+    expect(getThresholdForModule(logger, ':unknown', {}, 70)).toBe(70);
   });
 
   it('should use 0 as hard default', () => {
-    expect(getThresholdForModule(':unknown', {}, 0)).toBe(0);
+    expect(getThresholdForModule(logger, ':unknown', {}, 0)).toBe(0);
   });
 
   it('should handle empty thresholds object', () => {
-    expect(getThresholdForModule(':app', {}, 50)).toBe(50);
+    expect(getThresholdForModule(logger, ':app', {}, 50)).toBe(50);
   });
 
   it('should prioritize exact match over type match', () => {
@@ -69,8 +76,8 @@ describe('getThresholdForModule', () => {
       core: 80,
       ':core:testing': 0,
     };
-    expect(getThresholdForModule(':core:testing', config, 50)).toBe(0);
-    expect(getThresholdForModule(':core:common', config, 50)).toBe(80);
+    expect(getThresholdForModule(logger, ':core:testing', config, 50)).toBe(0);
+    expect(getThresholdForModule(logger, ':core:common', config, 50)).toBe(80);
   });
 });
 

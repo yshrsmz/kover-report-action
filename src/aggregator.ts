@@ -1,4 +1,4 @@
-import * as core from '@actions/core';
+import type { Logger } from './logger';
 import { type CoverageResult, parseCoverageFile } from './parser';
 import { checkThreshold, getThresholdForModule, type ThresholdConfig } from './threshold';
 
@@ -43,18 +43,20 @@ export interface ModuleInfo {
 /**
  * Aggregate coverage from multiple modules
  * Parses coverage files in parallel and calculates overall metrics
+ * @param logger Logger for output
  * @param modules List of modules with file paths
  * @param thresholds Threshold configuration
  * @param minCoverage Global minimum coverage (fallback)
  * @returns Overall coverage with per-module breakdown
  */
 export async function aggregateCoverage(
+  logger: Logger,
   modules: ModuleInfo[],
   thresholds: ThresholdConfig,
   minCoverage: number
 ): Promise<OverallCoverage> {
   if (modules.length === 0) {
-    core.info('No modules to aggregate');
+    logger.info('No modules to aggregate');
     return {
       percentage: 0,
       covered: 0,
@@ -63,22 +65,22 @@ export async function aggregateCoverage(
     };
   }
 
-  core.info(`Aggregating coverage for ${modules.length} modules`);
+  logger.info(`Aggregating coverage for ${modules.length} modules`);
 
   // Parse all coverage files in parallel for performance
   const coveragePromises = modules.map(async ({ name, filePath }) => {
-    const coverage = await parseCoverageFile(filePath);
-    const threshold = getThresholdForModule(name, thresholds, minCoverage);
+    const coverage = await parseCoverageFile(logger, filePath);
+    const threshold = getThresholdForModule(logger, name, thresholds, minCoverage);
 
     // Module passes only if coverage exists and meets threshold
     const passed = coverage !== null && checkThreshold(coverage.percentage, threshold);
 
     if (coverage === null) {
-      core.warning(`No coverage data found for module ${name}`);
+      logger.warn(`No coverage data found for module ${name}`);
     } else if (!passed) {
-      core.warning(`Module ${name} below threshold: ${coverage.percentage}% < ${threshold}%`);
+      logger.warn(`Module ${name} below threshold: ${coverage.percentage}% < ${threshold}%`);
     } else {
-      core.info(`Module ${name} meets threshold: ${coverage.percentage}% >= ${threshold}%`);
+      logger.info(`Module ${name} meets threshold: ${coverage.percentage}% >= ${threshold}%`);
     }
 
     return {
@@ -109,7 +111,7 @@ export async function aggregateCoverage(
   // Round to 1 decimal place
   const roundedPercentage = Math.round(overallPercentage * 10) / 10;
 
-  core.info(
+  logger.info(
     `Overall coverage: ${roundedPercentage}% (${totalCovered}/${totalInstructions} instructions)`
   );
 

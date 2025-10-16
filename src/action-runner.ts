@@ -93,7 +93,7 @@ export async function runAction(
 
     // Aggregate coverage
     logger.info('📈 Aggregating coverage...');
-    const overall = await aggregateCoverage(modules, config.thresholds, config.minCoverage);
+    const overall = await aggregateCoverage(logger, modules, config.thresholds, config.minCoverage);
 
     // Store coverage percentage for error handling
     coveragePercentage = overall.percentage;

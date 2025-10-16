@@ -28,15 +28,21 @@ async function run(): Promise<void> {
     // Create discovery function based on mode
     const discovery =
       config.discoveryMode === 'command' && config.discoveryCommand
-        ? createCommandDiscovery(config.discoveryCommand, config.modulePathTemplate)
-        : createGlobDiscovery(config.coverageFilesPattern);
+        ? createCommandDiscovery(logger, config.discoveryCommand, config.modulePathTemplate)
+        : createGlobDiscovery(logger, config.coverageFilesPattern);
 
     // Create history manager (if enabled)
     const history = config.enableHistory
       ? new DefaultHistoryManager(
           {
-            load: () => loadHistoryFromArtifacts(),
-            save: (data) => saveHistoryToArtifacts(data),
+            load: () =>
+              loadHistoryFromArtifacts(
+                logger,
+                undefined, // Use default artifact name
+                config?.githubToken,
+                config?.baselineBranch
+              ),
+            save: (data) => saveHistoryToArtifacts(logger, data),
           },
           config.historyRetention,
           config.baselineBranch
