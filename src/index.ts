@@ -28,8 +28,8 @@ async function run(): Promise<void> {
     // Create discovery function based on mode
     const discovery =
       config.discoveryMode === 'command' && config.discoveryCommand
-        ? createCommandDiscovery(config.discoveryCommand, config.modulePathTemplate)
-        : createGlobDiscovery(config.coverageFilesPattern);
+        ? createCommandDiscovery(logger, config.discoveryCommand, config.modulePathTemplate)
+        : createGlobDiscovery(logger, config.coverageFilesPattern);
 
     // Create history manager (if enabled)
     const history = config.enableHistory

@@ -1,19 +1,21 @@
 import { isAbsolute, relative, sep } from 'node:path';
-import * as core from '@actions/core';
 import { exec } from '@actions/exec';
 import { glob } from 'glob';
+import type { Logger } from './logger';
 
 // Regex pattern to extract module names from Gradle-style output
 const GRADLE_PROJECT_REGEX = /Project '([^']+)'/g;
 
 /**
  * Discover modules by executing a command (e.g., Gradle projects list)
+ * @param logger Logger for output
  * @param command Command to execute (shell features not supported for security)
  * @param ignoredModules List of module names to ignore
  * @returns Array of module names
  * @throws Error if command execution fails
  */
 export async function discoverModulesFromCommand(
+  logger: Logger,
   command: string,
   ignoredModules: string[] = []
 ): Promise<string[]> {
@@ -30,7 +32,7 @@ export async function discoverModulesFromCommand(
   const cmd = parts[0];
   const args = parts.slice(1);
 
-  core.debug(`Executing discovery command: ${cmd} ${args.join(' ')}`);
+  logger.debug(`Executing discovery command: ${cmd} ${args.join(' ')}`);
 
   try {
     await exec(cmd, args, {
@@ -49,12 +51,12 @@ export async function discoverModulesFromCommand(
     );
   }
 
-  core.debug(`Discovery command output:\n${output}`);
+  logger.debug(`Discovery command output:\n${output}`);
 
   const modules = parseGradleProjects(output);
   const filtered = filterIgnoredModules(modules, ignoredModules);
 
-  core.debug(`Discovered ${filtered.length} modules: ${filtered.join(', ')}`);
+  logger.debug(`Discovered ${filtered.length} modules: ${filtered.join(', ')}`);
 
   return filtered;
 }
@@ -102,12 +104,14 @@ function filterIgnoredModules(modules: string[], ignoredModules: string[]): stri
 
 /**
  * Discover modules using glob pattern to find coverage files
+ * @param logger Logger for output
  * @param pattern Glob pattern for coverage files (e.g., '** /build/reports/kover/report.xml')
  * @param ignoredModules List of module names to ignore
  * @returns Array of module info with name and file path
  * @throws Error if pattern is empty
  */
 export async function discoverModulesFromGlob(
+  logger: Logger,
   pattern: string,
   ignoredModules: string[] = []
 ): Promise<Array<{ module: string; filePath: string }>> {
@@ -115,28 +119,28 @@ export async function discoverModulesFromGlob(
     throw new Error('Glob pattern cannot be empty');
   }
 
-  core.debug(`Searching for coverage files with pattern: ${pattern}`);
+  logger.debug(`Searching for coverage files with pattern: ${pattern}`);
 
   const files = await glob(pattern, { nodir: true });
 
-  core.debug(`Found ${files.length} coverage files`);
+  logger.debug(`Found ${files.length} coverage files`);
 
   const normalizedIgnored = ignoredModules.map((m) => (m.startsWith(':') ? m : `:${m}`));
 
   const modules = files
     .map((filePath) => ({
-      module: extractModuleName(filePath),
+      module: extractModuleName(logger, filePath),
       filePath,
     }))
     .filter(({ module }) => {
       const isIgnored = normalizedIgnored.includes(module);
       if (isIgnored) {
-        core.debug(`Ignoring module: ${module}`);
+        logger.debug(`Ignoring module: ${module}`);
       }
       return !isIgnored;
     });
 
-  core.debug(`Discovered ${modules.length} modules after filtering`);
+  logger.debug(`Discovered ${modules.length} modules after filtering`);
 
   return modules;
 }
@@ -144,13 +148,14 @@ export async function discoverModulesFromGlob(
 /**
  * Extract module name from file path by removing common suffixes
  * Supports multiple common Kover report path patterns
+ * @param logger Logger for output
  * @param filePath Path to coverage file (e.g., 'core/common/build/reports/kover/report.xml')
  * @returns Normalized module name (e.g., ':core:common')
  * @example
- * extractModuleName('core/common/build/reports/kover/report.xml') // => ':core:common'
- * extractModuleName('app/build/reports/kover/report.xml') // => ':app'
+ * extractModuleName(logger, 'core/common/build/reports/kover/report.xml') // => ':core:common'
+ * extractModuleName(logger, 'app/build/reports/kover/report.xml') // => ':app'
  */
-export function extractModuleName(filePath: string): string {
+export function extractModuleName(logger: Logger, filePath: string): string {
   let modulePath = filePath;
 
   // If path is absolute, convert to relative from workspace
@@ -160,7 +165,7 @@ export function extractModuleName(filePath: string): string {
 
     // If relative path starts with .., it's outside workspace
     if (modulePath.startsWith(`..${sep}`)) {
-      core.warning(`Coverage file outside workspace: ${filePath}. Using filename only.`);
+      logger.warn(`Coverage file outside workspace: ${filePath}. Using filename only.`);
       // Use just the filename portion as fallback
       modulePath = filePath.split(sep).slice(-4, -3).join(sep) || 'unknown';
     }
