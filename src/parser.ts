@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
-import * as core from '@actions/core';
 import { XMLParser } from 'fast-xml-parser';
+import type { Logger } from './logger';
 
 /**
  * Coverage result from parsing Kover XML
@@ -30,16 +30,20 @@ const XML_PARSER_OPTIONS = {
 /**
  * Parse Kover XML coverage file
  * Extracts INSTRUCTION coverage metrics from JaCoCo-compatible XML format
+ * @param logger Logger for output
  * @param filePath Absolute path to Kover XML report
  * @returns Coverage result or null if file not found/invalid
  */
-export async function parseCoverageFile(filePath: string): Promise<CoverageResult | null> {
+export async function parseCoverageFile(
+  logger: Logger,
+  filePath: string
+): Promise<CoverageResult | null> {
   try {
     // Read XML file
     const xmlContent = await readFile(filePath, 'utf-8');
 
     if (!xmlContent || xmlContent.trim().length === 0) {
-      core.warning(`Coverage file is empty: ${filePath}`);
+      logger.warn(`Coverage file is empty: ${filePath}`);
       return null;
     }
 
@@ -48,26 +52,26 @@ export async function parseCoverageFile(filePath: string): Promise<CoverageResul
     const parsedData = parser.parse(xmlContent);
 
     // Extract coverage from parsed XML
-    const coverage = extractInstructionCounter(parsedData);
+    const coverage = extractInstructionCounter(logger, parsedData);
 
     if (coverage) {
-      core.debug(
+      logger.debug(
         `Parsed coverage from ${filePath}: ${coverage.percentage}% (${coverage.covered}/${coverage.total})`
       );
     } else {
-      core.warning(`Could not extract INSTRUCTION counter from ${filePath}`);
+      logger.warn(`Could not extract INSTRUCTION counter from ${filePath}`);
     }
 
     return coverage;
   } catch (error) {
     // File not found is expected for parent modules
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      core.debug(`Coverage file not found (expected for parent modules): ${filePath}`);
+      logger.debug(`Coverage file not found (expected for parent modules): ${filePath}`);
       return null;
     }
 
     // Invalid XML or parsing errors
-    core.warning(
+    logger.warn(
       `Failed to parse coverage file ${filePath}: ${error instanceof Error ? error.message : String(error)}`
     );
     return null;
@@ -94,10 +98,11 @@ interface XmlReport {
 
 /**
  * Extract INSTRUCTION counter from parsed XML data
+ * @param logger Logger for output
  * @param xmlData Parsed XML object
  * @returns Coverage result or null if INSTRUCTION counter not found
  */
-function extractInstructionCounter(xmlData: unknown): CoverageResult | null {
+function extractInstructionCounter(logger: Logger, xmlData: unknown): CoverageResult | null {
   try {
     // Type guard to check if xmlData has the expected structure
     if (!xmlData || typeof xmlData !== 'object') {
@@ -147,7 +152,7 @@ function extractInstructionCounter(xmlData: unknown): CoverageResult | null {
       percentage: roundedPercentage,
     };
   } catch (error) {
-    core.debug(
+    logger.debug(
       `Error extracting INSTRUCTION counter: ${error instanceof Error ? error.message : String(error)}`
     );
     return null;
