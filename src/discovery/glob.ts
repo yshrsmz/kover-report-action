@@ -6,8 +6,8 @@
  */
 
 import type { Logger } from '../common/logger';
-import { discoverModulesFromGlob } from '../discovery';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
+import { discoverModulesFromGlob } from './utils';
 
 /**
  * Creates a glob-based discovery function

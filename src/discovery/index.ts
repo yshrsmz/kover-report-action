@@ -23,3 +23,11 @@ export type ModuleDiscovery = (config: DiscoveryConfig) => Promise<ModuleReferen
 
 export { createCommandDiscovery } from './command';
 export { createGlobDiscovery } from './glob';
+
+// Re-export utility functions
+export {
+  discoverModulesFromCommand,
+  discoverModulesFromGlob,
+  extractModuleName,
+  parseGradleProjects,
+} from './utils';

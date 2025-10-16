@@ -7,8 +7,8 @@
 
 import type { Logger } from '../common/logger';
 import { resolveModulePath } from '../common/paths';
-import { discoverModulesFromCommand } from '../discovery';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
+import { discoverModulesFromCommand } from './utils';
 
 /**
  * Creates a command-based discovery function

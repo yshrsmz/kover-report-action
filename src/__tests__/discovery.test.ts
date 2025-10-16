@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SpyLogger } from '../common/logger';
-import { extractModuleName, parseGradleProjects } from '../discovery';
+import { extractModuleName, parseGradleProjects } from '../discovery/utils';
 import { loadFixture } from './helpers';
 
 describe('parseGradleProjects', () => {

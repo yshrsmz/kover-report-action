@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SpyLogger } from '../common/logger';
 import * as pathsModule from '../common/paths';
-import * as discoveryModule from '../discovery';
 import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index';
+import * as discoveryModule from '../discovery/utils';
 
-// Mock the old discovery module functions
-vi.mock('../discovery', () => ({
+// Mock the discovery utils module functions
+vi.mock('../discovery/utils', () => ({
   discoverModulesFromCommand: vi.fn(),
   discoverModulesFromGlob: vi.fn(),
 }));

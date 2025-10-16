@@ -1,7 +1,7 @@
 import { isAbsolute, relative, sep } from 'node:path';
 import { exec } from '@actions/exec';
 import { glob } from 'glob';
-import type { Logger } from './common/logger';
+import type { Logger } from '../common/logger';
 
 // Regex pattern to extract module names from Gradle-style output
 const GRADLE_PROJECT_REGEX = /Project '([^']+)'/g;
