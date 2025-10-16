@@ -263,6 +263,26 @@ The codebase has **315 comprehensive tests** across 18 test files:
 - Configurable retention policy (default: 50 entries)
 - Gracefully degrades if history unavailable
 
+**Baseline Branch Loading Behavior:**
+
+**IMPORTANT**: When `baseline-branch` and `github-token` are configured, the action **ALWAYS** loads coverage history from the baseline branch, not from the current workflow run. This ensures proper comparison of feature branch coverage against the baseline (e.g., main) branch coverage.
+
+- ✅ **With baseline configured** (token + baseline-branch): Always loads history from baseline branch
+  - Searches through up to 500 completed workflow runs on baseline branch
+  - Uses GitHub REST API for cross-run artifact downloads
+  - Ensures comparison against baseline coverage, not current run
+- ✅ **Without baseline configured**: Falls back to current workflow run
+  - Used for same-branch reruns without baseline comparison
+  - Uses standard artifact client with runtime token
+- ✅ **Cross-platform support**: Uses `@actions/tool-cache` for ZIP extraction
+  - Works on Linux, macOS, and Windows runners
+
+**Implementation Details:**
+- Pagination: Checks up to 500 workflow runs (100 per page × 5 pages)
+- Authentication: Uses provided `github-token` for cross-run access (runtime token is scoped to current run only)
+- Error handling: Per-run errors logged as debug, top-level errors as warnings
+- Artifact expiration: Automatically skips expired artifacts
+
 ### Advanced
 
 | Input | Description | Default | Required |
