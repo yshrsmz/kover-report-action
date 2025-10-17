@@ -10,21 +10,11 @@ A generalized GitHub Action for generating and reporting code coverage from Kove
 2. **Flexible Discovery**: Support command-based module discovery (Gradle) and glob patterns
 3. **Configurable Thresholds**: Per-module type and per-module name threshold configuration
 4. **PR Integration**: Post coverage reports as PR comments with automatic updates
-5. **Backward Compatible**: Easy migration from the reference implementation (omnitweety-android)
 6. **Extensible**: Modular design allowing future enhancements (history tracking, trends)
 7. **Testable Architecture**: ✅ Dependency injection with clean interfaces throughout
 8. **Maintainable Codebase**: ✅ Slim entrypoint with clear separation of concerns
 9. **Composable Components**: ✅ Functional-first patterns throughout
 
-## Reference Implementation
-
-Based on: `omnitweety-android/.github/actions/coverage-report`
-
-**Key Differences:**
-- Generalized module discovery (not Gradle-specific)
-- Configurable path templates (not hardcoded)
-- Simplified architecture for easier maintenance
-- Optional features via feature flags
 
 ## Architecture
 
@@ -862,36 +852,6 @@ const parserOptions = {
 3. **API Rate Limits:** Batch PR comment updates (1 per run, not per module)
 4. **Large Projects:** Stream large XML files instead of loading into memory
 
-## Backward Compatibility
-
-### Migration from Reference Action
-
-**Before (omnitweety-android):**
-```yaml
-- uses: ./.github/actions/coverage-report
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    gradle-command: './gradlew -q projects'
-    thresholds: '{"core": 80, "data": 75, "feature": 70, "default": 60}'
-    ignore-modules: ':core,:core:testing,:data,:feature,:build-logic'
-```
-
-**After (kover-report-action):**
-```yaml
-- uses: yshrsmz/kover-report-action@v1
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    discovery-command: './gradlew -q projects'
-    module-path-template: '{module}/build/reports/kover/report.xml'
-    thresholds: '{"core": 80, "data": 75, "feature": 70, "default": 60}'
-    ignore-modules: ':core,:core:testing,:data,:feature,:build-logic'
-```
-
-**Changes:**
-- `gradle-command` → `discovery-command` (renamed for clarity)
-- Added `module-path-template` (was hardcoded)
-- No other breaking changes
-
 ## Features
 
 ### Core Coverage Features
@@ -1267,4 +1227,3 @@ This logs:
 - [Kover Documentation](https://kotlin.github.io/kotlinx-kover/)
 - [JaCoCo XML Format](https://www.jacoco.org/jacoco/trunk/doc/xml.html)
 - [GitHub Actions Toolkit](https://github.com/actions/toolkit)
-- [Reference Implementation](https://github.com/yshrsmz/omnitweety-android/.github/actions/coverage-report)

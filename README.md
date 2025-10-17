@@ -482,35 +482,6 @@ This action implements several security measures:
 - **Command Safety:** Discovery commands execute without shell expansion
 - **Input Validation:** All inputs are validated before use
 
-## Migration Guide
-
-### From omnitweety-android/.github/actions/coverage-report
-
-**Before:**
-```yaml
-- uses: ./.github/actions/coverage-report
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    gradle-command: './gradlew -q projects'
-    thresholds: '{"core": 80, "data": 75, "feature": 70, "default": 60}'
-    ignore-modules: ':core,:core:testing,:data,:feature,:build-logic'
-```
-
-**After:**
-```yaml
-- uses: yshrsmz/kover-report-action@v1
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    discovery-command: './gradlew -q projects'
-    module-path-template: '{module}/build/reports/kover/report.xml'
-    thresholds: '{"core": 80, "data": 75, "feature": 70, "default": 60}'
-    ignore-modules: ':core,:core:testing,:data,:feature,:build-logic'
-```
-
-**Changes:**
-- `gradle-command` → `discovery-command`
-- Added `module-path-template` (was hardcoded)
-
 ## Development
 
 Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, coding standards, and contribution guidelines.

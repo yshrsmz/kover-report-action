@@ -75,7 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive README with quick start guides
 - Example workflows for common use cases
 - Troubleshooting guide
-- Migration guide from omnitweety-android action
 - CONTRIBUTING guide for developers
 - Detailed threshold configuration documentation
 
