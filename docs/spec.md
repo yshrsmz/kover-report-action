@@ -52,21 +52,25 @@ src/
 │   ├── glob.ts                # Glob-based discovery factory
 │   └── utils.ts               # Core discovery logic (command + glob)
 │
+├── coverage/                   # Coverage processing
+│   ├── index.ts               # Barrel exports
+│   ├── parser.ts              # Kover XML parsing
+│   ├── aggregator.ts          # Multi-module aggregation logic
+│   └── threshold.ts           # Threshold enforcement (type + name matching)
+│
 ├── history/                    # Coverage history management
-│   └── manager.ts             # HistoryManager class + interfaces
+│   ├── index.ts               # History types and interfaces
+│   ├── manager.ts             # HistoryManager class + interfaces
+│   ├── artifacts.ts           # GitHub artifacts I/O
+│   └── github-artifacts.ts    # Artifact discovery (GitHub API)
 │
-├── reporter/                   # Report emission abstractions
-│   ├── index.ts               # Reporter interfaces and types
-│   └── actions-reporter.ts    # GitHub Actions reporter factory
-│
-├── parser.ts                  # Kover XML parsing
-├── aggregator.ts              # Multi-module aggregation logic
-├── threshold.ts               # Threshold enforcement (type + name matching)
-├── report.ts                  # Markdown report generation
-├── graphs.ts                  # ASCII trend graph generation
-├── github.ts                  # PR comment posting
-├── history.ts                 # History types and interfaces
-└── artifacts.ts               # GitHub artifacts I/O
+└── reporter/                   # Report emission abstractions
+    ├── index.ts               # Reporter interfaces and types
+    ├── actions-reporter.ts    # GitHub Actions reporter factory
+    ├── report.ts              # Markdown report generation
+    ├── graphs.ts              # ASCII trend graph generation
+    └── github/                # GitHub PR integration
+        └── index.ts           # PR comment posting
 ```
 
 ### Architectural Layers

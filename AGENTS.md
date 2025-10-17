@@ -1,11 +1,19 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `src/` holds the TypeScript action entry point (`index.ts`); add new runtime logic here.
+- `src/` is organized into feature-based modules:
+  - `index.ts` - Entry point that delegates to `action-runner.ts`
+  - `action-runner.ts` - Main orchestrator
+  - `config/` - Configuration management (validation, thresholds)
+  - `discovery/` - Module discovery (command, glob, utilities)
+  - `coverage/` - Coverage processing (parser, aggregator, threshold enforcement)
+  - `history/` - History tracking (manager, artifacts, GitHub artifacts)
+  - `reporter/` - Reporting (report generation, graphs, GitHub PR integration)
+  - `common/` - Shared utilities (logger, paths)
 - `dist/` stores the bundle from `pnpm run build`; keep it aligned with source changes because GitHub Actions consume this directory.
 - `lib/` and `licenses.txt` are transient TypeScript and NCC outputs ignored by Git—do not commit them.
 - Docs and config files sit at the root (`action.yml`, `biome.json`, `tsconfig.json`, `README.md`), while `docs/` hosts guides and `examples/` holds reference workflows.
-- Use `test/fixtures/` for sample Kover XML or other assets that support verification.
+- Use `__fixtures__/` for sample Kover XML or other assets that support verification.
 
 ## Build, Test, and Development Commands
 ```bash
@@ -15,7 +23,7 @@ pnpm run lint        # lint with Biome's rule set
 pnpm run build       # tsc compile then bundle with @vercel/ncc into dist/
 pnpm run build       # tsc compile then bundle with @vercel/ncc into dist/
 pnpm run all         # run format + lint + build sequentially
-pnpm run test        # placeholder; update when adding automated tests
+pnpm run test        # run Vitest test suite
 ```
 Rebuild `dist/index.js` after runtime changes and commit it with the PR.
 
@@ -26,8 +34,10 @@ Rebuild `dist/index.js` after runtime changes and commit it with the PR.
 - When logging, use `@actions/core` helpers (`core.info`, `core.setFailed`) to keep output consistent with other GitHub Actions.
 
 ## Testing Guidelines
-- There is no automated suite yet; new coverage features should add tests under `test/` and hook them into `pnpm run test` (e.g., via `node:test` or a lightweight runner).
-- Store reusable XML samples or JSON expectations in `test/fixtures/` and keep them small for quick review.
+- The project uses Vitest for testing with comprehensive coverage (330+ tests across 18 test files).
+- Add tests under `src/__tests__/` following the existing patterns (unit tests with test doubles).
+- Store reusable XML samples or JSON expectations in `__fixtures__/` and keep them small for quick review.
+- Run tests with `pnpm test` (single run), `pnpm test:watch` (watch mode), or `pnpm test:coverage` (with coverage).
 - Validate manual runs with `act` or a scratch workflow whenever behaviour touches GitHub APIs.
 
 ## Commit & Pull Request Guidelines

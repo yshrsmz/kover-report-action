@@ -513,65 +513,7 @@ This action implements several security measures:
 
 ## Development
 
-### Prerequisites
-
-- Node.js 20.x or higher
-- pnpm package manager
-
-### Setup
-
-```bash
-# Install dependencies
-pnpm install
-
-# Format code
-pnpm run format
-
-# Lint code
-pnpm run lint
-
-# Build the action
-pnpm run build
-
-# Run all checks
-pnpm run all
-```
-
-### Testing
-
-```bash
-# Run tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Generate coverage report
-pnpm test:coverage
-```
-
-### Project Structure
-
-```
-.
-├── src/
-│   ├── index.ts          # Main orchestration
-│   ├── discovery.ts      # Module discovery
-│   ├── parser.ts         # Kover XML parsing
-│   ├── aggregator.ts     # Coverage aggregation
-│   ├── threshold.ts      # Threshold matching
-│   ├── report.ts         # Markdown generation
-│   ├── github.ts         # PR comment posting
-│   ├── history.ts        # Coverage history & comparison
-│   ├── artifacts.ts      # GitHub Artifacts API integration
-│   ├── graphs.ts         # ASCII graph visualization
-│   └── paths.ts          # Path resolution
-├── __tests__/            # Test files
-├── __fixtures__/         # Test fixtures
-├── dist/                 # Compiled action (committed)
-├── action.yml            # Action metadata
-└── docs/                 # Specification & planning docs
-```
+Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, coding standards, and contribution guidelines.
 
 ## License
 
