@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { OverallCoverage } from '../aggregator';
+import type { OverallCoverage } from '../coverage';
 import type { HistoryComparison } from '../history';
 import { generateMarkdownReport } from '../report';
 

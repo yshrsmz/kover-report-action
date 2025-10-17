@@ -1,4 +1,4 @@
-import type { OverallCoverage } from '../aggregator';
+import type { OverallCoverage } from '../coverage';
 import type { HistoryComparison } from '../history';
 
 export interface ReportResult {

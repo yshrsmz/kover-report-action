@@ -1,5 +1,5 @@
-import { getFailedModules, getMissingCoverageModules } from '../aggregator';
 import type { Logger } from '../common/logger';
+import { getFailedModules, getMissingCoverageModules } from '../coverage';
 import { postCoverageComment } from '../github';
 import { generateMarkdownReport } from '../report';
 import type { Reporter, ReportResult } from './index';

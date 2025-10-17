@@ -1,7 +1,7 @@
-import { aggregateCoverage } from './aggregator';
 import type { Logger } from './common/logger';
 import { resolveSecurePath } from './common/paths';
 import type { ActionConfig } from './config';
+import { aggregateCoverage } from './coverage';
 import type { ModuleDiscovery } from './discovery/index';
 import type { HistoryComparison } from './history';
 import type { CoverageSnapshot, HistoryContext, HistoryManager } from './history/manager';

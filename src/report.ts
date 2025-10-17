@@ -1,4 +1,4 @@
-import type { ModuleCoverage, OverallCoverage } from './aggregator';
+import type { ModuleCoverage, OverallCoverage } from './coverage';
 import type { HistoryComparison } from './history';
 import { formatDelta, getTrendIndicator } from './history';
 
