@@ -103,13 +103,33 @@ pnpm run all
 
 ## Action Architecture
 
+The action follows a **layered, feature-based architecture** with clean separation of concerns:
+
 ### Entry Point
-- `src/index.ts` - Main action entry point that:
-  - Reads inputs from `action.yml` (coverage-file, min-coverage, title)
-  - Accesses GitHub context via `@actions/github`
-  - Should parse Kover XML coverage reports (currently placeholder logic)
-  - Sets action outputs (coverage-percentage, lines-covered, lines-total)
-  - Fails the action if coverage is below minimum threshold
+- `src/index.ts` - Slim wiring layer that:
+  - Creates facades and dependencies (logger, config, discovery, history, reporter)
+  - Delegates all business logic to `action-runner.ts`
+  - Handles top-level error handling
+
+- `src/action-runner.ts` - Main orchestration logic that:
+  - Coordinates the workflow: discover → parse → aggregate → compare → report
+  - Pure business logic with injected dependencies
+  - No direct `@actions/core` usage (uses facades)
+
+### Module Organization
+- `src/config/` - Configuration management (loading, validation, threshold parsing)
+- `src/discovery/` - Module discovery (command-based and glob-based strategies)
+- `src/coverage/` - Coverage processing (XML parsing, aggregation, threshold enforcement)
+- `src/history/` - Coverage history tracking (manager, artifacts, GitHub API integration)
+- `src/reporter/` - Report generation (markdown, graphs, PR comments)
+- `src/common/` - Shared utilities (logger, path handling)
+
+### Key Features
+- Multi-module support with flexible discovery (Gradle commands or glob patterns)
+- Per-module threshold configuration (type-based and name-based)
+- Coverage history tracking with trend indicators (↑↓→)
+- PR comment integration with automatic updates
+- Comprehensive test coverage (330+ tests with Vitest)
 
 ### Configuration Files
 - `action.yml` - GitHub Action metadata defining inputs, outputs, and runtime (node24)
@@ -118,21 +138,22 @@ pnpm run all
 
 ## Key Implementation Details
 
-### Current State
-The action currently has placeholder logic for coverage calculation (lines 27-29 in src/index.ts). The actual Kover XML parsing needs to be implemented.
+### Coverage Parsing
+The action parses Kover XML reports (JaCoCo-compatible format):
+1. Reads XML files using `fast-xml-parser`
+2. Extracts INSTRUCTION coverage (not LINE coverage) for accuracy
+3. Aggregates across multiple modules with weighted averaging
+4. Compares against configurable per-module thresholds
 
-### Kover XML Format
-Kover generates XML reports in a specific format that needs to be parsed. The action should:
-1. Read and parse the XML file from the `coverage-file` input path
-2. Extract line coverage metrics
-3. Calculate overall coverage percentage
-4. Compare against `min-coverage` threshold
+### Action Inputs & Outputs
+**Inputs:** `coverage-files`, `discovery-command`, `module-path-template`, `thresholds`, `min-coverage`, `github-token`, `enable-history`, `baseline-branch`, etc.
 
-### Output Requirements
-The action must set three outputs via `core.setOutput()`:
-- `coverage-percentage` - Overall coverage as a number
-- `lines-covered` - Integer count of covered lines
-- `lines-total` - Integer count of total lines
+**Outputs:**
+- `coverage-percentage` - Overall coverage percentage
+- `instructions-covered` - Total instructions covered
+- `instructions-total` - Total instructions
+- `modules-coverage-json` - Per-module coverage JSON
+- `modules-below-threshold` - Modules failing thresholds
 
 ## CI/CD
 

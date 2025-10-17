@@ -1,7 +1,11 @@
 import type { DefaultArtifactClient } from '@actions/artifact';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HISTORY_FILENAME, loadHistoryFromArtifacts, saveHistoryToArtifacts } from '../artifacts';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
+import {
+  HISTORY_FILENAME,
+  loadHistoryFromArtifacts,
+  saveHistoryToArtifacts,
+} from '../history/artifacts';
 
 // Mock @actions/artifact
 vi.mock('@actions/artifact', () => {
@@ -35,8 +39,8 @@ vi.mock('node:fs', () => ({
   existsSync: vi.fn(() => true),
 }));
 
-// Mock github module
-vi.mock('../github', () => ({
+// Mock github-artifacts module
+vi.mock('../history/github-artifacts', () => ({
   findArtifactFromBaseline: vi.fn(),
   downloadArtifactArchive: vi.fn(),
 }));
@@ -150,7 +154,9 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should load from baseline branch when baseline is configured', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const { findArtifactFromBaseline, downloadArtifactArchive } = await import('../github');
+    const { findArtifactFromBaseline, downloadArtifactArchive } = await import(
+      '../history/github-artifacts'
+    );
     const { readFile } = await import('node:fs/promises');
     const toolCache = await import('@actions/tool-cache');
     const mockClient = new DefaultArtifactClient();
@@ -198,7 +204,7 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should not search baseline branch when no token provided', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const { findArtifactFromBaseline } = await import('../github');
+    const { findArtifactFromBaseline } = await import('../history/github-artifacts');
     const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
@@ -213,7 +219,7 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should not search baseline branch when no baseline branch provided', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const { findArtifactFromBaseline } = await import('../github');
+    const { findArtifactFromBaseline } = await import('../history/github-artifacts');
     const mockClient = new DefaultArtifactClient();
 
     vi.mocked(mockClient.getArtifact).mockResolvedValue({
@@ -233,7 +239,9 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should always prefer baseline artifact when baseline is configured', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const { findArtifactFromBaseline, downloadArtifactArchive } = await import('../github');
+    const { findArtifactFromBaseline, downloadArtifactArchive } = await import(
+      '../history/github-artifacts'
+    );
     const { readFile } = await import('node:fs/promises');
     const toolCache = await import('@actions/tool-cache');
     const mockClient = new DefaultArtifactClient();
@@ -276,7 +284,7 @@ describe('loadHistoryFromArtifacts', () => {
 
   it('should return empty array when baseline artifact not found', async () => {
     const { DefaultArtifactClient } = await import('@actions/artifact');
-    const { findArtifactFromBaseline } = await import('../github');
+    const { findArtifactFromBaseline } = await import('../history/github-artifacts');
     const mockClient = new DefaultArtifactClient();
 
     // Mock artifact not in current run

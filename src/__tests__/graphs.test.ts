@@ -4,7 +4,7 @@ import {
   generateCoverageTrendGraph,
   generateModuleTrendGraph,
   type TrendData,
-} from '../graphs';
+} from '../reporter/graphs';
 
 describe('generateCoverageTrendGraph', () => {
   it('should generate ASCII graph for overall coverage trend', () => {

@@ -30,7 +30,7 @@ jobs:
       - name: Generate coverage report
         uses: yshrsmz/kover-report-action@v1
         with:
-          coverage-file: 'build/reports/kover/report.xml'
+          coverage-files: 'build/reports/kover/report.xml'
           min-coverage: '80'
           title: 'Code Coverage Report'
 ```
@@ -41,7 +41,7 @@ jobs:
 - name: Check coverage threshold
   uses: yshrsmz/kover-report-action@v1
   with:
-    coverage-file: 'build/reports/kover/report.xml'
+    coverage-files: 'build/reports/kover/report.xml'
     min-coverage: '90'  # Fail if below 90%
 ```
 
@@ -52,40 +52,34 @@ jobs:
   id: coverage
   uses: yshrsmz/kover-report-action@v1
   with:
-    coverage-file: 'build/reports/kover/report.xml'
+    coverage-files: 'build/reports/kover/report.xml'
 
 - name: Comment on PR
   uses: actions/github-script@v7
   with:
     script: |
       const coverage = '${{ steps.coverage.outputs.coverage-percentage }}';
-      const covered = '${{ steps.coverage.outputs.lines-covered }}';
-      const total = '${{ steps.coverage.outputs.lines-total }}';
-      
+      const covered = '${{ steps.coverage.outputs.instructions-covered }}';
+      const total = '${{ steps.coverage.outputs.instructions-total }}';
+
       github.rest.issues.createComment({
         issue_number: context.issue.number,
         owner: context.repo.owner,
         repo: context.repo.repo,
-        body: `## Coverage Report\n\n📊 Coverage: ${coverage}%\n📈 Lines: ${covered}/${total}`
+        body: `## Coverage Report\n\n📊 Coverage: ${coverage}%\n📈 Instructions: ${covered}/${total}`
       });
 ```
 
 ## Multi-Module Project
 
 ```yaml
-- name: Coverage for module A
+- name: Multi-module coverage with Gradle discovery
   uses: yshrsmz/kover-report-action@v1
   with:
-    coverage-file: 'moduleA/build/reports/kover/report.xml'
-    title: 'Module A Coverage'
-    min-coverage: '75'
-
-- name: Coverage for module B
-  uses: yshrsmz/kover-report-action@v1
-  with:
-    coverage-file: 'moduleB/build/reports/kover/report.xml'
-    title: 'Module B Coverage'
-    min-coverage: '80'
+    discovery-command: './gradlew -q projects'
+    module-path-template: '{module}/build/reports/kover/report.xml'
+    thresholds: '{"moduleA": 75, "moduleB": 80, "default": 70}'
+    github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## With Coverage History & Trends

@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SpyLogger } from '../logger';
-import { parseCoverageFile } from '../parser';
+import { SpyLogger } from '../common/logger';
+import { parseCoverageFile } from '../coverage/parser';
 
 const FIXTURES_DIR = join(__dirname, '../../__fixtures__/kover-reports');
 

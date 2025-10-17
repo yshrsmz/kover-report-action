@@ -5,9 +5,9 @@
  * then extracting module names from the file paths.
  */
 
-import { discoverModulesFromGlob } from '../discovery';
-import type { Logger } from '../logger';
+import type { Logger } from '../common/logger';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
+import { discoverModulesFromGlob } from './utils';
 
 /**
  * Creates a glob-based discovery function

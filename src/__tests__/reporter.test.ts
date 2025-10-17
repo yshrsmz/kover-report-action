@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { SpyLogger } from '../logger';
+import { SpyLogger } from '../common/logger';
 import { createActionsReporter } from '../reporter/actions-reporter';
 import type { ReportResult } from '../reporter/index';
 
 // Mock the github and report modules
-vi.mock('../github', () => ({
+vi.mock('../reporter/github', () => ({
   postCoverageComment: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../report', () => ({
+vi.mock('../reporter/report', () => ({
   generateMarkdownReport: vi.fn().mockReturnValue('# Mock Markdown Report\n\nCoverage: 80%'),
 }));
 
-import { postCoverageComment } from '../github';
-import { generateMarkdownReport } from '../report';
+import { postCoverageComment } from '../reporter/github';
+import { generateMarkdownReport } from '../reporter/report';
 
 // Clear mocks before each test to prevent test pollution
 beforeEach(() => {

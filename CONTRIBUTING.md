@@ -2,6 +2,16 @@
 
 Thank you for your interest in contributing to Kover Report Action! This document provides guidelines and information for contributors.
 
+## Documentation
+
+For detailed technical specifications, architecture, and design decisions, see [docs/spec.md](docs/spec.md). This includes:
+- Complete architecture overview with data flow diagrams
+- Input/output specifications
+- Module discovery strategies
+- XML parsing details
+- Security considerations
+- Troubleshooting guides
+
 ## Code of Conduct
 
 This project adheres to a code of conduct. By participating, you are expected to uphold this code. Please be respectful and constructive in all interactions.
@@ -270,18 +280,47 @@ Root project 'myapp'
 ```
 .
 ├── src/
-│   ├── index.ts          # Main entry point
-│   ├── discovery.ts      # Module discovery logic
-│   ├── parser.ts         # Kover XML parsing
-│   ├── aggregator.ts     # Coverage aggregation
-│   ├── threshold.ts      # Threshold matching
-│   ├── report.ts         # Markdown report generation
-│   ├── github.ts         # PR comment posting
-│   └── paths.ts          # Path resolution & normalization
+│   ├── index.ts                    # Entry point
+│   ├── action-runner.ts            # Main orchestration
+│   │
+│   ├── config/                     # Configuration management
+│   │   ├── index.ts               # Core configuration
+│   │   ├── validation.ts          # Input validation
+│   │   └── thresholds.ts          # Threshold parsing
+│   │
+│   ├── discovery/                  # Module discovery
+│   │   ├── index.ts               # Types & exports
+│   │   ├── command.ts             # Command-based discovery
+│   │   ├── glob.ts                # Glob-based discovery
+│   │   └── utils.ts               # Shared utilities
+│   │
+│   ├── coverage/                   # Coverage processing
+│   │   ├── index.ts               # Barrel exports
+│   │   ├── parser.ts              # Kover XML parsing
+│   │   ├── aggregator.ts          # Coverage aggregation
+│   │   └── threshold.ts           # Threshold enforcement
+│   │
+│   ├── history/                    # History tracking
+│   │   ├── index.ts               # Types & interfaces
+│   │   ├── manager.ts             # History management
+│   │   ├── artifacts.ts           # Artifact persistence
+│   │   └── github-artifacts.ts    # Artifact discovery
+│   │
+│   ├── reporter/                   # Reporting
+│   │   ├── index.ts               # Types & exports
+│   │   ├── actions-reporter.ts    # GitHub Actions reporter
+│   │   ├── report.ts              # Report generation
+│   │   ├── graphs.ts              # Graph visualization
+│   │   └── github/                # GitHub PR integration
+│   │       └── index.ts           # PR comment posting
+│   │
+│   └── common/                     # Shared utilities
+│       ├── logger.ts              # Logging utility
+│       └── paths.ts               # Path resolution
+│
 ├── __tests__/
-│   ├── discovery.test.ts # Tests for discovery.ts
-│   ├── parser.test.ts    # Tests for parser.ts
-│   └── ...               # Other test files
+│   ├── *.test.ts         # Test files organized by module
+│   └── helpers.ts        # Test utilities
 ├── __fixtures__/
 │   ├── kover-reports/    # Sample Kover XML files
 │   ├── gradle-output/    # Sample Gradle command outputs
@@ -289,9 +328,7 @@ Root project 'myapp'
 ├── dist/
 │   └── index.js          # Compiled action (MUST be committed)
 ├── lib/                  # TypeScript compilation output (not committed)
-├── docs/
-│   ├── spec.md           # Specification document
-│   └── plan.md           # Implementation plan
+├── docs/                 # Documentation & planning
 ├── action.yml            # GitHub Action metadata
 ├── package.json          # Dependencies and scripts
 ├── tsconfig.json         # TypeScript configuration
@@ -379,7 +416,8 @@ node dist/index.js
 
 ## Questions?
 
-- 📖 Check the [README](README.md)
+- 📖 Check the [README](README.md) for usage documentation
+- 📋 Read [docs/spec.md](docs/spec.md) for technical specifications
 - 🔍 Search [existing issues](https://github.com/yshrsmz/kover-report-action/issues)
 - 💬 Ask in a [new issue](https://github.com/yshrsmz/kover-report-action/issues/new)
 

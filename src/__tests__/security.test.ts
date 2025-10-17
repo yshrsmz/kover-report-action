@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { resolveSecurePath } from '../paths';
+import { resolveSecurePath } from '../common/paths';
 
 describe('resolveSecurePath - Path Traversal Prevention', () => {
   const workspace = '/home/user/workspace';

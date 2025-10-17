@@ -5,10 +5,10 @@
  * and resolving their coverage file paths using a template.
  */
 
-import { discoverModulesFromCommand } from '../discovery';
-import type { Logger } from '../logger';
-import { resolveModulePath } from '../paths';
+import type { Logger } from '../common/logger';
+import { resolveModulePath } from '../common/paths';
 import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
+import { discoverModulesFromCommand } from './utils';
 
 /**
  * Creates a command-based discovery function

@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { ActionsLogger, createLogger, SpyLogger } from '../logger';
+import { ActionsLogger, createLogger, SpyLogger } from '../common/logger';
 
 describe('ActionsLogger', () => {
   test('forwards info calls to core', () => {
