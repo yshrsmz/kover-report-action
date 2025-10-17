@@ -1,6 +1,6 @@
 import * as github from '@actions/github';
-import type { Logger } from './common/logger';
-import { COMMENT_IDENTIFIER } from './report';
+import type { Logger } from '../../common/logger';
+import { COMMENT_IDENTIFIER } from '../report';
 
 /**
  * Type alias for Octokit instance

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { OverallCoverage } from '../coverage';
 import type { HistoryComparison } from '../history/index';
-import { generateMarkdownReport } from '../report';
+import { generateMarkdownReport } from '../reporter/report';
 
 describe('generateMarkdownReport', () => {
   it('should generate report with all passing modules', () => {

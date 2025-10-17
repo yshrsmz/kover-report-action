@@ -1,8 +1,8 @@
 import type { Logger } from '../common/logger';
 import { getFailedModules, getMissingCoverageModules } from '../coverage';
-import { postCoverageComment } from '../github';
-import { generateMarkdownReport } from '../report';
+import { postCoverageComment } from './github';
 import type { Reporter, ReportResult } from './index';
+import { generateMarkdownReport } from './report';
 
 export interface ActionsReporterOptions {
   logger: Logger;
