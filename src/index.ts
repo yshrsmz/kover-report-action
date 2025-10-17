@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import { runAction } from './action-runner';
-import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './artifacts';
 import { createLogger } from './common/logger';
 import { createCoreFacade, loadConfig } from './config';
 import { createCommandDiscovery, createGlobDiscovery } from './discovery/index';
+import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './history/artifacts';
 import { DefaultHistoryManager } from './history/manager';
 import { createActionsReporter } from './reporter/actions-reporter';
 

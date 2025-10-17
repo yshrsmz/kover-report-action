@@ -8,7 +8,7 @@ import {
   loadHistory,
   saveHistory,
   trimHistory,
-} from '../history';
+} from '../history/index';
 
 // Helper to load test fixtures
 async function loadFixture(relativePath: string): Promise<string> {

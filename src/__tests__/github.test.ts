@@ -6,7 +6,8 @@ import { SpyLogger } from '../common/logger';
 vi.mock('@actions/github');
 
 // Import after mocking
-import { findArtifactFromBaseline, postCoverageComment } from '../github';
+import { postCoverageComment } from '../github';
+import { findArtifactFromBaseline } from '../history/github-artifacts';
 
 describe('postCoverageComment', () => {
   let logger: SpyLogger;

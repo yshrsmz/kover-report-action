@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { OverallCoverage } from '../coverage';
-import type { HistoryComparison } from '../history';
+import type { HistoryComparison } from '../history/index';
 import { generateMarkdownReport } from '../report';
 
 describe('generateMarkdownReport', () => {
