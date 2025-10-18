@@ -31,6 +31,9 @@ ENV AQUA_ROOT_DIR=${USER_HOME}/.local/share/aquaproj-aqua
 ENV AQUA_BIN=${AQUA_ROOT_DIR}/bin
 ENV AQUA_CONFIG=${USER_CONFIG}/aqua/aqua.yaml
 
+# Claude Code
+ENV CLAUDE_CONFIG_DIR=${USER_CONFIG}/claude
+
 ENV PATH=${AQUA_BIN}:${USER_LOCAL_BIN}:$PATH
 
 ENV PATH="${MISE_SHIMS_DIR}:${USER_LOCAL_BIN}:$PATH"
@@ -52,6 +55,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   ${USER_LOCAL}/bash_completion.d \
   ${USER_CONFIG}/.ssh \
   ${USER_CONFIG}/aqua \
+  $(USER_CONFIG)/gh \
+  ${USER_CONFIG}/claude \
   ${USER_HOME}/.claude \
   ${USER_HOME}/.codex \
   ${XDG_CACHE_HOME} \
