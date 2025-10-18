@@ -19,6 +19,11 @@
       "type": "volume"
     },
     {
+      "source": "claude-code-user-config-${localWorkspaceFolderBasename}",
+      "target": "/home/vscode/.config/claude",
+      "type": "volume"
+    },
+    {
       "source": "codex-config-${localWorkspaceFolderBasename}",
       "target": "/home/vscode/.codex",
       "type": "volume"
@@ -29,8 +34,7 @@
     "ghcr.io/devcontainers/features/github-cli:1": {
       "installDirectlyFromGitHubRelease": true,
       "version": "latest"
-    },
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+    }
   },
   "initializeCommand": [
     "/bin/sh",
@@ -38,5 +42,9 @@
     "cd ${localWorkspaceFolder} && if [ ! -f .devcontainer/runtime.env ]; then cp .devcontainer/runtime.env.template .devcontainer/runtime.env; fi"
   ],
   "onCreateCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-create.sh"],
+  "postCreateCommand": [
+    "/bin/bash",
+    "/home/vscode/workspace/.devcontainer/scripts/on-post-create.sh"
+  ],
   "postStartCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-post-start.sh"]
 }
