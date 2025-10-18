@@ -2,6 +2,10 @@ name: 'Kover Report Action'
 description: 'A generalized GitHub Action for generating and reporting code coverage from Kover XML reports with multi-module support'
 author: 'yshrsmz'
 
+branding:
+  icon: anchor
+  color: green
+
 inputs:
   # Discovery & Paths
   discovery-command:
