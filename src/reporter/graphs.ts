@@ -1,6 +1,5 @@
 /**
  * ASCII graph visualization for coverage trends
- * Generates sparklines and text-based charts for PR comments
  */
 
 /**
@@ -10,11 +9,6 @@ export interface TrendData {
   label: string; // Date, commit, or other label
   value: number; // Coverage percentage (0-100)
 }
-
-/**
- * Sparkline block characters (8 levels from low to high)
- */
-const SPARKLINE_CHARS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
 
 /**
  * Generate a coverage trend graph with ASCII art
@@ -113,59 +107,6 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
 }
 
 /**
- * Generate a trend graph for a specific module
- * @param data Coverage history for the module
- * @param moduleName Name of the module
- * @returns ASCII graph for module trend
- */
-export function generateModuleTrendGraph(data: TrendData[], moduleName: string): string {
-  if (data.length === 0) {
-    return `**${moduleName}**\n\nNo history data available for this module.`;
-  }
-
-  return generateCoverageTrendGraph(data, moduleName);
-}
-
-/**
- * Generate a compact sparkline graph (single line)
- * Perfect for inline display in tables or compact reports
- * @param data Coverage data points
- * @returns Single-line sparkline string
- */
-export function generateCompactTrendGraph(data: TrendData[]): string {
-  if (data.length === 0) {
-    return '';
-  }
-
-  if (data.length === 1) {
-    // Single point - use middle block
-    return SPARKLINE_CHARS[4];
-  }
-
-  // Find min/max for scaling
-  const values = data.map((d) => d.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min;
-
-  // If all values are the same, use middle block
-  if (range === 0) {
-    return SPARKLINE_CHARS[4].repeat(data.length);
-  }
-
-  // Map each value to a sparkline character
-  const sparkline = values
-    .map((value) => {
-      const normalized = (value - min) / range;
-      const index = Math.min(7, Math.floor(normalized * 8));
-      return SPARKLINE_CHARS[index];
-    })
-    .join('');
-
-  return sparkline;
-}
-
-/**
  * Sample data points to fit within target width
  * Uses even distribution across the dataset
  * @param data Full dataset
@@ -186,43 +127,4 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
   }
 
   return sampled;
-}
-
-/**
- * Generate a summary of recent coverage changes
- * Shows the last N data points with their changes
- * @param data Coverage history
- * @param count Number of recent points to show (default 5)
- * @returns Formatted summary string
- */
-export function generateRecentChangesSummary(data: TrendData[], count = 5): string {
-  if (data.length === 0) {
-    return 'No recent data';
-  }
-
-  const recent = data.slice(-count);
-  const lines: string[] = [];
-
-  lines.push('**Recent Changes:**');
-  lines.push('');
-
-  for (let i = 0; i < recent.length; i++) {
-    const point = recent[i];
-    let change = '';
-
-    if (i > 0) {
-      const delta = point.value - recent[i - 1].value;
-      if (delta > 0.1) {
-        change = ` (↑ +${delta.toFixed(1)}%)`;
-      } else if (delta < -0.1) {
-        change = ` (↓ ${delta.toFixed(1)}%)`;
-      } else {
-        change = ' (→)';
-      }
-    }
-
-    lines.push(`- ${point.label}: ${point.value.toFixed(1)}%${change}`);
-  }
-
-  return lines.join('\n');
 }

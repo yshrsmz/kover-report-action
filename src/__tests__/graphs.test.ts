@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  generateCompactTrendGraph,
-  generateCoverageTrendGraph,
-  generateModuleTrendGraph,
-  type TrendData,
-} from '../reporter/graphs';
+import { generateCoverageTrendGraph, type TrendData } from '../reporter/graphs';
 
 describe('generateCoverageTrendGraph', () => {
   it('should generate ASCII graph for overall coverage trend', () => {
@@ -67,78 +62,6 @@ describe('generateCoverageTrendGraph', () => {
     expect(graph).toContain('●'); // Should contain data points
     // Y-axis should show values around 85%
     expect(graph).toMatch(/8[3-7]%/); // Range around 85%
-  });
-});
-
-describe('generateModuleTrendGraph', () => {
-  it('should generate graph for specific module', () => {
-    const data: TrendData[] = [
-      { label: 'Jan 10', value: 75.0 },
-      { label: 'Jan 11', value: 78.0 },
-      { label: 'Jan 12', value: 80.0 },
-    ];
-
-    const graph = generateModuleTrendGraph(data, ':core:common');
-
-    expect(graph).toContain(':core:common');
-    expect(graph).toContain('75%'); // Y-axis shows rounded percentages
-    expect(graph).toContain('80%');
-  });
-
-  it('should handle module with no data', () => {
-    const graph = generateModuleTrendGraph([], ':new:module');
-
-    expect(graph).toContain(':new:module');
-    expect(graph).toContain('No history');
-  });
-});
-
-describe('generateCompactTrendGraph', () => {
-  it('should generate compact sparkline-style graph', () => {
-    const data: TrendData[] = [
-      { label: '', value: 80.0 },
-      { label: '', value: 82.0 },
-      { label: '', value: 85.0 },
-      { label: '', value: 83.0 },
-      { label: '', value: 87.0 },
-    ];
-
-    const graph = generateCompactTrendGraph(data);
-
-    // Should be compact (single line or few lines)
-    const lines = graph.split('\n');
-    expect(lines.length).toBeLessThanOrEqual(3);
-
-    // Should contain trend indicators
-    expect(graph.length).toBeGreaterThan(0);
-  });
-
-  it('should use sparkline characters for compact display', () => {
-    const data: TrendData[] = [
-      { label: '', value: 70 },
-      { label: '', value: 75 },
-      { label: '', value: 80 },
-      { label: '', value: 85 },
-      { label: '', value: 90 },
-    ];
-
-    const graph = generateCompactTrendGraph(data);
-
-    // Should contain block characters or similar for sparkline
-    expect(graph).toMatch(/[▁▂▃▄▅▆▇█]/g);
-  });
-
-  it('should handle empty data', () => {
-    const graph = generateCompactTrendGraph([]);
-    expect(graph).toBe('');
-  });
-
-  it('should handle single point', () => {
-    const data: TrendData[] = [{ label: '', value: 85.0 }];
-
-    const graph = generateCompactTrendGraph(data);
-
-    expect(graph).toMatch(/[▁▂▃▄▅▆▇█]/);
   });
 });
 
