@@ -185,14 +185,18 @@ function convertHistoryToTrendData(history: HistoryEntry[]): TrendData[] {
  * @returns Formatted label string
  */
 function formatHistoryLabel(entry: HistoryEntry): string {
-  // Try to use short commit SHA (first 7 chars)
+  // Try to use short commit SHA (first 7 chars, or less if shorter)
   if (entry.commit && entry.commit !== 'unknown') {
-    return entry.commit.substring(0, 7);
+    return entry.commit.substring(0, Math.min(7, entry.commit.length));
   }
 
   // Fallback to date
+  const date = new Date(entry.timestamp);
+  if (Number.isNaN(date.getTime())) {
+    return 'N/A';
+  }
+
   try {
-    const date = new Date(entry.timestamp);
     return date.toISOString().substring(5, 10); // MM-DD format
   } catch {
     return 'N/A';

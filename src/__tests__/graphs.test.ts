@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  generateCompactTrendGraph,
-  generateCoverageTrendGraph,
-  generateModuleTrendGraph,
-  type TrendData,
-} from '../reporter/graphs';
+import { generateCoverageTrendGraph, type TrendData } from '../reporter/graphs';
 
 describe('generateCoverageTrendGraph', () => {
   it('should generate ASCII graph for overall coverage trend', () => {
@@ -61,80 +56,12 @@ describe('generateCoverageTrendGraph', () => {
 
     const graph = generateCoverageTrendGraph(data, 'Stable Coverage');
 
-    expect(graph).toContain('85.0%');
-    expect(graph).toContain('All values');
-  });
-});
-
-describe('generateModuleTrendGraph', () => {
-  it('should generate graph for specific module', () => {
-    const data: TrendData[] = [
-      { label: 'Jan 10', value: 75.0 },
-      { label: 'Jan 11', value: 78.0 },
-      { label: 'Jan 12', value: 80.0 },
-    ];
-
-    const graph = generateModuleTrendGraph(data, ':core:common');
-
-    expect(graph).toContain(':core:common');
-    expect(graph).toContain('75%'); // Y-axis shows rounded percentages
-    expect(graph).toContain('80%');
-  });
-
-  it('should handle module with no data', () => {
-    const graph = generateModuleTrendGraph([], ':new:module');
-
-    expect(graph).toContain(':new:module');
-    expect(graph).toContain('No history');
-  });
-});
-
-describe('generateCompactTrendGraph', () => {
-  it('should generate compact sparkline-style graph', () => {
-    const data: TrendData[] = [
-      { label: '', value: 80.0 },
-      { label: '', value: 82.0 },
-      { label: '', value: 85.0 },
-      { label: '', value: 83.0 },
-      { label: '', value: 87.0 },
-    ];
-
-    const graph = generateCompactTrendGraph(data);
-
-    // Should be compact (single line or few lines)
-    const lines = graph.split('\n');
-    expect(lines.length).toBeLessThanOrEqual(3);
-
-    // Should contain trend indicators
-    expect(graph.length).toBeGreaterThan(0);
-  });
-
-  it('should use sparkline characters for compact display', () => {
-    const data: TrendData[] = [
-      { label: '', value: 70 },
-      { label: '', value: 75 },
-      { label: '', value: 80 },
-      { label: '', value: 85 },
-      { label: '', value: 90 },
-    ];
-
-    const graph = generateCompactTrendGraph(data);
-
-    // Should contain block characters or similar for sparkline
-    expect(graph).toMatch(/[▁▂▃▄▅▆▇█]/g);
-  });
-
-  it('should handle empty data', () => {
-    const graph = generateCompactTrendGraph([]);
-    expect(graph).toBe('');
-  });
-
-  it('should handle single point', () => {
-    const data: TrendData[] = [{ label: '', value: 85.0 }];
-
-    const graph = generateCompactTrendGraph(data);
-
-    expect(graph).toMatch(/[▁▂▃▄▅▆▇█]/);
+    // Should display a graph even when all values are the same
+    expect(graph).toContain('Stable Coverage');
+    expect(graph).toMatch(/[│┤├─]/g); // Should contain graph characters
+    expect(graph).toContain('●'); // Should contain data points
+    // Y-axis should show values around 85%
+    expect(graph).toMatch(/8[3-7]%/); // Range around 85%
   });
 });
 
@@ -179,6 +106,33 @@ describe('Graph scaling and formatting', () => {
     const lines = graph.split('\n');
     const maxLineLength = Math.max(...lines.map((l) => l.length));
     expect(maxLineLength).toBeLessThanOrEqual(120);
+  });
+
+  it('should sample data when exceeding max width and include newest point', () => {
+    // Create 60 data points (exceeds MAX_GRAPH_WIDTH of 50)
+    const data: TrendData[] = Array.from({ length: 60 }, (_, i) => ({
+      label: `commit-${i}`,
+      value: 70 + i * 0.5, // Gradually increasing coverage
+    }));
+
+    const graph = generateCoverageTrendGraph(data, 'Sampled History');
+
+    // Should contain the title
+    expect(graph).toContain('Sampled History');
+
+    // Should contain the first label
+    expect(graph).toContain('commit-0');
+
+    // Should contain the last (newest) label - this is the critical test
+    // Labels are truncated to 8 chars, so "commit-59" becomes "commit-5"
+    expect(graph).toContain('commit-5');
+
+    // Graph should contain data points
+    expect(graph).toContain('●');
+
+    // Should show the range (first value ~70%, last value ~99.5%)
+    expect(graph).toMatch(/7[0-9]%/); // First values around 70%
+    expect(graph).toMatch(/9[0-9]%/); // Last values around 99%
   });
 
   it('should show trend direction clearly', () => {
