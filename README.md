@@ -325,7 +325,6 @@ With history tracking enabled:
 
 ### Coverage Trend
 
-```
 **Overall Coverage History**
 
 ┌────────────────────────────┐
@@ -336,8 +335,6 @@ With history tracking enabled:
 │ 80%             ●      ●   │
 └────────────────────────────┘
    abc123  def456  ghi789
-```
-```
 
 ### Module Coverage
 
