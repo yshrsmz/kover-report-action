@@ -108,6 +108,33 @@ describe('Graph scaling and formatting', () => {
     expect(maxLineLength).toBeLessThanOrEqual(120);
   });
 
+  it('should sample data when exceeding max width and include newest point', () => {
+    // Create 60 data points (exceeds MAX_GRAPH_WIDTH of 50)
+    const data: TrendData[] = Array.from({ length: 60 }, (_, i) => ({
+      label: `commit-${i}`,
+      value: 70 + i * 0.5, // Gradually increasing coverage
+    }));
+
+    const graph = generateCoverageTrendGraph(data, 'Sampled History');
+
+    // Should contain the title
+    expect(graph).toContain('Sampled History');
+
+    // Should contain the first label
+    expect(graph).toContain('commit-0');
+
+    // Should contain the last (newest) label - this is the critical test
+    // Labels are truncated to 8 chars, so "commit-59" becomes "commit-5"
+    expect(graph).toContain('commit-5');
+
+    // Graph should contain data points
+    expect(graph).toContain('●');
+
+    // Should show the range (first value ~70%, last value ~99.5%)
+    expect(graph).toMatch(/7[0-9]%/); // First values around 70%
+    expect(graph).toMatch(/9[0-9]%/); // Last values around 99%
+  });
+
   it('should show trend direction clearly', () => {
     const upwardData: TrendData[] = [
       { label: 'Day 1', value: 70 },

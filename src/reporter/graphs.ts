@@ -71,13 +71,13 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
     const displayRange = displayMax - displayMin;
 
     // Draw graph with axis
-    lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
+    lines.push(`┌${'─'.repeat(sampledData.length + 6)}┐`);
     for (let row = 0; row < height; row++) {
       const percentage = displayMax - (row / (height - 1)) * displayRange;
       const label = `${percentage.toFixed(0)}%`.padStart(4);
       lines.push(`│${label} ${graph[row].join('')} │`);
     }
-    lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
+    lines.push(`└${'─'.repeat(sampledData.length + 6)}┘`);
   } else {
     // Normal case with varying values
     // Plot points
@@ -89,13 +89,13 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
     }
 
     // Draw graph with axis
-    lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
+    lines.push(`┌${'─'.repeat(sampledData.length + 6)}┐`);
     for (let row = 0; row < height; row++) {
       const percentage = max - (row / (height - 1)) * range;
       const label = `${percentage.toFixed(0)}%`.padStart(4);
       lines.push(`│${label} ${graph[row].join('')} │`);
     }
-    lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
+    lines.push(`└${'─'.repeat(sampledData.length + 6)}┘`);
   }
 
   // X-axis labels
@@ -114,6 +114,7 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
 /**
  * Sample data points to fit within target width
  * Uses even distribution across the dataset
+ * Always includes the last (newest) data point
  * @param data Full dataset
  * @param targetWidth Desired number of points
  * @returns Sampled data
@@ -126,10 +127,13 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
   const step = data.length / targetWidth;
   const sampled: TrendData[] = [];
 
-  for (let i = 0; i < targetWidth; i++) {
+  for (let i = 0; i < targetWidth - 1; i++) {
     const index = Math.floor(i * step);
     sampled.push(data[index]);
   }
+
+  // Always include the last (newest) data point
+  sampled.push(data[data.length - 1]);
 
   return sampled;
 }
