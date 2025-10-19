@@ -56,6 +56,7 @@ export interface HistoryManager {
   append(context: HistoryContext, snapshot: CoverageSnapshot): void;
   persist(): Promise<void>;
   getEntryCount(): number;
+  getHistory(): HistoryEntry[];
 }
 
 /**
@@ -136,5 +137,13 @@ export class DefaultHistoryManager implements HistoryManager {
    */
   getEntryCount(): number {
     return this.history.length;
+  }
+
+  /**
+   * Get a copy of the current history entries
+   * Returns a new array to prevent external mutations
+   */
+  getHistory(): HistoryEntry[] {
+    return [...this.history];
   }
 }

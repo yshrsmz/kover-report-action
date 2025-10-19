@@ -56,6 +56,9 @@ function createFakeHistoryManager(): {
     getEntryCount() {
       return entryCount;
     },
+    getHistory() {
+      return [];
+    },
   };
 
   return {
@@ -264,6 +267,7 @@ describe('runAction', () => {
       append: () => {},
       persist: async () => {},
       getEntryCount: () => 0,
+      getHistory: () => [],
     };
 
     const config = createTestConfig({ enableHistory: true });
@@ -310,6 +314,7 @@ describe('runAction', () => {
       append: () => {},
       persist: async () => {},
       getEntryCount: () => 10,
+      getHistory: () => [],
     };
 
     const config = createTestConfig({ enableHistory: true });
@@ -341,6 +346,7 @@ describe('runAction', () => {
       append: () => {},
       persist: async () => {},
       getEntryCount: () => 0,
+      getHistory: () => [],
     };
 
     const config = createTestConfig({
@@ -372,6 +378,7 @@ describe('runAction', () => {
       },
       persist: async () => {},
       getEntryCount: () => entryCount,
+      getHistory: () => [],
     };
 
     const config = createTestConfig({ enableHistory: true, debug: true });

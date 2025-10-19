@@ -23,7 +23,7 @@ export interface ActionsReporterOptions {
  */
 export function createActionsReporter(options: ActionsReporterOptions): Reporter {
   return async (result: ReportResult, title: string): Promise<void> => {
-    const { overall, comparison } = result;
+    const { overall, comparison, history } = result;
     const { logger, core, githubToken, enablePrComment, debug } = options;
 
     // Set GitHub Actions outputs
@@ -72,7 +72,7 @@ export function createActionsReporter(options: ActionsReporterOptions): Reporter
     // PR comment
     if (enablePrComment) {
       logger.info('📝 Generating coverage report...');
-      const report = generateMarkdownReport(overall, title, comparison);
+      const report = generateMarkdownReport(overall, title, comparison, history);
       if (debug) {
         logger.debug(`Generated report (${report.length} characters)`);
       }
