@@ -3,8 +3,8 @@ description: 'A generalized GitHub Action for generating and reporting code cove
 author: 'yshrsmz'
 
 branding:
-  icon: anchor
-  color: green
+  icon: 'check-circle'
+  color: 'green'
 
 inputs:
   # Discovery & Paths
@@ -94,7 +94,3 @@ outputs:
 runs:
   using: 'node24'
   main: 'dist/index.js'
-
-branding:
-  icon: 'check-circle'
-  color: 'green'
