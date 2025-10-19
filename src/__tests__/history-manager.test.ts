@@ -284,6 +284,57 @@ describe('HistoryManager', () => {
     });
   });
 
+  describe('getHistory', () => {
+    test('returns empty array for new manager', () => {
+      const store = new InMemoryHistoryStore();
+      const manager = new DefaultHistoryManager(store, 50, 'main');
+
+      const history = manager.getHistory();
+
+      expect(history).toEqual([]);
+    });
+
+    test('returns copy of history entries after append', () => {
+      const store = new InMemoryHistoryStore();
+      const manager = new DefaultHistoryManager(store, 50, 'main');
+
+      manager.append(
+        { branch: 'main', commit: 'abc123', timestamp: '2025-01-01T00:00:00Z' },
+        { overall: 80, covered: 800, total: 1000, modules: { ':core': 80 } }
+      );
+
+      const history = manager.getHistory();
+
+      expect(history).toHaveLength(1);
+      expect(history[0].commit).toBe('abc123');
+      expect(history[0].overall.percentage).toBe(80);
+    });
+
+    test('returns copy that does not affect internal state', () => {
+      const store = new InMemoryHistoryStore();
+      const manager = new DefaultHistoryManager(store, 50, 'main');
+
+      manager.append(
+        { branch: 'main', commit: 'abc123', timestamp: '2025-01-01T00:00:00Z' },
+        { overall: 80, covered: 800, total: 1000, modules: { ':core': 80 } }
+      );
+
+      const history = manager.getHistory();
+      // Try to mutate the returned array
+      history.push({
+        timestamp: '2025-01-02T00:00:00Z',
+        branch: 'feature',
+        commit: 'def456',
+        overall: { percentage: 85, covered: 850, total: 1000 },
+        modules: { ':core': 85 },
+      });
+
+      // Internal state should be unchanged
+      expect(manager.getEntryCount()).toBe(1);
+      expect(manager.getHistory()).toHaveLength(1);
+    });
+  });
+
   describe('persist', () => {
     test('saves empty history to store', async () => {
       const store = new InMemoryHistoryStore();

@@ -316,7 +316,12 @@ describe('createActionsReporter', () => {
     await reporter(result, 'Test Report');
 
     expect(logger.hasMessage('info', '📝 Generating coverage report...')).toBe(true);
-    expect(generateMarkdownReport).toHaveBeenCalledWith(result.overall, 'Test Report', undefined);
+    expect(generateMarkdownReport).toHaveBeenCalledWith(
+      result.overall,
+      'Test Report',
+      undefined,
+      undefined
+    );
   });
 
   test('posts PR comment when token provided', async () => {
@@ -400,7 +405,8 @@ describe('createActionsReporter', () => {
     expect(generateMarkdownReport).toHaveBeenCalledWith(
       result.overall,
       'Test Report',
-      result.comparison
+      result.comparison,
+      undefined
     );
   });
 

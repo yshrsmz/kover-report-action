@@ -1,9 +1,10 @@
 import type { OverallCoverage } from '../coverage';
-import type { HistoryComparison } from '../history';
+import type { HistoryComparison, HistoryEntry } from '../history';
 
 export interface ReportResult {
   overall: OverallCoverage;
   comparison?: HistoryComparison;
+  history?: HistoryEntry[];
 }
 
 /**

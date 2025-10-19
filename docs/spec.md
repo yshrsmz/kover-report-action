@@ -871,6 +871,7 @@ const parserOptions = {
 - ✅ Store coverage history in GitHub artifacts
 - ✅ Compare against configurable baseline branch
 - ✅ Show trend indicators (↑↓) in reports
+- ✅ Display visual ASCII trend graphs in PR comments
 - ✅ Configurable retention policy (default: 50 entries)
 - ✅ Module-level and overall coverage trends
 - ✅ Graceful degradation if history unavailable

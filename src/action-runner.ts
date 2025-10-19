@@ -158,7 +158,11 @@ export async function runAction(
     }
 
     // Report results
-    const reportResult: ReportResult = { overall, comparison };
+    const reportResult: ReportResult = {
+      overall,
+      comparison,
+      history: history?.getHistory(),
+    };
     await reporter(reportResult, config.title);
 
     // Check threshold

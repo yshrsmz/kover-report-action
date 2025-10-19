@@ -1,6 +1,7 @@
 import type { ModuleCoverage, OverallCoverage } from '../coverage';
-import type { HistoryComparison } from '../history/index';
+import type { HistoryComparison, HistoryEntry } from '../history/index';
 import { formatDelta, getTrendIndicator } from '../history/index';
+import { generateCoverageTrendGraph, type TrendData } from './graphs';
 
 /**
  * HTML comment identifier for finding and updating PR comments
@@ -19,12 +20,14 @@ const REPO_URL = 'https://github.com/yshrsmz/kover-report-action';
  * @param overall Overall coverage data with per-module breakdown
  * @param title Report title (displayed as heading)
  * @param comparison Optional history comparison for trend indicators
+ * @param history Optional history entries for trend graphs
  * @returns Markdown-formatted report with HTML comment identifier
  */
 export function generateMarkdownReport(
   overall: OverallCoverage,
   title: string,
-  comparison?: HistoryComparison
+  comparison?: HistoryComparison,
+  history?: HistoryEntry[]
 ): string {
   const lines: string[] = [];
 
@@ -46,6 +49,19 @@ export function generateMarkdownReport(
     lines.push(`**Overall Coverage: ${formattedOverall}**`);
   }
   lines.push('');
+
+  // Coverage trend graph (if history is available and has multiple entries)
+  if (history && history.length > 1) {
+    const trendData = convertHistoryToTrendData(history);
+    if (trendData.length > 1) {
+      lines.push('### Coverage Trend');
+      lines.push('');
+      lines.push('```');
+      lines.push(generateCoverageTrendGraph(trendData, 'Overall Coverage History'));
+      lines.push('```');
+      lines.push('');
+    }
+  }
 
   // Module coverage table
   lines.push('### Module Coverage');
@@ -146,4 +162,39 @@ function formatChange(moduleName: string, comparison: HistoryComparison): string
   const trendIndicator = getTrendIndicator(delta);
   const deltaStr = formatDelta(delta);
   return `${trendIndicator} ${deltaStr}`;
+}
+
+/**
+ * Convert history entries to TrendData format for graph generation
+ * @param history Array of history entries
+ * @returns Array of TrendData with labels and values
+ */
+function convertHistoryToTrendData(history: HistoryEntry[]): TrendData[] {
+  return history
+    .map((entry) => ({
+      label: formatHistoryLabel(entry),
+      value: entry.overall.percentage,
+    }))
+    .reverse(); // Reverse to show oldest to newest (left to right)
+}
+
+/**
+ * Format a history entry as a label for trend graphs
+ * Uses short commit SHA or date
+ * @param entry History entry
+ * @returns Formatted label string
+ */
+function formatHistoryLabel(entry: HistoryEntry): string {
+  // Try to use short commit SHA (first 7 chars)
+  if (entry.commit && entry.commit !== 'unknown') {
+    return entry.commit.substring(0, 7);
+  }
+
+  // Fallback to date
+  try {
+    const date = new Date(entry.timestamp);
+    return date.toISOString().substring(5, 10); // MM-DD format
+  } catch {
+    return 'N/A';
+  }
 }
