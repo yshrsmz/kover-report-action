@@ -166,6 +166,26 @@ The `.github/workflows/ci.yml` workflow runs on push and PRs to main:
 
 **Important**: Always run `pnpm run build` and commit the `dist/` directory when making changes to source files. The CI will fail if `dist/` is not up to date with source code.
 
+## Git Workflow
+
+**Important Git Commit Rules:**
+- **NEVER use `git commit --no-verify`** - Always let git hooks run to ensure code quality
+- **NEVER use `LEFTHOOK=0`** when committing - This bypasses Lefthook git hooks
+- Git hooks run formatting, linting, and other checks before commits
+- If hooks fail, fix the issues rather than bypassing them with --no-verify or LEFTHOOK=0
+- The only exception is in CI/CD environments where hooks may not be compatible
+- If you encounter hook errors, investigate and fix the underlying issue first
+
+**Commit Message Format:**
+- Use clear, descriptive commit messages
+- Follow the project's existing commit message style
+- Include Claude Code attribution when applicable:
+  ```
+  🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+  Co-Authored-By: Claude <noreply@anthropic.com>
+  ```
+
 ## Testing the Action
 
 To test locally, you can:
