@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { OverallCoverage } from '../coverage';
-import type { HistoryComparison } from '../history/index';
+import type { HistoryComparison, HistoryEntry } from '../history/index';
 import { generateMarkdownReport } from '../reporter/report';
 
 describe('generateMarkdownReport', () => {
@@ -399,5 +399,211 @@ describe('generateMarkdownReport', () => {
     expect(report).not.toContain('Change');
     expect(report).not.toContain('↑');
     expect(report).not.toContain('↓');
+  });
+
+  it('should include trend graph when history has multiple entries', () => {
+    const coverage: OverallCoverage = {
+      percentage: 87.0,
+      covered: 870,
+      total: 1000,
+      modules: [
+        {
+          module: ':core:common',
+          coverage: { covered: 870, missed: 130, total: 1000, percentage: 87.0 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const history: HistoryEntry[] = [
+      {
+        timestamp: '2025-01-10T10:00:00Z',
+        branch: 'main',
+        commit: 'abc1234',
+        overall: { percentage: 85.0, covered: 850, total: 1000 },
+        modules: { ':core:common': 85.0 },
+      },
+      {
+        timestamp: '2025-01-11T10:00:00Z',
+        branch: 'main',
+        commit: 'def5678',
+        overall: { percentage: 86.0, covered: 860, total: 1000 },
+        modules: { ':core:common': 86.0 },
+      },
+      {
+        timestamp: '2025-01-12T10:00:00Z',
+        branch: 'main',
+        commit: 'ghi9012',
+        overall: { percentage: 87.0, covered: 870, total: 1000 },
+        modules: { ':core:common': 87.0 },
+      },
+    ];
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, history);
+
+    // Should contain trend graph section
+    expect(report).toContain('### Coverage Trend');
+    expect(report).toContain('Overall Coverage History');
+    expect(report).toContain('```'); // Code fence for graph
+
+    // Should contain graph elements (box drawing characters and dots)
+    expect(report).toMatch(/[┌┐└┘─│]/); // Box drawing characters
+    expect(report).toContain('●'); // Data points
+
+    // Should show commit SHAs as labels (first 7 chars)
+    expect(report).toContain('abc1234');
+    expect(report).toContain('ghi9012');
+  });
+
+  it('should not include trend graph when history has only one entry', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const history: HistoryEntry[] = [
+      {
+        timestamp: '2025-01-10T10:00:00Z',
+        branch: 'main',
+        commit: 'abc1234',
+        overall: { percentage: 85.0, covered: 850, total: 1000 },
+        modules: {},
+      },
+    ];
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, history);
+
+    // Should not show trend graph with only one entry
+    expect(report).not.toContain('### Coverage Trend');
+    expect(report).not.toContain('Overall Coverage History');
+  });
+
+  it('should not include trend graph when history is empty', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, []);
+
+    // Should not show trend graph with empty history
+    expect(report).not.toContain('### Coverage Trend');
+  });
+
+  it('should not include trend graph when history is not provided', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report');
+
+    // Should not show trend graph without history parameter
+    expect(report).not.toContain('### Coverage Trend');
+  });
+
+  it('should handle history entries with short commit SHAs', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const history: HistoryEntry[] = [
+      {
+        timestamp: '2025-01-10T10:00:00Z',
+        branch: 'main',
+        commit: 'abc', // Short commit (less than 7 chars)
+        overall: { percentage: 84.0, covered: 840, total: 1000 },
+        modules: {},
+      },
+      {
+        timestamp: '2025-01-11T10:00:00Z',
+        branch: 'main',
+        commit: 'def5678',
+        overall: { percentage: 85.0, covered: 850, total: 1000 },
+        modules: {},
+      },
+    ];
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, history);
+
+    // Should handle short commits without error
+    expect(report).toContain('### Coverage Trend');
+    expect(report).toContain('abc'); // Short commit should appear as-is
+  });
+
+  it('should use date labels when commit is unknown', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const history: HistoryEntry[] = [
+      {
+        timestamp: '2025-01-10T10:00:00Z',
+        branch: 'main',
+        commit: 'unknown',
+        overall: { percentage: 84.0, covered: 840, total: 1000 },
+        modules: {},
+      },
+      {
+        timestamp: '2025-01-11T10:00:00Z',
+        branch: 'main',
+        commit: 'unknown',
+        overall: { percentage: 85.0, covered: 850, total: 1000 },
+        modules: {},
+      },
+    ];
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, history);
+
+    // Should use MM-DD format when commit is "unknown"
+    expect(report).toContain('### Coverage Trend');
+    expect(report).toContain('01-10'); // Date in MM-DD format
+    expect(report).toContain('01-11');
+  });
+
+  it('should handle invalid timestamps gracefully', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.0,
+      covered: 850,
+      total: 1000,
+      modules: [],
+    };
+
+    const history: HistoryEntry[] = [
+      {
+        timestamp: 'invalid-date',
+        branch: 'main',
+        commit: 'unknown',
+        overall: { percentage: 84.0, covered: 840, total: 1000 },
+        modules: {},
+      },
+      {
+        timestamp: '2025-01-11T10:00:00Z',
+        branch: 'main',
+        commit: 'abc1234',
+        overall: { percentage: 85.0, covered: 850, total: 1000 },
+        modules: {},
+      },
+    ];
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report', undefined, history);
+
+    // Should show N/A for invalid dates and not crash
+    expect(report).toContain('### Coverage Trend');
+    expect(report).toContain('N/A'); // Invalid timestamp
+    expect(report).toContain('abc1234'); // Valid commit
   });
 });

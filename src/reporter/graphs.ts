@@ -3,6 +3,11 @@
  */
 
 /**
+ * Maximum width of trend graph in data points
+ */
+const MAX_GRAPH_WIDTH = 50;
+
+/**
  * Data point for trend visualization
  */
 export interface TrendData {
@@ -42,7 +47,7 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
 
   // Graph dimensions
   const height = 10;
-  const width = Math.min(data.length, 50);
+  const width = Math.min(data.length, MAX_GRAPH_WIDTH);
 
   // Sample data if too many points
   const sampledData = data.length > width ? sampleData(data, width) : data;
