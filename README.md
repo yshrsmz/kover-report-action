@@ -11,7 +11,7 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
 - 🔍 **Flexible Discovery** - Command-based (Gradle) or glob pattern module discovery
 - 🎯 **Configurable Thresholds** - Per-module type and per-module name threshold configuration
 - 💬 **PR Integration** - Post coverage reports as PR comments with automatic updates
-- 📈 **Coverage History & Trends** - Track coverage over time with trend indicators (↑↓→) and comparison against baseline
+- 📈 **Coverage History & Trends** - Track coverage over time with visual ASCII graphs and trend indicators (↑↓→)
 - 🔄 **Coverage Outputs** - Export coverage data for use in other workflow steps
 - ⚡ **Fast & Secure** - Parallel parsing with path traversal and command injection prevention
 
@@ -136,7 +136,7 @@ A GitHub Action for generating and reporting code coverage from Kover XML report
 **How it works:**
 - When enabled, coverage history is stored in GitHub Artifacts with 90-day retention
 - Each workflow run adds a new history entry with timestamp, branch, commit, and coverage data
-- Reports show trend indicators (↑↓→) comparing current coverage vs baseline branch
+- Reports show visual ASCII trend graphs and trend indicators (↑↓→) comparing current coverage vs baseline branch
 - History persists across workflow runs and is automatically managed
 
 **Trend Indicators:**
@@ -322,6 +322,22 @@ With history tracking enabled:
 ## 📊 Code Coverage Report
 
 **Overall Coverage: 85.5%** ↑ +2.3%
+
+### Coverage Trend
+
+```
+**Overall Coverage History**
+
+┌────────────────────────────┐
+│ 88% ●                      │
+│ 86%   ●                    │
+│ 84%     ●    ●             │
+│ 82%       ●    ●     ●     │
+│ 80%             ●      ●   │
+└────────────────────────────┘
+   abc123  def456  ghi789
+```
+```
 
 ### Module Coverage
 
