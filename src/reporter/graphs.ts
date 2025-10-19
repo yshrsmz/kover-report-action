@@ -46,13 +46,6 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
   const max = Math.max(...values);
   const range = max - min;
 
-  // If all values are the same, show flat line
-  if (range === 0) {
-    lines.push(`All values: ${max.toFixed(1)}%`);
-    lines.push(`${data[0].label} → ${data[data.length - 1].label}`);
-    return lines.join('\n');
-  }
-
   // Graph dimensions
   const height = 10;
   const width = Math.min(data.length, 50);
@@ -65,22 +58,46 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
     Array(sampledData.length).fill(' ')
   );
 
-  // Plot points
-  for (let i = 0; i < sampledData.length; i++) {
-    const value = sampledData[i].value;
-    const normalizedValue = (value - min) / range;
-    const row = height - 1 - Math.round(normalizedValue * (height - 1));
-    graph[row][i] = '●';
-  }
+  // If all values are the same, create a small artificial range for display
+  // and place all dots in the middle row
+  if (range === 0) {
+    const middleRow = Math.floor(height / 2);
+    for (let i = 0; i < sampledData.length; i++) {
+      graph[middleRow][i] = '●';
+    }
 
-  // Draw graph with axis
-  lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
-  for (let row = 0; row < height; row++) {
-    const percentage = max - (row / (height - 1)) * range;
-    const label = `${percentage.toFixed(0)}%`.padStart(4);
-    lines.push(`│${label} ${graph[row].join('')} │`);
+    // Create a small range around the value for Y-axis labels
+    const displayMin = Math.max(0, max - 2);
+    const displayMax = Math.min(100, max + 2);
+    const displayRange = displayMax - displayMin;
+
+    // Draw graph with axis
+    lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
+    for (let row = 0; row < height; row++) {
+      const percentage = displayMax - (row / (height - 1)) * displayRange;
+      const label = `${percentage.toFixed(0)}%`.padStart(4);
+      lines.push(`│${label} ${graph[row].join('')} │`);
+    }
+    lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
+  } else {
+    // Normal case with varying values
+    // Plot points
+    for (let i = 0; i < sampledData.length; i++) {
+      const value = sampledData[i].value;
+      const normalizedValue = (value - min) / range;
+      const row = height - 1 - Math.round(normalizedValue * (height - 1));
+      graph[row][i] = '●';
+    }
+
+    // Draw graph with axis
+    lines.push(`┌${'─'.repeat(sampledData.length + 2)}┐`);
+    for (let row = 0; row < height; row++) {
+      const percentage = max - (row / (height - 1)) * range;
+      const label = `${percentage.toFixed(0)}%`.padStart(4);
+      lines.push(`│${label} ${graph[row].join('')} │`);
+    }
+    lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
   }
-  lines.push(`└${'─'.repeat(sampledData.length + 2)}┘`);
 
   // X-axis labels
   if (sampledData.length > 1) {

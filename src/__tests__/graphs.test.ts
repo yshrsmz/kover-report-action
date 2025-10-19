@@ -61,8 +61,12 @@ describe('generateCoverageTrendGraph', () => {
 
     const graph = generateCoverageTrendGraph(data, 'Stable Coverage');
 
-    expect(graph).toContain('85.0%');
-    expect(graph).toContain('All values');
+    // Should display a graph even when all values are the same
+    expect(graph).toContain('Stable Coverage');
+    expect(graph).toMatch(/[│┤├─]/g); // Should contain graph characters
+    expect(graph).toContain('●'); // Should contain data points
+    // Y-axis should show values around 85%
+    expect(graph).toMatch(/8[3-7]%/); // Range around 85%
   });
 });
 
