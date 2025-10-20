@@ -63,6 +63,83 @@ describe('generateCoverageTrendGraph', () => {
     // Y-axis should show values around 85%
     expect(graph).toMatch(/8[3-7]%/); // Range around 85%
   });
+
+  it('should not have duplicate y-axis labels in small ranges (except anchors)', () => {
+    // Regression test for bug where small ranges (e.g., 36-39%) caused duplicate labels
+    // because multiple rows would round to the same percentage
+    const data: TrendData[] = [
+      { label: 'commit1', value: 36.0 },
+      { label: 'commit2', value: 39.0 },
+    ];
+
+    const graph = generateCoverageTrendGraph(data, 'Small Range Coverage');
+
+    // Extract all y-axis labels from the graph with their positions
+    const lines = graph.split('\n');
+    const labelPositions: Array<{ row: number; label: string }> = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/│\s*(\d+%)/);
+      if (match) {
+        labelPositions.push({ row: i, label: match[1] });
+      }
+    }
+
+    // Count occurrences of each label
+    const labelCounts = new Map<string, number>();
+    for (const pos of labelPositions) {
+      labelCounts.set(pos.label, (labelCounts.get(pos.label) || 0) + 1);
+    }
+
+    // For this range (36-39), all labels should be unique
+    // (anchors happen to be different integers)
+    for (const [_label, count] of labelCounts.entries()) {
+      expect(count).toBe(1);
+    }
+
+    // Should contain the range endpoints
+    expect(graph).toContain('36%');
+    expect(graph).toContain('39%');
+
+    // Verify anchors are at first and last label positions
+    expect(labelPositions[0].label).toBe('39%'); // Top
+    expect(labelPositions[labelPositions.length - 1].label).toBe('36%'); // Bottom
+  });
+
+  it('should maintain visual anchors when min/max round to same integer', () => {
+    // Edge case: when range is so small that min and max round to the same percentage
+    // e.g., 39.2% to 39.4% both round to 39%
+    const data: TrendData[] = [
+      { label: 'commit1', value: 39.2 },
+      { label: 'commit2', value: 39.4 },
+    ];
+
+    const graph = generateCoverageTrendGraph(data, 'Tiny Range Coverage');
+
+    // Extract all y-axis labels from the graph
+    const lines = graph.split('\n');
+    const labelPositions: Array<{ row: number; label: string }> = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/│\s*(\d+%)/);
+      if (match) {
+        labelPositions.push({ row: i, label: match[1] });
+      }
+    }
+
+    // Should have at least the top and bottom anchors
+    expect(labelPositions.length).toBeGreaterThanOrEqual(2);
+
+    // Both endpoints should show 39% (since both round to 39)
+    const firstLabel = labelPositions[0];
+    const lastLabel = labelPositions[labelPositions.length - 1];
+
+    expect(firstLabel.label).toBe('39%'); // Top anchor
+    expect(lastLabel.label).toBe('39%'); // Bottom anchor
+
+    // In this case, it's acceptable to have the same label twice (at anchors)
+    // because the entire range rounds to one integer
+  });
 });
 
 describe('Graph scaling and formatting', () => {
