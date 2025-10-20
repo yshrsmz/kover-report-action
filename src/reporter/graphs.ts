@@ -201,13 +201,24 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
       labelMap.set(0, `${topPercentage}%`.padStart(4));
       labelMap.set(height - 1, `${bottomPercentage}%`.padStart(4));
     } else {
-      // Distribute evenly from top to bottom
-      const rowStep = (height - 1) / (uniquePercentages.length - 1);
+      // Distribute as evenly as possible using Bresenham-like algorithm
+      // This keeps gaps within ±1 row when perfect division isn't possible
+      const numLabels = uniquePercentages.length;
+      const numGaps = numLabels - 1;
+      const totalRows = height - 1;
 
-      for (let i = 0; i < uniquePercentages.length; i++) {
-        const row = Math.round(i * rowStep);
+      // First label always at row 0
+      labelMap.set(0, `${uniquePercentages[0]}%`.padStart(4));
+
+      // Distribute middle labels
+      for (let i = 1; i < numLabels - 1; i++) {
+        // Use multiplication before division for better precision
+        const row = Math.round((i * totalRows) / numGaps);
         labelMap.set(row, `${uniquePercentages[i]}%`.padStart(4));
       }
+
+      // Last label always at bottom row
+      labelMap.set(height - 1, `${uniquePercentages[numLabels - 1]}%`.padStart(4));
     }
   }
 

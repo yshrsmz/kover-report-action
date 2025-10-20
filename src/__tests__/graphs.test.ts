@@ -157,6 +157,13 @@ describe('generateCoverageTrendGraph', () => {
       description: 'Small range with 4 unique integer labels',
     },
     {
+      name: 'small range with imperfect division (38-42%)',
+      min: 38,
+      max: 42,
+      expectedLabels: 5,
+      description: '5 labels in 10 rows - gaps differ by at most 1',
+    },
+    {
       name: 'medium range (35-45%)',
       min: 35,
       max: 45,
@@ -200,11 +207,11 @@ describe('generateCoverageTrendGraph', () => {
         gaps.push(labelRows[i] - labelRows[i - 1]);
       }
 
-      // All gaps should be equal (even spacing)
-      const firstGap = gaps[0];
-      for (const gap of gaps) {
-        expect(gap).toBe(firstGap);
-      }
+      // Gaps should be as even as possible (differ by at most 1 row)
+      // When labels don't divide evenly into rows, perfect equality is impossible
+      const minGap = Math.min(...gaps);
+      const maxGap = Math.max(...gaps);
+      expect(maxGap - minGap).toBeLessThanOrEqual(1);
     }
 
     // Verify min and max are present
