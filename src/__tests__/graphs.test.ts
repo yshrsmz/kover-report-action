@@ -140,6 +140,101 @@ describe('generateCoverageTrendGraph', () => {
     // In this case, it's acceptable to have the same label twice (at anchors)
     // because the entire range rounds to one integer
   });
+
+  it('should have even spacing between labels (regression test for spacing bug)', () => {
+    // Regression test for the bug where labels had uneven spacing
+    // Original issue: 39-42% range had gaps of 2, 1, 3 rows between labels
+    // After fix: all gaps should be equal (e.g., consistent 3-row gaps)
+    const data: TrendData[] = [
+      { label: 'commit1', value: 39.0 },
+      { label: 'commit2', value: 42.0 },
+    ];
+
+    const graph = generateCoverageTrendGraph(data, 'Coverage with Even Spacing');
+
+    // Extract label positions
+    const lines = graph.split('\n');
+    const labelRows: number[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/│\s*(\d+%)/);
+      if (match) {
+        labelRows.push(i);
+      }
+    }
+
+    // Should have exactly 4 labels (42, 41, 40, 39)
+    expect(labelRows.length).toBe(4);
+
+    // Calculate gaps between consecutive labels
+    const gaps: number[] = [];
+    for (let i = 1; i < labelRows.length; i++) {
+      gaps.push(labelRows[i] - labelRows[i - 1]);
+    }
+
+    // All gaps should be equal (even spacing)
+    const firstGap = gaps[0];
+    for (const gap of gaps) {
+      expect(gap).toBe(firstGap);
+    }
+
+    // Verify it contains the expected labels
+    expect(graph).toContain('42%');
+    expect(graph).toContain('41%');
+    expect(graph).toContain('40%');
+    expect(graph).toContain('39%');
+  });
+
+  it('should distribute labels evenly for various range sizes', () => {
+    // Test that even distribution works for different range sizes
+    const testCases = [
+      { min: 36, max: 39, expectedLabels: 4 }, // Small range: 4 labels
+      { min: 35, max: 45, expectedLabels: 10 }, // Medium range: 10 labels (height)
+      { min: 10, max: 90, expectedLabels: 10 }, // Large range: 81 integers, but only 10 rows
+    ];
+
+    for (const testCase of testCases) {
+      const data: TrendData[] = [
+        { label: 'start', value: testCase.min },
+        { label: 'end', value: testCase.max },
+      ];
+
+      const graph = generateCoverageTrendGraph(data, `Range ${testCase.min}-${testCase.max}%`);
+
+      // Extract label positions
+      const lines = graph.split('\n');
+      const labelRows: number[] = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const match = lines[i].match(/│\s*(\d+%)/);
+        if (match) {
+          labelRows.push(i);
+        }
+      }
+
+      // Should have the expected number of labels (or less if range is smaller than height)
+      expect(labelRows.length).toBeGreaterThan(0);
+      expect(labelRows.length).toBeLessThanOrEqual(testCase.expectedLabels);
+
+      // Calculate gaps between consecutive labels
+      if (labelRows.length > 1) {
+        const gaps: number[] = [];
+        for (let i = 1; i < labelRows.length; i++) {
+          gaps.push(labelRows[i] - labelRows[i - 1]);
+        }
+
+        // All gaps should be equal (even spacing)
+        const firstGap = gaps[0];
+        for (const gap of gaps) {
+          expect(gap).toBe(firstGap);
+        }
+      }
+
+      // Verify min and max are present
+      expect(graph).toContain(`${testCase.max}%`);
+      expect(graph).toContain(`${testCase.min}%`);
+    }
+  });
 });
 
 describe('Graph scaling and formatting', () => {
