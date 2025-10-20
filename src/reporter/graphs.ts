@@ -68,13 +68,14 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
     // Create a small range around the value for Y-axis labels
     const displayMin = Math.max(0, max - 2);
     const displayMax = Math.min(100, max + 2);
-    const displayRange = displayMax - displayMin;
+
+    // Calculate unique integer labels and their row positions
+    const labelMap = calculateLabelPositions(displayMin, displayMax, height);
 
     // Draw graph with axis
     lines.push(`┌${'─'.repeat(sampledData.length + 6)}┐`);
     for (let row = 0; row < height; row++) {
-      const percentage = displayMax - (row / (height - 1)) * displayRange;
-      const label = `${percentage.toFixed(0)}%`.padStart(4);
+      const label = labelMap.get(row) ?? '    ';
       lines.push(`│${label} ${graph[row].join('')} │`);
     }
     lines.push(`└${'─'.repeat(sampledData.length + 6)}┘`);
@@ -88,11 +89,13 @@ export function generateCoverageTrendGraph(data: TrendData[], title: string): st
       graph[row][i] = '●';
     }
 
+    // Calculate unique integer labels and their row positions
+    const labelMap = calculateLabelPositions(min, max, height);
+
     // Draw graph with axis
     lines.push(`┌${'─'.repeat(sampledData.length + 6)}┐`);
     for (let row = 0; row < height; row++) {
-      const percentage = max - (row / (height - 1)) * range;
-      const label = `${percentage.toFixed(0)}%`.padStart(4);
+      const label = labelMap.get(row) ?? '    ';
       lines.push(`│${label} ${graph[row].join('')} │`);
     }
     lines.push(`└${'─'.repeat(sampledData.length + 6)}┘`);
@@ -136,4 +139,56 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
   sampled.push(data[data.length - 1]);
 
   return sampled;
+}
+
+/**
+ * Calculate which row each unique integer percentage should appear on
+ * This prevents duplicate labels when the range is small
+ * @param min Minimum percentage value
+ * @param max Maximum percentage value
+ * @param height Graph height in rows
+ * @returns Map of row index to formatted label string
+ */
+function calculateLabelPositions(min: number, max: number, height: number): Map<number, string> {
+  const labelMap = new Map<number, string>();
+  const range = max - min;
+
+  // Special case: all values are the same
+  if (range === 0) {
+    const middleRow = Math.floor(height / 2);
+    labelMap.set(middleRow, `${Math.round(max)}%`.padStart(4));
+    return labelMap;
+  }
+
+  const usedPercentages = new Set<number>();
+
+  // Always anchor the top (max) and bottom (min) rows with their values
+  // This provides clear visual boundaries even in edge cases
+  const topRow = 0;
+  const bottomRow = height - 1;
+  const topPercentage = Math.round(max);
+  const bottomPercentage = Math.round(min);
+
+  // Always set top anchor
+  labelMap.set(topRow, `${topPercentage}%`.padStart(4));
+  usedPercentages.add(topPercentage);
+
+  // Always set bottom anchor, even if it duplicates the top percentage
+  // This maintains visual anchors when the range is very small (e.g., 39.2-39.4 both round to 39%)
+  labelMap.set(bottomRow, `${bottomPercentage}%`.padStart(4));
+  usedPercentages.add(bottomPercentage);
+
+  // Fill in intermediate rows with unique labels (excluding the anchor percentages)
+  for (let row = 1; row < height - 1; row++) {
+    const percentage = max - (row / (height - 1)) * range;
+    const roundedPercentage = Math.round(percentage);
+
+    // Only use this percentage if we haven't used it yet (including anchors)
+    if (!usedPercentages.has(roundedPercentage)) {
+      labelMap.set(row, `${roundedPercentage}%`.padStart(4));
+      usedPercentages.add(roundedPercentage);
+    }
+  }
+
+  return labelMap;
 }
