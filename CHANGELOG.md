@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Graph Y-Axis Distribution**: Improved y-axis label distribution for ASCII trend graphs with edge-aware spacing
+  - Labels now use base gap distribution with remainder placed at expandable edge
+  - Bottom = 0%: blank row at top (values can't go below 0)
+  - Top = 100%: blank row at bottom (values can't go above 100)
+  - Default: blank row at bottom (coverage can improve)
+  - Provides better visual indication of where coverage values can expand
+
 ## [1.0.0] - TBD
 
 ### Added
