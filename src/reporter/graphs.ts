@@ -143,7 +143,7 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
 
 /**
  * Calculate which row each unique integer percentage should appear on
- * This prevents duplicate labels when the range is small
+ * Distributes labels evenly for better visual clarity
  * @param min Minimum percentage value
  * @param max Maximum percentage value
  * @param height Graph height in rows
@@ -153,6 +153,12 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
   const labelMap = new Map<number, string>();
   const range = max - min;
 
+  // Guard: height must be at least 2 for meaningful distribution
+  if (height < 2) {
+    labelMap.set(0, `${Math.round(max)}%`.padStart(4));
+    return labelMap;
+  }
+
   // Special case: all values are the same
   if (range === 0) {
     const middleRow = Math.floor(height / 2);
@@ -160,33 +166,48 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
     return labelMap;
   }
 
-  const usedPercentages = new Set<number>();
-
-  // Always anchor the top (max) and bottom (min) rows with their values
-  // This provides clear visual boundaries even in edge cases
-  const topRow = 0;
-  const bottomRow = height - 1;
   const topPercentage = Math.round(max);
   const bottomPercentage = Math.round(min);
 
-  // Always set top anchor
-  labelMap.set(topRow, `${topPercentage}%`.padStart(4));
-  usedPercentages.add(topPercentage);
+  // Get all unique integer percentages in the range
+  const uniquePercentages: number[] = [];
+  for (let p = topPercentage; p >= bottomPercentage; p--) {
+    uniquePercentages.push(p);
+  }
 
-  // Always set bottom anchor, even if it duplicates the top percentage
-  // This maintains visual anchors when the range is very small (e.g., 39.2-39.4 both round to 39%)
-  labelMap.set(bottomRow, `${bottomPercentage}%`.padStart(4));
-  usedPercentages.add(bottomPercentage);
+  // If we have more unique percentages than rows, we can't show them all
+  // In this case, always show top and bottom, and select representative labels for the middle
+  if (uniquePercentages.length > height) {
+    // Always show top and bottom
+    labelMap.set(0, `${topPercentage}%`.padStart(4));
+    labelMap.set(height - 1, `${bottomPercentage}%`.padStart(4));
 
-  // Fill in intermediate rows with unique labels (excluding the anchor percentages)
-  for (let row = 1; row < height - 1; row++) {
-    const percentage = max - (row / (height - 1)) * range;
-    const roundedPercentage = Math.round(percentage);
+    // For middle rows, select labels at evenly spaced intervals
+    const availableRows = height - 2;
+    if (availableRows > 0) {
+      const labelStep = (uniquePercentages.length - 1) / (height - 1);
 
-    // Only use this percentage if we haven't used it yet (including anchors)
-    if (!usedPercentages.has(roundedPercentage)) {
-      labelMap.set(row, `${roundedPercentage}%`.padStart(4));
-      usedPercentages.add(roundedPercentage);
+      for (let rowIdx = 1; rowIdx < height - 1; rowIdx++) {
+        const labelIdx = Math.round(rowIdx * labelStep);
+        labelMap.set(rowIdx, `${uniquePercentages[labelIdx]}%`.padStart(4));
+      }
+    }
+  } else {
+    // We have enough rows to show all unique percentages
+    // Distribute them evenly across the available rows
+
+    if (uniquePercentages.length === 1) {
+      // Only one unique percentage - show it on both anchors
+      labelMap.set(0, `${topPercentage}%`.padStart(4));
+      labelMap.set(height - 1, `${bottomPercentage}%`.padStart(4));
+    } else {
+      // Distribute evenly from top to bottom
+      const rowStep = (height - 1) / (uniquePercentages.length - 1);
+
+      for (let i = 0; i < uniquePercentages.length; i++) {
+        const row = Math.round(i * rowStep);
+        labelMap.set(row, `${uniquePercentages[i]}%`.padStart(4));
+      }
     }
   }
 
