@@ -355,6 +355,37 @@ describe('generateCoverageTrendGraph', () => {
         expect(labelRows).toEqual(expectedRows);
       }
     );
+
+    it('should handle exactly 10 labels using overflow/sampling path', () => {
+      // Regression test: exactly height labels should use overflow path
+      // to avoid baseGap=0 when fitting 10 labels into 9 usable rows
+      const data: TrendData[] = [
+        { label: 'start', value: 50 },
+        { label: 'end', value: 59 },
+      ];
+
+      const graph = generateCoverageTrendGraph(data, 'Ten Labels');
+      const lines = graph.split('\n');
+
+      const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
+
+      // Extract label row positions
+      const labelRows: number[] = [];
+      for (let i = graphStartIndex + 1; i < lines.length; i++) {
+        const match = lines[i].match(/│\s*(\d+%)/);
+        if (match) {
+          labelRows.push(i - graphStartIndex - 1);
+        }
+      }
+
+      // Should show all 10 labels, one per row
+      expect(labelRows.length).toBe(10);
+      expect(labelRows).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+      // Verify both endpoints present
+      expect(graph).toContain('50%');
+      expect(graph).toContain('59%');
+    });
   });
 });
 

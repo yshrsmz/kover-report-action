@@ -178,8 +178,9 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
     uniquePercentages.push(p);
   }
 
-  // If we have more unique percentages than rows, sample them
-  if (uniquePercentages.length > height) {
+  // If we have more unique percentages than rows, or exactly equal, sample them
+  // Using >= prevents baseGap=0 when trying to fit height labels into height-1 rows
+  if (uniquePercentages.length >= height) {
     // Always show top and bottom
     labelMap.set(0, `${topPercentage}%`.padStart(4));
     labelMap.set(height - 1, `${bottomPercentage}%`.padStart(4));
