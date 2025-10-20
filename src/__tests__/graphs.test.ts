@@ -141,82 +141,220 @@ describe('generateCoverageTrendGraph', () => {
     // because the entire range rounds to one integer
   });
 
-  it.each([
-    {
-      name: 'small range (user-reported bug: 39-42%)',
-      min: 39,
-      max: 42,
-      expectedLabels: 4,
-      description: 'Original bug: gaps of 2, 1, 3 rows. After fix: equal gaps',
-    },
-    {
-      name: 'small range (36-39%)',
-      min: 36,
-      max: 39,
-      expectedLabels: 4,
-      description: 'Small range with 4 unique integer labels',
-    },
-    {
-      name: 'small range with imperfect division (38-42%)',
-      min: 38,
-      max: 42,
-      expectedLabels: 5,
-      description: '5 labels in 10 rows - gaps differ by at most 1',
-    },
-    {
-      name: 'medium range (35-45%)',
-      min: 35,
-      max: 45,
-      expectedLabels: 10,
-      description: 'Medium range filling all 10 graph rows',
-    },
-    {
-      name: 'large range (10-90%)',
-      min: 10,
-      max: 90,
-      expectedLabels: 10,
-      description: 'Large range (81 integers) sampled to 10 rows',
-    },
-  ])('should have even spacing between labels: $name', ({ min, max, expectedLabels }) => {
-    const data: TrendData[] = [
-      { label: 'start', value: min },
-      { label: 'end', value: max },
-    ];
+  describe('Edge-aware label distribution', () => {
+    it.each([
+      {
+        name: '2 labels, default range (50-51%)',
+        min: 50,
+        max: 51,
+        expectedRows: [0, 8],
+        description: 'Use rows 0-8, gap of 8',
+      },
+      {
+        name: '3 labels, default range (50-52%)',
+        min: 50,
+        max: 52,
+        expectedRows: [0, 4, 8],
+        description: 'Use rows 0-8, even gaps of 4',
+      },
+      {
+        name: '4 labels, default range (50-53%)',
+        min: 50,
+        max: 53,
+        expectedRows: [0, 2, 4, 8],
+        description: 'Use rows 0-8, base gap=2, remainder=2 added to last',
+      },
+      {
+        name: '5 labels, default range (50-54%)',
+        min: 50,
+        max: 54,
+        expectedRows: [0, 2, 4, 6, 8],
+        description: 'Use rows 0-8, even gaps of 2',
+      },
+      {
+        name: '6 labels, default range (50-55%)',
+        min: 50,
+        max: 55,
+        expectedRows: [0, 1, 2, 3, 4, 8],
+        description: 'Use rows 0-8, base gap=1, remainder=3 added to last',
+      },
+      {
+        name: '7 labels, default range (50-56%)',
+        min: 50,
+        max: 56,
+        expectedRows: [0, 1, 2, 3, 4, 5, 8],
+        description: 'Use rows 0-8, base gap=1, remainder=2 added to last',
+      },
+      {
+        name: '8 labels, default range (50-57%)',
+        min: 50,
+        max: 57,
+        expectedRows: [0, 1, 2, 3, 4, 5, 6, 8],
+        description: 'Use rows 0-8, base gap=1, remainder=1 added to last',
+      },
+      {
+        name: '9 labels, default range (50-58%)',
+        min: 50,
+        max: 58,
+        expectedRows: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        description: 'Use rows 0-8, consecutive with no remainder',
+      },
+    ])('should distribute labels with remainder at bottom: $name', ({ min, max, expectedRows }) => {
+      const data: TrendData[] = [
+        { label: 'start', value: min },
+        { label: 'end', value: max },
+      ];
 
-    const graph = generateCoverageTrendGraph(data, `Range ${min}-${max}%`);
+      const graph = generateCoverageTrendGraph(data, 'Test');
+      const lines = graph.split('\n');
 
-    // Extract label positions
-    const lines = graph.split('\n');
-    const labelRows: number[] = [];
+      // Find the offset: title (1 line) + blank (1 line) + top border (1 line) = 3
+      const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
 
-    for (let i = 0; i < lines.length; i++) {
-      const match = lines[i].match(/│\s*(\d+%)/);
-      if (match) {
-        labelRows.push(i);
+      // Extract label row positions relative to graph start
+      const labelRows: number[] = [];
+      for (let i = graphStartIndex + 1; i < lines.length; i++) {
+        const match = lines[i].match(/│\s*(\d+%)/);
+        if (match) {
+          // Convert line index to graph row index (0-9)
+          labelRows.push(i - graphStartIndex - 1);
+        }
       }
-    }
 
-    // Should have the expected number of labels (or less if range is smaller than height)
-    expect(labelRows.length).toBeGreaterThan(0);
-    expect(labelRows.length).toBeLessThanOrEqual(expectedLabels);
+      expect(labelRows).toEqual(expectedRows);
+    });
 
-    // Calculate gaps between consecutive labels
-    if (labelRows.length > 1) {
-      const gaps: number[] = [];
-      for (let i = 1; i < labelRows.length; i++) {
-        gaps.push(labelRows[i] - labelRows[i - 1]);
+    it.each([
+      {
+        name: '2 labels, bottom=0% (0-1%)',
+        min: 0,
+        max: 1,
+        expectedRows: [1, 9],
+        description: 'Use rows 1-9, gap of 8',
+      },
+      {
+        name: '3 labels, bottom=0% (0-2%)',
+        min: 0,
+        max: 2,
+        expectedRows: [1, 5, 9],
+        description: 'Use rows 1-9, even gaps of 4',
+      },
+      {
+        name: '4 labels, bottom=0% (0-3%)',
+        min: 0,
+        max: 3,
+        expectedRows: [1, 5, 7, 9],
+        description: 'Use rows 1-9, base gap=2, remainder=2 added to first',
+      },
+      {
+        name: '5 labels, bottom=0% (0-4%)',
+        min: 0,
+        max: 4,
+        expectedRows: [1, 3, 5, 7, 9],
+        description: 'Use rows 1-9, even gaps of 2',
+      },
+      {
+        name: '6 labels, bottom=0% (0-5%)',
+        min: 0,
+        max: 5,
+        expectedRows: [1, 5, 6, 7, 8, 9],
+        description: 'Use rows 1-9, base gap=1, remainder=3 added to first',
+      },
+      {
+        name: '7 labels, bottom=0% (0-6%)',
+        min: 0,
+        max: 6,
+        expectedRows: [1, 4, 5, 6, 7, 8, 9],
+        description: 'Use rows 1-9, base gap=1, remainder=2 added to first',
+      },
+      {
+        name: '8 labels, bottom=0% (0-7%)',
+        min: 0,
+        max: 7,
+        expectedRows: [1, 3, 4, 5, 6, 7, 8, 9],
+        description: 'Use rows 1-9, base gap=1, remainder=1 added to first',
+      },
+      {
+        name: '9 labels, bottom=0% (0-8%)',
+        min: 0,
+        max: 8,
+        expectedRows: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        description: 'Use rows 1-9, consecutive with no remainder',
+      },
+    ])('should distribute labels with remainder at top: $name', ({ min, max, expectedRows }) => {
+      const data: TrendData[] = [
+        { label: 'start', value: min },
+        { label: 'end', value: max },
+      ];
+
+      const graph = generateCoverageTrendGraph(data, 'Test');
+      const lines = graph.split('\n');
+
+      // Find the offset: title (1 line) + blank (1 line) + top border (1 line) = 3
+      const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
+
+      // Extract label row positions relative to graph start
+      const labelRows: number[] = [];
+      for (let i = graphStartIndex + 1; i < lines.length; i++) {
+        const match = lines[i].match(/│\s*(\d+%)/);
+        if (match) {
+          // Convert line index to graph row index (0-9)
+          labelRows.push(i - graphStartIndex - 1);
+        }
       }
 
-      // Gaps should be as even as possible (differ by at most 1 row)
-      // When labels don't divide evenly into rows, perfect equality is impossible
-      const minGap = Math.min(...gaps);
-      const maxGap = Math.max(...gaps);
-      expect(maxGap - minGap).toBeLessThanOrEqual(1);
-    }
+      expect(labelRows).toEqual(expectedRows);
+    });
 
-    // Verify min and max are present
-    expect(graph).toContain(`${max}%`);
-    expect(graph).toContain(`${min}%`);
+    it.each([
+      {
+        name: '2 labels, top=100% (99-100%)',
+        min: 99,
+        max: 100,
+        expectedRows: [0, 8],
+        description: 'Use rows 0-8, gap of 8',
+      },
+      {
+        name: '3 labels, top=100% (98-100%)',
+        min: 98,
+        max: 100,
+        expectedRows: [0, 4, 8],
+        description: 'Use rows 0-8, even gaps of 4',
+      },
+      {
+        name: '4 labels, top=100% (97-100%)',
+        min: 97,
+        max: 100,
+        expectedRows: [0, 2, 4, 8],
+        description: 'Use rows 0-8, base gap=2, remainder=2 added to last',
+      },
+    ])(
+      'should distribute labels with remainder at bottom when top=100%: $name',
+      ({ min, max, expectedRows }) => {
+        const data: TrendData[] = [
+          { label: 'start', value: min },
+          { label: 'end', value: max },
+        ];
+
+        const graph = generateCoverageTrendGraph(data, 'Test');
+        const lines = graph.split('\n');
+
+        // Find the offset: title (1 line) + blank (1 line) + top border (1 line) = 3
+        const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
+
+        // Extract label row positions relative to graph start
+        const labelRows: number[] = [];
+        for (let i = graphStartIndex + 1; i < lines.length; i++) {
+          const match = lines[i].match(/│\s*(\d+%)/);
+          if (match) {
+            // Convert line index to graph row index (0-9)
+            labelRows.push(i - graphStartIndex - 1);
+          }
+        }
+
+        expect(labelRows).toEqual(expectedRows);
+      }
+    );
   });
 });
 

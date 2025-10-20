@@ -143,7 +143,10 @@ function sampleData(data: TrendData[], targetWidth: number): TrendData[] {
 
 /**
  * Calculate which row each unique integer percentage should appear on
- * Distributes labels evenly for better visual clarity
+ * Uses edge-aware distribution: places remainder gap at the edge where values can expand
+ * - If bottom = 0%: blank row at top (rows 1-9), remainder at top
+ * - If top = 100%: blank row at bottom (rows 0-8), remainder at bottom
+ * - Otherwise: blank row at bottom (rows 0-8), remainder at bottom (room to grow)
  * @param min Minimum percentage value
  * @param max Maximum percentage value
  * @param height Graph height in rows
@@ -175,8 +178,7 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
     uniquePercentages.push(p);
   }
 
-  // If we have more unique percentages than rows, we can't show them all
-  // In this case, always show top and bottom, and select representative labels for the middle
+  // If we have more unique percentages than rows, sample them
   if (uniquePercentages.length > height) {
     // Always show top and bottom
     labelMap.set(0, `${topPercentage}%`.padStart(4));
@@ -193,32 +195,61 @@ function calculateLabelPositions(min: number, max: number, height: number): Map<
       }
     }
   } else {
-    // We have enough rows to show all unique percentages
-    // Distribute them evenly across the available rows
-
+    // Edge-aware distribution for labels that fit within height
     if (uniquePercentages.length === 1) {
       // Only one unique percentage - show it on both anchors
       labelMap.set(0, `${topPercentage}%`.padStart(4));
       labelMap.set(height - 1, `${bottomPercentage}%`.padStart(4));
     } else {
-      // Distribute as evenly as possible using Bresenham-like algorithm
-      // This keeps gaps within ±1 row when perfect division isn't possible
-      const numLabels = uniquePercentages.length;
-      const numGaps = numLabels - 1;
-      const totalRows = height - 1;
+      // Determine usable row range and where to place remainder
+      let startRow: number;
+      let endRow: number;
+      let expandableEdge: 'top' | 'bottom';
 
-      // First label always at row 0
-      labelMap.set(0, `${uniquePercentages[0]}%`.padStart(4));
-
-      // Distribute middle labels
-      for (let i = 1; i < numLabels - 1; i++) {
-        // Use multiplication before division for better precision
-        const row = Math.round((i * totalRows) / numGaps);
-        labelMap.set(row, `${uniquePercentages[i]}%`.padStart(4));
+      if (bottomPercentage === 0) {
+        // Nothing exists below 0%, blank at top, expandable at top
+        startRow = 1;
+        endRow = height - 1;
+        expandableEdge = 'top';
+      } else if (topPercentage === 100) {
+        // Nothing exists above 100%, blank at bottom, expandable at bottom
+        startRow = 0;
+        endRow = height - 2;
+        expandableEdge = 'bottom';
+      } else {
+        // Default: room to grow at bottom
+        startRow = 0;
+        endRow = height - 2;
+        expandableEdge = 'bottom';
       }
 
-      // Last label always at bottom row
-      labelMap.set(height - 1, `${uniquePercentages[numLabels - 1]}%`.padStart(4));
+      const numLabels = uniquePercentages.length;
+      const numGaps = numLabels - 1;
+      const totalRows = endRow - startRow;
+
+      // Calculate base gap and remainder
+      const baseGap = Math.floor(totalRows / numGaps);
+      const remainder = totalRows % numGaps;
+
+      // Place labels with base gaps, putting remainder at expandable edge
+      let currentRow = startRow;
+      for (let i = 0; i < numLabels; i++) {
+        labelMap.set(currentRow, `${uniquePercentages[i]}%`.padStart(4));
+
+        if (i < numLabels - 1) {
+          // Add base gap
+          currentRow += baseGap;
+
+          // Add remainder to appropriate edge
+          if (expandableEdge === 'bottom' && i === numLabels - 2) {
+            // Last gap gets the remainder (expandable at bottom)
+            currentRow += remainder;
+          } else if (expandableEdge === 'top' && i === 0) {
+            // First gap gets the remainder (expandable at top)
+            currentRow += remainder;
+          }
+        }
+      }
     }
   }
 
