@@ -16,7 +16,9 @@ vi.mock('@actions/artifact', () => {
   };
 
   return {
-    DefaultArtifactClient: vi.fn(() => mockClient),
+    DefaultArtifactClient: vi.fn(function MockDefaultArtifactClient() {
+      return mockClient;
+    }),
   };
 });
 
