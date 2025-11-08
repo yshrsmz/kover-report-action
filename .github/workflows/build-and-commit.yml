@@ -69,11 +69,7 @@ jobs:
           git add dist/
           git commit -m "chore: auto-rebuild dist directory for PR #${{ github.event.pull_request.number }}
 
-          Triggered by the build-and-commit label.
-
-          🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-          Co-Authored-By: Claude <noreply@anthropic.com>"
+          Triggered by the build-and-commit label."
           git push
 
       - name: Remove label
