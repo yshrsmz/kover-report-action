@@ -11,7 +11,7 @@ import { postCoverageComment } from '../reporter/github';
 
 describe('postCoverageComment', () => {
   let logger: SpyLogger;
-  let setSecret: ReturnType<typeof vi.fn>;
+  let setSecret: (secret: string) => void;
   const mockOctokit = {
     rest: {
       issues: {
