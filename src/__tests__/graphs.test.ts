@@ -328,33 +328,34 @@ describe('generateCoverageTrendGraph', () => {
         expectedRows: [0, 2, 4, 8],
         description: 'Use rows 0-8, base gap=2, remainder=2 added to last',
       },
-    ])(
-      'should distribute labels with remainder at bottom when top=100%: $name',
-      ({ min, max, expectedRows }) => {
-        const data: TrendData[] = [
-          { label: 'start', value: min },
-          { label: 'end', value: max },
-        ];
+    ])('should distribute labels with remainder at bottom when top=100%: $name', ({
+      min,
+      max,
+      expectedRows,
+    }) => {
+      const data: TrendData[] = [
+        { label: 'start', value: min },
+        { label: 'end', value: max },
+      ];
 
-        const graph = generateCoverageTrendGraph(data, 'Test');
-        const lines = graph.split('\n');
+      const graph = generateCoverageTrendGraph(data, 'Test');
+      const lines = graph.split('\n');
 
-        // Find the offset: title (1 line) + blank (1 line) + top border (1 line) = 3
-        const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
+      // Find the offset: title (1 line) + blank (1 line) + top border (1 line) = 3
+      const graphStartIndex = lines.findIndex((line) => line.startsWith('┌'));
 
-        // Extract label row positions relative to graph start
-        const labelRows: number[] = [];
-        for (let i = graphStartIndex + 1; i < lines.length; i++) {
-          const match = lines[i].match(/│\s*(\d+%)/);
-          if (match) {
-            // Convert line index to graph row index (0-9)
-            labelRows.push(i - graphStartIndex - 1);
-          }
+      // Extract label row positions relative to graph start
+      const labelRows: number[] = [];
+      for (let i = graphStartIndex + 1; i < lines.length; i++) {
+        const match = lines[i].match(/│\s*(\d+%)/);
+        if (match) {
+          // Convert line index to graph row index (0-9)
+          labelRows.push(i - graphStartIndex - 1);
         }
-
-        expect(labelRows).toEqual(expectedRows);
       }
-    );
+
+      expect(labelRows).toEqual(expectedRows);
+    });
 
     it('should handle exactly 10 labels using overflow/sampling path', () => {
       // Regression test: exactly height labels should use overflow path
