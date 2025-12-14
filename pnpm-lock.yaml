@@ -9,50 +9,50 @@ importers:
   .:
     dependencies:
       '@actions/artifact':
-        specifier: ^5.0.0
+        specifier: 5.0.1
         version: 5.0.1
       '@actions/core':
-        specifier: ^2.0.0
+        specifier: 2.0.1
         version: 2.0.1
       '@actions/exec':
-        specifier: ^2.0.0
+        specifier: 2.0.0
         version: 2.0.0
       '@actions/github':
-        specifier: ^6.0.1
+        specifier: 6.0.1
         version: 6.0.1
       '@actions/tool-cache':
-        specifier: ^2.0.2
+        specifier: 2.0.2
         version: 2.0.2
       fast-xml-parser:
-        specifier: ^5.3.2
+        specifier: 5.3.2
         version: 5.3.2
       glob:
-        specifier: ^13.0.0
+        specifier: 13.0.0
         version: 13.0.0
     devDependencies:
       '@biomejs/biome':
-        specifier: ^2.3.7
+        specifier: 2.3.7
         version: 2.3.7
       '@types/node':
-        specifier: ^24.10.1
+        specifier: 24.10.1
         version: 24.10.1
       '@vercel/ncc':
-        specifier: ^0.38.4
+        specifier: 0.38.4
         version: 0.38.4
       '@vitest/coverage-v8':
-        specifier: ^4.0.14
+        specifier: 4.0.14
         version: 4.0.14(vitest@4.0.14)
       '@vitest/ui':
-        specifier: ^4.0.14
+        specifier: 4.0.14
         version: 4.0.14(vitest@4.0.14)
       lefthook:
-        specifier: ^2.0.4
+        specifier: 2.0.4
         version: 2.0.4
       typescript:
-        specifier: ^5.9.3
+        specifier: 5.9.3
         version: 5.9.3
       vitest:
-        specifier: ^4.0.14
+        specifier: 4.0.14
         version: 4.0.14(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(@vitest/ui@4.0.14)
 
 packages:
