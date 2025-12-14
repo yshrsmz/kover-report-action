@@ -12,8 +12,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.1
       '@actions/core':
-        specifier: ^1.11.1
-        version: 1.11.1
+        specifier: ^2.0.0
+        version: 2.0.1
       '@actions/exec':
         specifier: ^1.1.1
         version: 1.1.1
