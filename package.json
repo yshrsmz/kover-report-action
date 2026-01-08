@@ -36,12 +36,12 @@
     "glob": "13.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.9",
+    "@biomejs/biome": "2.3.11",
     "@types/node": "24.10.4",
     "@vercel/ncc": "0.38.4",
     "@vitest/coverage-v8": "4.0.16",
     "@vitest/ui": "4.0.16",
-    "lefthook": "2.0.12",
+    "lefthook": "2.0.13",
     "typescript": "5.9.3",
     "vitest": "4.0.16"
   }
