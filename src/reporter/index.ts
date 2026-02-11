@@ -1,5 +1,5 @@
-import type { OverallCoverage } from '../coverage';
-import type { HistoryComparison, HistoryEntry } from '../history';
+import type { OverallCoverage } from '../coverage/index.js';
+import type { HistoryComparison, HistoryEntry } from '../history/index.js';
 
 export interface ReportResult {
   overall: OverallCoverage;
@@ -13,4 +13,4 @@ export interface ReportResult {
  */
 export type Reporter = (result: ReportResult, title: string) => Promise<void>;
 
-export { createActionsReporter } from './actions-reporter';
+export { createActionsReporter } from './actions-reporter.js';

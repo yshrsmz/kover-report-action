@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SpyLogger } from '../common/logger';
-import { extractModuleName, parseGradleProjects } from '../discovery/utils';
-import { loadFixture } from './helpers';
+import { SpyLogger } from '../common/logger.js';
+import { extractModuleName, parseGradleProjects } from '../discovery/utils.js';
+import { loadFixture } from './helpers.js';
 
 describe('parseGradleProjects', () => {
   it('should extract module names from Gradle output', async () => {

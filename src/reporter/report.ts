@@ -1,7 +1,7 @@
-import type { ModuleCoverage, OverallCoverage } from '../coverage';
-import type { HistoryComparison, HistoryEntry } from '../history/index';
-import { formatDelta, getTrendIndicator } from '../history/index';
-import { generateCoverageTrendGraph, type TrendData } from './graphs';
+import type { ModuleCoverage, OverallCoverage } from '../coverage/index.js';
+import type { HistoryComparison, HistoryEntry } from '../history/index.js';
+import { formatDelta, getTrendIndicator } from '../history/index.js';
+import { generateCoverageTrendGraph, type TrendData } from './graphs.js';
 
 /**
  * HTML comment identifier for finding and updating PR comments

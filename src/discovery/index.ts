@@ -21,8 +21,8 @@ export interface ModuleReference {
  */
 export type ModuleDiscovery = (config: DiscoveryConfig) => Promise<ModuleReference[]>;
 
-export { createCommandDiscovery } from './command';
-export { createGlobDiscovery } from './glob';
+export { createCommandDiscovery } from './command.js';
+export { createGlobDiscovery } from './glob.js';
 
 // Re-export utility functions
 export {
@@ -30,4 +30,4 @@ export {
   discoverModulesFromGlob,
   extractModuleName,
   parseGradleProjects,
-} from './utils';
+} from './utils.js';

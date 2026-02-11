@@ -1,5 +1,5 @@
 import * as github from '@actions/github';
-import type { Logger } from '../common/logger';
+import type { Logger } from '../common/logger.js';
 
 /**
  * Find artifact from the baseline branch

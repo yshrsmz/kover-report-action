@@ -1,13 +1,13 @@
 import * as github from '@actions/github';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SpyLogger } from '../common/logger';
+import { SpyLogger } from '../common/logger.js';
 
 // Mock the modules
 vi.mock('@actions/github');
 
-import { findArtifactFromBaseline } from '../history/github-artifacts';
+import { findArtifactFromBaseline } from '../history/github-artifacts.js';
 // Import after mocking
-import { postCoverageComment } from '../reporter/github';
+import { postCoverageComment } from '../reporter/github/index.js';
 
 describe('postCoverageComment', () => {
   let logger: SpyLogger;

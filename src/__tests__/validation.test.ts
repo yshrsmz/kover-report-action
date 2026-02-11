@@ -3,7 +3,7 @@ import {
   looksLikeToken,
   validateMinCoverage,
   validateModulePathTemplate,
-} from '../config/validation';
+} from '../config/validation.js';
 
 describe('validateMinCoverage', () => {
   it('should accept valid integer coverage values', () => {

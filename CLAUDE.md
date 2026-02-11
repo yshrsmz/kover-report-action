@@ -70,9 +70,8 @@ export interface Logger {
 
 ## Build System
 
-The build process has two stages:
-1. TypeScript compilation: `src/*.ts` → `lib/*.js`
-2. Bundling with ncc: `lib/index.js` → `dist/index.js` (single file with all dependencies)
+The build process uses Rollup with TypeScript plugin to produce a single ESM bundle:
+- `rollup -c` compiles TypeScript and bundles: `src/index.ts` → `dist/index.js` (single file with all dependencies)
 
 The `dist/` directory must be committed to the repository since GitHub Actions runs the bundled code directly.
 
@@ -94,7 +93,7 @@ pnpm run lint
 # Fix linting issues automatically
 pnpm run lint:fix
 
-# Build the action (compiles TypeScript + bundles with @vercel/ncc)
+# Build the action (bundles TypeScript with Rollup)
 pnpm run build
 
 # Run all checks (format + lint + build)
@@ -133,7 +132,7 @@ The action follows a **layered, feature-based architecture** with clean separati
 
 ### Configuration Files
 - `action.yml` - GitHub Action metadata defining inputs, outputs, and runtime (node24)
-- `tsconfig.json` - Strict TypeScript configuration targeting ES2021 with CommonJS modules
+- `tsconfig.json` - Strict TypeScript configuration targeting ES2022 with NodeNext modules
 - `biome.json` - Biome configuration for linting and formatting
 
 ## Key Implementation Details

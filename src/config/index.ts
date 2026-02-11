@@ -6,10 +6,10 @@
  */
 
 import type * as core from '@actions/core';
-import { normalizeModuleName } from '../common/paths';
-import { DEFAULT_BASELINE_BRANCH, DEFAULT_HISTORY_RETENTION } from '../history';
-import { parseThresholdsFromJSON } from './thresholds';
-import { validateMinCoverage, validateModulePathTemplate } from './validation';
+import { normalizeModuleName } from '../common/paths.js';
+import { DEFAULT_BASELINE_BRANCH, DEFAULT_HISTORY_RETENTION } from '../history/index.js';
+import { parseThresholdsFromJSON } from './thresholds.js';
+import { validateMinCoverage, validateModulePathTemplate } from './validation.js';
 
 /**
  * Facade for @actions/core input methods

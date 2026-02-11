@@ -5,7 +5,7 @@ export default defineConfig({
     // Exclude lib/ and dist/ directories from test discovery
     exclude: ['**/node_modules/**', '**/dist/**', '**/lib/**', '**/__fixtures__/**'],
     // Include only src and __tests__ directories
-    include: ['src/**/*.test.ts', '__tests__/**/*.test.ts'],
+    include: ['src/**/*.test.ts'],
     // Coverage configuration
     coverage: {
       provider: 'v8',

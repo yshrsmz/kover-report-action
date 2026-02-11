@@ -1,11 +1,11 @@
-import type { Logger } from './common/logger';
-import { resolveSecurePath } from './common/paths';
-import type { ActionConfig } from './config';
-import { aggregateCoverage } from './coverage';
-import type { ModuleDiscovery } from './discovery/index';
-import type { HistoryComparison } from './history/index';
-import type { CoverageSnapshot, HistoryContext, HistoryManager } from './history/manager';
-import type { Reporter, ReportResult } from './reporter';
+import type { Logger } from './common/logger.js';
+import { resolveSecurePath } from './common/paths.js';
+import type { ActionConfig } from './config/index.js';
+import { aggregateCoverage } from './coverage/index.js';
+import type { ModuleDiscovery } from './discovery/index.js';
+import type { HistoryComparison } from './history/index.js';
+import type { CoverageSnapshot, HistoryContext, HistoryManager } from './history/manager.js';
+import type { Reporter, ReportResult } from './reporter/index.js';
 
 export interface RunResult {
   success: boolean;
