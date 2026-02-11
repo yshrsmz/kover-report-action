@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "rootDir": "./src",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
@@ -18,5 +19,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "__fixtures__", "__tests__", "dist"]
+  "exclude": ["node_modules", "__fixtures__", "**/__tests__", "dist"]
 }
