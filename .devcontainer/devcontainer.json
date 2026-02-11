@@ -1,50 +1,37 @@
 {
-  "name": "Node.js",
+  "name": "kover-report-action Dev Container",
   "build": {
-    "dockerfile": "Dockerfile",
-    "context": "..",
-    "cacheFrom": "kover-report-action-devcontainer-cache:latest"
+    "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/home/vscode/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/workspace,type=bind,consistency=cached",
-  "mounts": [
-    {
-      "source": "gh-config-${localWorkspaceFolderBasename}",
-      "target": "/home/vscode/.config/gh",
-      "type": "volume"
-    },
-    {
-      "source": "claude-code-config-${localWorkspaceFolderBasename}",
-      "target": "/home/vscode/.claude",
-      "type": "volume"
-    },
-    {
-      "source": "claude-code-user-config-${localWorkspaceFolderBasename}",
-      "target": "/home/vscode/.config/claude",
-      "type": "volume"
-    },
-    {
-      "source": "codex-config-${localWorkspaceFolderBasename}",
-      "target": "/home/vscode/.codex",
-      "type": "volume"
-    }
-  ],
-  "runArgs": ["--env-file", "${localWorkspaceFolder}/.devcontainer/runtime.env"],
+  "remoteUser": "vscode",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {
-      "installDirectlyFromGitHubRelease": true,
-      "version": "latest"
+    "ghcr.io/devcontainers-extra/features/mise:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["bierner.markdown-mermaid", "editorconfig.editorconfig", "hverlin.mise-vscode"]
     }
   },
-  "initializeCommand": [
-    "/bin/sh",
-    "-c",
-    "cd ${localWorkspaceFolder} && if [ ! -f .devcontainer/runtime.env ]; then cp .devcontainer/runtime.env.template .devcontainer/runtime.env; fi"
+  "mounts": [
+    "source=kover-claude,target=/home/vscode/.claude,type=volume",
+    "source=kover-gh-config,target=/home/vscode/.config/gh,type=volume",
+    "source=kover-mise-data,target=/mnt/mise-data,type=volume",
+    "source=kover-shell-history,target=/home/vscode/.shell_history,type=volume",
+    "source=kover-codex,target=/home/vscode/.codex,type=volume",
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+    "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
   ],
-  "onCreateCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-create.sh"],
-  "postCreateCommand": [
-    "/bin/bash",
-    "/home/vscode/workspace/.devcontainer/scripts/on-post-create.sh"
-  ],
-  "postStartCommand": ["/bin/bash", "/home/vscode/workspace/.devcontainer/scripts/on-post-start.sh"]
+  "containerEnv": {
+    "MISE_DATA_DIR": "/mnt/mise-data",
+    "MISE_STATE_DIR": "/mnt/mise-data/state",
+    "MISE_CACHE_DIR": "/mnt/mise-data/cache",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
+    "SSH_AUTH_SOCK": "/ssh-agent"
+  },
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/mnt/mise-data/shims"
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postAttachCommand": "bash .devcontainer/post-attach.sh"
 }
