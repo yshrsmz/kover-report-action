@@ -12,6 +12,9 @@ setopt HIST_IGNORE_SPACE
 
 eval "$(mise activate zsh)"
 
+# fzf key bindings (Ctrl+R for history search, Ctrl+T for file search, Alt+C for cd)
+eval "$(fzf --zsh)"
+
 # Starship config (no-nerd-font preset for devcontainer portability)
 export STARSHIP_CONFIG="/workspaces/kover-report-action/.devcontainer/starship.toml"
 eval "$(starship init zsh)"
