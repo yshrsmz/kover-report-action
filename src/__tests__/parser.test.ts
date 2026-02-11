@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { SpyLogger } from '../common/logger.js';
 import { parseCoverageFile } from '../coverage/parser.js';
 
-const FIXTURES_DIR = join(import.meta.dirname, '../../__fixtures__/kover-reports');
+const FIXTURES_DIR = join(import.meta.dirname, '__fixtures__/kover-reports');
 
 describe('parseCoverageFile', () => {
   let logger: SpyLogger;

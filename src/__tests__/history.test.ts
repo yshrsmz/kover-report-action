@@ -12,7 +12,7 @@ import {
 
 // Helper to load test fixtures
 async function loadFixture(relativePath: string): Promise<string> {
-  const fixturePath = join(import.meta.dirname, '../../__fixtures__', relativePath);
+  const fixturePath = join(import.meta.dirname, '__fixtures__', relativePath);
   return readFile(fixturePath, 'utf-8');
 }
 
