@@ -1,0 +1,5 @@
+[tools]
+starship = "1.23.0"
+fzf = "0.65.2"
+uv = "0.9.2"
+"npm:@openai/codex" = "0.98.0"
