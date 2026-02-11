@@ -1,11 +1,11 @@
 import * as core from '@actions/core';
-import { runAction } from './action-runner';
-import { createLogger } from './common/logger';
-import { createCoreFacade, loadConfig } from './config';
-import { createCommandDiscovery, createGlobDiscovery } from './discovery/index';
-import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './history/artifacts';
-import { DefaultHistoryManager } from './history/manager';
-import { createActionsReporter } from './reporter/actions-reporter';
+import { runAction } from './action-runner.js';
+import { createLogger } from './common/logger.js';
+import { createCoreFacade, loadConfig } from './config/index.js';
+import { createCommandDiscovery, createGlobDiscovery } from './discovery/index.js';
+import { loadHistoryFromArtifacts, saveHistoryToArtifacts } from './history/artifacts.js';
+import { DefaultHistoryManager } from './history/manager.js';
+import { createActionsReporter } from './reporter/actions-reporter.js';
 
 /**
  * Main entry point for the GitHub Action

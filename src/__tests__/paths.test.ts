@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeModuleName, resolveModulePath } from '../common/paths';
+import { normalizeModuleName, resolveModulePath } from '../common/paths.js';
 
 describe('resolveModulePath', () => {
   it('should transform :core:common to core/common', () => {

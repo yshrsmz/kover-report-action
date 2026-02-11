@@ -5,9 +5,9 @@
  * then extracting module names from the file paths.
  */
 
-import type { Logger } from '../common/logger';
-import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index';
-import { discoverModulesFromGlob } from './utils';
+import type { Logger } from '../common/logger.js';
+import type { DiscoveryConfig, ModuleDiscovery, ModuleReference } from './index.js';
+import { discoverModulesFromGlob } from './utils.js';
 
 /**
  * Creates a glob-based discovery function

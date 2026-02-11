@@ -2,9 +2,10 @@
   "name": "kover-report-action",
   "version": "1.0.0",
   "description": "coverage report action for Kover",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && ncc build lib/index.js -o dist --source-map --license licenses.txt",
+    "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "lint": "biome check .",
@@ -37,11 +38,15 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.14",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "24.10.12",
-    "@vercel/ncc": "0.38.4",
     "@vitest/coverage-v8": "4.0.18",
     "@vitest/ui": "4.0.18",
     "lefthook": "2.1.0",
+    "rollup": "^4.57.1",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
   }

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SpyLogger } from '../common/logger';
-import { validateThresholds } from '../config/thresholds';
-import { checkThreshold, getModuleType, getThresholdForModule } from '../coverage/threshold';
+import { SpyLogger } from '../common/logger.js';
+import { validateThresholds } from '../config/thresholds.js';
+import { checkThreshold, getModuleType, getThresholdForModule } from '../coverage/threshold.js';
 
 describe('getModuleType', () => {
   it('should extract type from :core:common', () => {

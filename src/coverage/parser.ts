@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { XMLParser } from 'fast-xml-parser';
-import type { Logger } from '../common/logger';
+import type { Logger } from '../common/logger.js';
 
 /**
  * Coverage result from parsing Kover XML

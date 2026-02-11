@@ -16,7 +16,7 @@ import {
   loadHistory,
   saveHistory,
   trimHistory,
-} from './index';
+} from './index.js';
 
 /**
  * Storage interface for history persistence

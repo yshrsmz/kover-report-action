@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateCoverageTrendGraph, type TrendData } from '../reporter/graphs';
+import { generateCoverageTrendGraph, type TrendData } from '../reporter/graphs.js';
 
 describe('generateCoverageTrendGraph', () => {
   it('should generate ASCII graph for overall coverage trend', () => {

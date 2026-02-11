@@ -1,7 +1,7 @@
-import type { Logger } from '../common/logger';
-import type { ThresholdConfig } from '../config/thresholds';
-import { type CoverageResult, parseCoverageFile } from './parser';
-import { checkThreshold, getThresholdForModule } from './threshold';
+import type { Logger } from '../common/logger.js';
+import type { ThresholdConfig } from '../config/thresholds.js';
+import { type CoverageResult, parseCoverageFile } from './parser.js';
+import { checkThreshold, getThresholdForModule } from './threshold.js';
 
 /**
  * Module coverage information with threshold and pass/fail status

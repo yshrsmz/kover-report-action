@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SpyLogger } from '../common/logger';
-import * as pathsModule from '../common/paths';
-import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index';
-import * as discoveryModule from '../discovery/utils';
+import { SpyLogger } from '../common/logger.js';
+import * as pathsModule from '../common/paths.js';
+import { createCommandDiscovery, createGlobDiscovery } from '../discovery/index.js';
+import * as discoveryModule from '../discovery/utils.js';
 
 // Mock the discovery utils module functions
-vi.mock('../discovery/utils', () => ({
+vi.mock('../discovery/utils.js', () => ({
   discoverModulesFromCommand: vi.fn(),
   discoverModulesFromGlob: vi.fn(),
 }));
 
-vi.mock('../common/paths', async () => {
-  const actual = await vi.importActual('../common/paths');
+vi.mock('../common/paths.js', async () => {
+  const actual = await vi.importActual('../common/paths.js');
   return {
     ...actual,
     resolveModulePath: vi.fn(),

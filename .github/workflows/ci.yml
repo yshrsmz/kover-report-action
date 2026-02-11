@@ -50,7 +50,7 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
-            echo "Uncommitted changes detected. Please run 'npm run build' and commit the changes."
+            echo "Uncommitted changes detected. Please run 'pnpm run build' and commit the changes."
             git status
             exit 1
           fi

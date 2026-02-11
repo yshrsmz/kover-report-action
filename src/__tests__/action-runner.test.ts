@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { runAction } from '../action-runner';
-import { SpyLogger } from '../common/logger';
-import type { ActionConfig } from '../config';
-import type { DiscoveryConfig, ModuleReference } from '../discovery/index';
-import type { HistoryManager } from '../history/manager';
-import type { Reporter, ReportResult } from '../reporter';
+import { runAction } from '../action-runner.js';
+import { SpyLogger } from '../common/logger.js';
+import type { ActionConfig } from '../config/index.js';
+import type { DiscoveryConfig, ModuleReference } from '../discovery/index.js';
+import type { HistoryManager } from '../history/manager.js';
+import type { Reporter, ReportResult } from '../reporter/index.js';
 
 /**
  * Create a fake discovery function for testing

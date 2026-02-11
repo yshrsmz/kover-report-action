@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SpyLogger } from '../common/logger';
-import { aggregateCoverage } from '../coverage/aggregator';
-import type { CoverageResult } from '../coverage/parser';
+import { SpyLogger } from '../common/logger.js';
+import { aggregateCoverage } from '../coverage/aggregator.js';
+import type { CoverageResult } from '../coverage/parser.js';
 
 // Mock the parser module
-vi.mock('../coverage/parser', () => ({
+vi.mock('../coverage/parser.js', () => ({
   parseCoverageFile: vi.fn((_logger: unknown, filePath: string): Promise<CoverageResult | null> => {
     // Simulate different coverage results based on path
     if (filePath.includes('core-common')) {

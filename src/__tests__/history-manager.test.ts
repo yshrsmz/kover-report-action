@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { DefaultHistoryManager, type HistoryStore } from '../history/manager';
+import { DefaultHistoryManager, type HistoryStore } from '../history/manager.js';
 
 /**
  * In-memory implementation of HistoryStore for testing

@@ -1,5 +1,5 @@
-import type { Logger } from '../common/logger';
-import type { ThresholdConfig } from '../config/thresholds';
+import type { Logger } from '../common/logger.js';
+import type { ThresholdConfig } from '../config/thresholds.js';
 
 /**
  * Get module type from module name

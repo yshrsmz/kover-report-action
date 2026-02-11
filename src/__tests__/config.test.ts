@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { ConfigError, type CoreFacade, type InputOptions, loadConfig } from '../config';
+import { ConfigError, type CoreFacade, type InputOptions, loadConfig } from '../config/index.js';
 
 /**
  * Create a mock CoreFacade for testing
