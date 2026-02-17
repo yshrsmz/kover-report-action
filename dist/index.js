@@ -154607,7 +154607,7 @@ function generateMarkdownReport(overall, title, comparison, history) {
         ? `Module Coverage - ${failedModules}/${totalModules} below threshold ❌`
         : `Module Coverage ✅`;
     lines.push('<details>');
-    lines.push(`<summary>${summaryLabel}</summary>`);
+    lines.push(`<summary><b>${summaryLabel}</b></summary>`);
     lines.push('');
     // Table header - add "Change" column if comparison is available
     if (comparison) {

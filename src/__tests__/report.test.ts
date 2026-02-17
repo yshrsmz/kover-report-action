@@ -232,7 +232,7 @@ describe('generateMarkdownReport', () => {
 
     expect(report).toContain('## 📊 Coverage Report');
     expect(report).toContain('**Overall Coverage: 0.0%**');
-    expect(report).toContain('<summary>Module Coverage ✅</summary>');
+    expect(report).toContain('<summary><b>Module Coverage ✅</b></summary>');
   });
 
   it('should wrap module coverage table in collapsible details tag', () => {
@@ -253,7 +253,7 @@ describe('generateMarkdownReport', () => {
     const report = generateMarkdownReport(coverage, 'Coverage Report');
 
     expect(report).toContain('<details>');
-    expect(report).toContain('<summary>Module Coverage ✅</summary>');
+    expect(report).toContain('<summary><b>Module Coverage ✅</b></summary>');
     expect(report).toContain('</details>');
 
     // Verify structure: <details> comes before table, </details> comes after legend
@@ -292,7 +292,7 @@ describe('generateMarkdownReport', () => {
 
     const report = generateMarkdownReport(coverage, 'Coverage Report');
 
-    expect(report).toContain('<summary>Module Coverage ✅</summary>');
+    expect(report).toContain('<summary><b>Module Coverage ✅</b></summary>');
   });
 
   it('should show failed module count in summary when modules are below threshold', () => {
@@ -324,7 +324,7 @@ describe('generateMarkdownReport', () => {
 
     const report = generateMarkdownReport(coverage, 'Coverage Report');
 
-    expect(report).toContain('<summary>Module Coverage - 2/3 below threshold ❌</summary>');
+    expect(report).toContain('<summary><b>Module Coverage - 2/3 below threshold ❌</b></summary>');
   });
 
   it('should show trend indicators when comparison is provided', () => {

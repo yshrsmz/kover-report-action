@@ -72,7 +72,7 @@ export function generateMarkdownReport(
       : `Module Coverage ✅`;
 
   lines.push('<details>');
-  lines.push(`<summary>${summaryLabel}</summary>`);
+  lines.push(`<summary><b>${summaryLabel}</b></summary>`);
   lines.push('');
 
   // Table header - add "Change" column if comparison is available
