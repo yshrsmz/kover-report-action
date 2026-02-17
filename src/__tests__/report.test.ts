@@ -232,7 +232,7 @@ describe('generateMarkdownReport', () => {
 
     expect(report).toContain('## 📊 Coverage Report');
     expect(report).toContain('**Overall Coverage: 0.0%**');
-    expect(report).toContain('<summary>Module Coverage</summary>');
+    expect(report).toContain('<summary>Module Coverage ✅</summary>');
   });
 
   it('should wrap module coverage table in collapsible details tag', () => {
@@ -253,12 +253,12 @@ describe('generateMarkdownReport', () => {
     const report = generateMarkdownReport(coverage, 'Coverage Report');
 
     expect(report).toContain('<details>');
-    expect(report).toContain('<summary>Module Coverage</summary>');
+    expect(report).toContain('<summary>Module Coverage ✅</summary>');
     expect(report).toContain('</details>');
 
     // Verify structure: <details> comes before table, </details> comes after legend
     const detailsOpen = report.indexOf('<details>');
-    const summary = report.indexOf('<summary>Module Coverage</summary>');
+    const summary = report.indexOf('<summary>');
     const table = report.indexOf('| Module |');
     const legend = report.indexOf('### Legend');
     const detailsClose = report.indexOf('</details>');
@@ -267,6 +267,64 @@ describe('generateMarkdownReport', () => {
     expect(summary).toBeLessThan(table);
     expect(table).toBeLessThan(legend);
     expect(legend).toBeLessThan(detailsClose);
+  });
+
+  it('should show checkmark in summary when all modules pass', () => {
+    const coverage: OverallCoverage = {
+      percentage: 90.0,
+      covered: 900,
+      total: 1000,
+      modules: [
+        {
+          module: ':core',
+          coverage: { covered: 450, missed: 50, total: 500, percentage: 90.0 },
+          threshold: 80,
+          passed: true,
+        },
+        {
+          module: ':data',
+          coverage: { covered: 450, missed: 50, total: 500, percentage: 90.0 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report');
+
+    expect(report).toContain('<summary>Module Coverage ✅</summary>');
+  });
+
+  it('should show failed module count in summary when modules are below threshold', () => {
+    const coverage: OverallCoverage = {
+      percentage: 60.0,
+      covered: 600,
+      total: 1000,
+      modules: [
+        {
+          module: ':core',
+          coverage: { covered: 400, missed: 100, total: 500, percentage: 80.0 },
+          threshold: 80,
+          passed: true,
+        },
+        {
+          module: ':feature:auth',
+          coverage: { covered: 100, missed: 200, total: 300, percentage: 33.3 },
+          threshold: 70,
+          passed: false,
+        },
+        {
+          module: ':data',
+          coverage: { covered: 100, missed: 100, total: 200, percentage: 50.0 },
+          threshold: 75,
+          passed: false,
+        },
+      ],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report');
+
+    expect(report).toContain('<summary>Module Coverage - 2/3 below threshold ❌</summary>');
   });
 
   it('should show trend indicators when comparison is provided', () => {
