@@ -63,8 +63,9 @@ export function generateMarkdownReport(
     }
   }
 
-  // Module coverage table
-  lines.push('### Module Coverage');
+  // Module coverage table (collapsible)
+  lines.push('<details>');
+  lines.push('<summary>Module Coverage</summary>');
   lines.push('');
 
   // Table header - add "Change" column if comparison is available
@@ -100,6 +101,8 @@ export function generateMarkdownReport(
   lines.push('- ✅ Coverage meets threshold');
   lines.push('- ❌ Coverage below threshold');
   lines.push('- ⚠️ No coverage report found');
+  lines.push('');
+  lines.push('</details>');
 
   // Footer with action attribution
   lines.push('');

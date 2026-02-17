@@ -232,7 +232,41 @@ describe('generateMarkdownReport', () => {
 
     expect(report).toContain('## 📊 Coverage Report');
     expect(report).toContain('**Overall Coverage: 0.0%**');
-    expect(report).toContain('### Module Coverage');
+    expect(report).toContain('<summary>Module Coverage</summary>');
+  });
+
+  it('should wrap module coverage table in collapsible details tag', () => {
+    const coverage: OverallCoverage = {
+      percentage: 85.5,
+      covered: 855,
+      total: 1000,
+      modules: [
+        {
+          module: ':core',
+          coverage: { covered: 855, missed: 145, total: 1000, percentage: 85.5 },
+          threshold: 80,
+          passed: true,
+        },
+      ],
+    };
+
+    const report = generateMarkdownReport(coverage, 'Coverage Report');
+
+    expect(report).toContain('<details>');
+    expect(report).toContain('<summary>Module Coverage</summary>');
+    expect(report).toContain('</details>');
+
+    // Verify structure: <details> comes before table, </details> comes after legend
+    const detailsOpen = report.indexOf('<details>');
+    const summary = report.indexOf('<summary>Module Coverage</summary>');
+    const table = report.indexOf('| Module |');
+    const legend = report.indexOf('### Legend');
+    const detailsClose = report.indexOf('</details>');
+
+    expect(detailsOpen).toBeLessThan(summary);
+    expect(summary).toBeLessThan(table);
+    expect(table).toBeLessThan(legend);
+    expect(legend).toBeLessThan(detailsClose);
   });
 
   it('should show trend indicators when comparison is provided', () => {
