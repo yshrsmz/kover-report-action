@@ -63,8 +63,16 @@ export function generateMarkdownReport(
     }
   }
 
-  // Module coverage table
-  lines.push('### Module Coverage');
+  // Module coverage table (collapsible) with threshold summary
+  const totalModules = overall.modules.length;
+  const failedModules = overall.modules.filter((m) => !m.passed).length;
+  const summaryLabel =
+    failedModules > 0
+      ? `Module Coverage - ${failedModules}/${totalModules} below threshold ❌`
+      : `Module Coverage ✅`;
+
+  lines.push('<details>');
+  lines.push(`<summary><b>${summaryLabel}</b></summary>`);
   lines.push('');
 
   // Table header - add "Change" column if comparison is available
@@ -100,6 +108,8 @@ export function generateMarkdownReport(
   lines.push('- ✅ Coverage meets threshold');
   lines.push('- ❌ Coverage below threshold');
   lines.push('- ⚠️ No coverage report found');
+  lines.push('');
+  lines.push('</details>');
 
   // Footer with action attribution
   lines.push('');
