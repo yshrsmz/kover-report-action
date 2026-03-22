@@ -27935,7 +27935,7 @@ function requireUndici$1 () {
 var undiciExports = requireUndici$1();
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-var __awaiter$j = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$k = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -28011,8 +28011,8 @@ class HttpClientResponse {
         this.message = message;
     }
     readBody() {
-        return __awaiter$j(this, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter$k(this, void 0, void 0, function* () {
                 let output = Buffer.alloc(0);
                 this.message.on('data', (chunk) => {
                     output = Buffer.concat([output, chunk]);
@@ -28024,8 +28024,8 @@ class HttpClientResponse {
         });
     }
     readBodyBuffer() {
-        return __awaiter$j(this, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter$k(this, void 0, void 0, function* () {
                 const chunks = [];
                 this.message.on('data', (chunk) => {
                     chunks.push(chunk);
@@ -28076,42 +28076,42 @@ class HttpClient {
         }
     }
     options(requestUrl, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
         });
     }
     get(requestUrl, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('GET', requestUrl, null, additionalHeaders || {});
         });
     }
     del(requestUrl, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('DELETE', requestUrl, null, additionalHeaders || {});
         });
     }
     post(requestUrl, data, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('POST', requestUrl, data, additionalHeaders || {});
         });
     }
     patch(requestUrl, data, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('PATCH', requestUrl, data, additionalHeaders || {});
         });
     }
     put(requestUrl, data, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('PUT', requestUrl, data, additionalHeaders || {});
         });
     }
     head(requestUrl, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request('HEAD', requestUrl, null, additionalHeaders || {});
         });
     }
     sendStream(verb, requestUrl, stream, additionalHeaders) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return this.request(verb, requestUrl, stream, additionalHeaders);
         });
     }
@@ -28120,14 +28120,14 @@ class HttpClient {
      * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
      */
     getJson(requestUrl_1) {
-        return __awaiter$j(this, arguments, void 0, function* (requestUrl, additionalHeaders = {}) {
+        return __awaiter$k(this, arguments, void 0, function* (requestUrl, additionalHeaders = {}) {
             additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
             const res = yield this.get(requestUrl, additionalHeaders);
             return this._processResponse(res, this.requestOptions);
         });
     }
     postJson(requestUrl_1, obj_1) {
-        return __awaiter$j(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter$k(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
             const data = JSON.stringify(obj, null, 2);
             additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
             additionalHeaders[Headers.ContentType] =
@@ -28137,7 +28137,7 @@ class HttpClient {
         });
     }
     putJson(requestUrl_1, obj_1) {
-        return __awaiter$j(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter$k(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
             const data = JSON.stringify(obj, null, 2);
             additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
             additionalHeaders[Headers.ContentType] =
@@ -28147,7 +28147,7 @@ class HttpClient {
         });
     }
     patchJson(requestUrl_1, obj_1) {
-        return __awaiter$j(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter$k(this, arguments, void 0, function* (requestUrl, obj, additionalHeaders = {}) {
             const data = JSON.stringify(obj, null, 2);
             additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
             additionalHeaders[Headers.ContentType] =
@@ -28162,7 +28162,7 @@ class HttpClient {
      * Prefer get, del, post and patch
      */
     request(verb, requestUrl, data, headers) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             if (this._disposed) {
                 throw new Error('Client has already been disposed.');
             }
@@ -28258,7 +28258,7 @@ class HttpClient {
      * @param data
      */
     requestRaw(info, data) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 function callbackForResult(err, res) {
                     if (err) {
@@ -28539,15 +28539,15 @@ class HttpClient {
         return baseUserAgent;
     }
     _performExponentialBackoff(retryNumber) {
-        return __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
             retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
             const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
             return new Promise(resolve => setTimeout(() => resolve(), ms));
         });
     }
     _processResponse(res, options) {
-        return __awaiter$j(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter$j(this, void 0, void 0, function* () {
+        return __awaiter$k(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter$k(this, void 0, void 0, function* () {
                 const statusCode = res.message.statusCode || 0;
                 const response = {
                     statusCode,
@@ -28613,7 +28613,7 @@ class HttpClient {
 }
 const lowercaseKeys$2 = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
 
-var __awaiter$i = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$j = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -28639,13 +28639,13 @@ class BearerCredentialHandler {
         return false;
     }
     handleAuthentication() {
-        return __awaiter$i(this, void 0, void 0, function* () {
+        return __awaiter$j(this, void 0, void 0, function* () {
             throw new Error('not implemented');
         });
     }
 }
 
-var __awaiter$h = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$i = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -28677,7 +28677,7 @@ class OidcClient {
         return runtimeUrl;
     }
     static getCall(id_token_url) {
-        return __awaiter$h(this, void 0, void 0, function* () {
+        return __awaiter$i(this, void 0, void 0, function* () {
             var _a;
             const httpclient = OidcClient.createHttpClient();
             const res = yield httpclient
@@ -28695,7 +28695,7 @@ class OidcClient {
         });
     }
     static getIDToken(audience) {
-        return __awaiter$h(this, void 0, void 0, function* () {
+        return __awaiter$i(this, void 0, void 0, function* () {
             try {
                 // New ID Token is requested from action service
                 let id_token_url = OidcClient.getIDTokenUrl();
@@ -28715,7 +28715,7 @@ class OidcClient {
     }
 }
 
-var __awaiter$g = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$h = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -28737,7 +28737,7 @@ class Summary {
      * @returns step summary file path
      */
     filePath() {
-        return __awaiter$g(this, void 0, void 0, function* () {
+        return __awaiter$h(this, void 0, void 0, function* () {
             if (this._filePath) {
                 return this._filePath;
             }
@@ -28781,7 +28781,7 @@ class Summary {
      * @returns {Promise<Summary>} summary instance
      */
     write(options) {
-        return __awaiter$g(this, void 0, void 0, function* () {
+        return __awaiter$h(this, void 0, void 0, function* () {
             const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
             const filePath = yield this.filePath();
             const writeFunc = overwrite ? writeFile : appendFile;
@@ -28795,7 +28795,7 @@ class Summary {
      * @returns {Summary} summary instance
      */
     clear() {
-        return __awaiter$g(this, void 0, void 0, function* () {
+        return __awaiter$h(this, void 0, void 0, function* () {
             return this.emptyBuffer().write({ overwrite: true });
         });
     }
@@ -29024,7 +29024,7 @@ function toPlatformPath(pth) {
     return pth.replace(/[/\\]/g, path$1.sep);
 }
 
-var __awaiter$f = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$g = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -29038,7 +29038,7 @@ const { chmod, copyFile, lstat, mkdir, open, readdir, rename, rm, rmdir, stat, s
 const IS_WINDOWS$1 = process.platform === 'win32';
 fs$1.constants.O_RDONLY;
 function exists$1(fsPath) {
-    return __awaiter$f(this, void 0, void 0, function* () {
+    return __awaiter$g(this, void 0, void 0, function* () {
         try {
             yield stat(fsPath);
         }
@@ -29073,7 +29073,7 @@ function isRooted(p) {
  * @return if file exists and is executable, returns the file path. otherwise empty string.
  */
 function tryGetExecutablePath(filePath, extensions) {
-    return __awaiter$f(this, void 0, void 0, function* () {
+    return __awaiter$g(this, void 0, void 0, function* () {
         let stats = undefined;
         try {
             // test file exists
@@ -29166,7 +29166,7 @@ function isUnixExecutable(stats) {
             stats.uid === process.getuid()));
 }
 
-var __awaiter$e = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$f = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -29184,7 +29184,7 @@ var __awaiter$e = (undefined && undefined.__awaiter) || function (thisArg, _argu
  * @returns   Promise<string>   path to tool
  */
 function which(tool, check) {
-    return __awaiter$e(this, void 0, void 0, function* () {
+    return __awaiter$f(this, void 0, void 0, function* () {
         if (!tool) {
             throw new Error("parameter 'tool' is required");
         }
@@ -29214,7 +29214,7 @@ function which(tool, check) {
  * @returns   Promise<string[]>  the paths of the tool
  */
 function findInPath(tool) {
-    return __awaiter$e(this, void 0, void 0, function* () {
+    return __awaiter$f(this, void 0, void 0, function* () {
         if (!tool) {
             throw new Error("parameter 'tool' is required");
         }
@@ -29265,7 +29265,7 @@ function findInPath(tool) {
     });
 }
 
-var __awaiter$d = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$e = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -29613,7 +29613,7 @@ class ToolRunner extends require$$1$1.EventEmitter {
      * @returns   number
      */
     exec() {
-        return __awaiter$d(this, void 0, void 0, function* () {
+        return __awaiter$e(this, void 0, void 0, function* () {
             // root the tool path if it is unrooted and contains relative pathing
             if (!isRooted(this.toolPath) &&
                 (this.toolPath.includes('/') ||
@@ -29624,7 +29624,7 @@ class ToolRunner extends require$$1$1.EventEmitter {
             // if the tool is only a file name, then resolve it from the PATH
             // otherwise verify it exists (add extension on Windows if necessary)
             this.toolPath = yield which(this.toolPath, true);
-            return new Promise((resolve, reject) => __awaiter$d(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter$e(this, void 0, void 0, function* () {
                 this._debug(`exec tool: ${this.toolPath}`);
                 this._debug('arguments:');
                 for (const arg of this.args) {
@@ -29845,7 +29845,7 @@ class ExecState extends require$$1$1.EventEmitter {
     }
 }
 
-var __awaiter$c = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$d = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -29865,7 +29865,7 @@ var __awaiter$c = (undefined && undefined.__awaiter) || function (thisArg, _argu
  * @returns   Promise<number>    exit code
  */
 function exec$1(commandLine, args, options) {
-    return __awaiter$c(this, void 0, void 0, function* () {
+    return __awaiter$d(this, void 0, void 0, function* () {
         const commandArgs = argStringToArray(commandLine);
         if (commandArgs.length === 0) {
             throw new Error(`Parameter 'commandLine' cannot be null or empty.`);
@@ -29888,7 +29888,7 @@ function exec$1(commandLine, args, options) {
  * @returns   Promise<ExecOutput>   exit code, stdout, and stderr
  */
 function getExecOutput(commandLine, args, options) {
-    return __awaiter$c(this, void 0, void 0, function* () {
+    return __awaiter$d(this, void 0, void 0, function* () {
         var _a, _b;
         let stdout = '';
         let stderr = '';
@@ -29922,7 +29922,7 @@ function getExecOutput(commandLine, args, options) {
     });
 }
 
-var __awaiter$b = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$c = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -29931,7 +29931,7 @@ var __awaiter$b = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const getWindowsInfo = () => __awaiter$b(void 0, void 0, void 0, function* () {
+const getWindowsInfo = () => __awaiter$c(void 0, void 0, void 0, function* () {
     const { stdout: version } = yield getExecOutput('powershell -command "(Get-CimInstance -ClassName Win32_OperatingSystem).Version"', undefined, {
         silent: true
     });
@@ -29943,7 +29943,7 @@ const getWindowsInfo = () => __awaiter$b(void 0, void 0, void 0, function* () {
         version: version.trim()
     };
 });
-const getMacOsInfo = () => __awaiter$b(void 0, void 0, void 0, function* () {
+const getMacOsInfo = () => __awaiter$c(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     const { stdout } = yield getExecOutput('sw_vers', undefined, {
         silent: true
@@ -29955,7 +29955,7 @@ const getMacOsInfo = () => __awaiter$b(void 0, void 0, void 0, function* () {
         version
     };
 });
-const getLinuxInfo = () => __awaiter$b(void 0, void 0, void 0, function* () {
+const getLinuxInfo = () => __awaiter$c(void 0, void 0, void 0, function* () {
     const { stdout } = yield getExecOutput('lsb_release', ['-i', '-r', '-s'], {
         silent: true
     });
@@ -29971,7 +29971,7 @@ const isWindows = platform$1 === 'win32';
 const isMacOS = platform$1 === 'darwin';
 const isLinux = platform$1 === 'linux';
 function getDetails() {
-    return __awaiter$b(this, void 0, void 0, function* () {
+    return __awaiter$c(this, void 0, void 0, function* () {
         return Object.assign(Object.assign({}, (yield (isWindows
             ? getWindowsInfo()
             : isMacOS
@@ -29994,7 +29994,7 @@ var platform$2 = /*#__PURE__*/Object.freeze({
     platform: platform$1
 });
 
-var __awaiter$a = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$b = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -30245,7 +30245,7 @@ function endGroup() {
  * @param fn The function to wrap in the group
  */
 function group(name, fn) {
-    return __awaiter$a(this, void 0, void 0, function* () {
+    return __awaiter$b(this, void 0, void 0, function* () {
         startGroup(name);
         let result;
         try {
@@ -30284,7 +30284,7 @@ function getState(name) {
     return process.env[`STATE_${name}`] || '';
 }
 function getIDToken(aud) {
-    return __awaiter$a(this, void 0, void 0, function* () {
+    return __awaiter$b(this, void 0, void 0, function* () {
         return yield OidcClient.getIDToken(aud);
     });
 }
@@ -30419,7 +30419,7 @@ function getAllMatches(string, regex) {
   return matches;
 }
 
-const isName = function(string) {
+const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');
 };
@@ -30428,8 +30428,23 @@ function isExist(v) {
   return typeof v !== 'undefined';
 }
 
-// const fakeCall = function(a) {return a;};
-// const fakeCallNoReturn = function() {};
+/**
+ * Dangerous property names that could lead to prototype pollution or security issues
+ */
+const DANGEROUS_PROPERTY_NAMES = [
+  // '__proto__',
+  // 'constructor',
+  // 'prototype',
+  'hasOwnProperty',
+  'toString',
+  'valueOf',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__'
+];
+
+const criticalProperties = ["__proto__", "constructor", "prototype"];
 
 const defaultOptions$2 = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
@@ -30453,19 +30468,19 @@ function validate(xmlData, options) {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
   }
-  
+
   for (let i = 0; i < xmlData.length; i++) {
 
-    if (xmlData[i] === '<' && xmlData[i+1] === '?') {
-      i+=2;
-      i = readPI(xmlData,i);
+    if (xmlData[i] === '<' && xmlData[i + 1] === '?') {
+      i += 2;
+      i = readPI(xmlData, i);
       if (i.err) return i;
-    }else if (xmlData[i] === '<') {
+    } else if (xmlData[i] === '<') {
       //starting of tag
       //read until you reach to '>' avoiding any '>' in attribute value
       let tagStartPos = i;
       i++;
-      
+
       if (xmlData[i] === '!') {
         i = readCommentAndCDATA(xmlData, i);
         continue;
@@ -30501,14 +30516,14 @@ function validate(xmlData, options) {
           if (tagName.trim().length === 0) {
             msg = "Invalid space after '<'.";
           } else {
-            msg = "Tag '"+tagName+"' is an invalid name.";
+            msg = "Tag '" + tagName + "' is an invalid name.";
           }
           return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
         }
 
         const result = readAttributeStr(xmlData, i);
         if (result === false) {
-          return getErrorObject('InvalidAttr', "Attributes for '"+tagName+"' have open quote.", getLineNumberForPosition(xmlData, i));
+          return getErrorObject('InvalidAttr', "Attributes for '" + tagName + "' have open quote.", getLineNumberForPosition(xmlData, i));
         }
         let attrStr = result.value;
         i = result.index;
@@ -30529,17 +30544,17 @@ function validate(xmlData, options) {
           }
         } else if (closingTag) {
           if (!result.tagClosed) {
-            return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' doesn't have proper closing.", getLineNumberForPosition(xmlData, i));
+            return getErrorObject('InvalidTag', "Closing tag '" + tagName + "' doesn't have proper closing.", getLineNumberForPosition(xmlData, i));
           } else if (attrStr.trim().length > 0) {
-            return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, tagStartPos));
+            return getErrorObject('InvalidTag', "Closing tag '" + tagName + "' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, tagStartPos));
           } else if (tags.length === 0) {
-            return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' has not been opened.", getLineNumberForPosition(xmlData, tagStartPos));
+            return getErrorObject('InvalidTag', "Closing tag '" + tagName + "' has not been opened.", getLineNumberForPosition(xmlData, tagStartPos));
           } else {
             const otg = tags.pop();
             if (tagName !== otg.tagName) {
               let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
               return getErrorObject('InvalidTag',
-                "Expected closing tag '"+otg.tagName+"' (opened in line "+openPos.line+", col "+openPos.col+") instead of closing tag '"+tagName+"'.",
+                "Expected closing tag '" + otg.tagName + "' (opened in line " + openPos.line + ", col " + openPos.col + ") instead of closing tag '" + tagName + "'.",
                 getLineNumberForPosition(xmlData, tagStartPos));
             }
 
@@ -30560,8 +30575,8 @@ function validate(xmlData, options) {
           //if the root level has been reached before ...
           if (reachedRoot === true) {
             return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
-          } else if(options.unpairedTags.indexOf(tagName) !== -1); else {
-            tags.push({tagName, tagStartPos});
+          } else if (options.unpairedTags.indexOf(tagName) !== -1) ; else {
+            tags.push({ tagName, tagStartPos });
           }
           tagFound = true;
         }
@@ -30575,7 +30590,7 @@ function validate(xmlData, options) {
               i++;
               i = readCommentAndCDATA(xmlData, i);
               continue;
-            } else if (xmlData[i+1] === '?') {
+            } else if (xmlData[i + 1] === '?') {
               i = readPI(xmlData, ++i);
               if (i.err) return i;
             } else {
@@ -30586,7 +30601,7 @@ function validate(xmlData, options) {
             if (afterAmp == -1)
               return getErrorObject('InvalidChar', "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
             i = afterAmp;
-          }else {
+          } else {
             if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
               return getErrorObject('InvalidXml', "Extra text at the end", getLineNumberForPosition(xmlData, i));
             }
@@ -30597,27 +30612,27 @@ function validate(xmlData, options) {
         }
       }
     } else {
-      if ( isWhiteSpace(xmlData[i])) {
+      if (isWhiteSpace(xmlData[i])) {
         continue;
       }
-      return getErrorObject('InvalidChar', "char '"+xmlData[i]+"' is not expected.", getLineNumberForPosition(xmlData, i));
+      return getErrorObject('InvalidChar', "char '" + xmlData[i] + "' is not expected.", getLineNumberForPosition(xmlData, i));
     }
   }
 
   if (!tagFound) {
     return getErrorObject('InvalidXml', 'Start tag expected.', 1);
-  }else if (tags.length == 1) {
-      return getErrorObject('InvalidTag', "Unclosed tag '"+tags[0].tagName+"'.", getLineNumberForPosition(xmlData, tags[0].tagStartPos));
-  }else if (tags.length > 0) {
-      return getErrorObject('InvalidXml', "Invalid '"+
-          JSON.stringify(tags.map(t => t.tagName), null, 4).replace(/\r?\n/g, '')+
-          "' found.", {line: 1, col: 1});
+  } else if (tags.length == 1) {
+    return getErrorObject('InvalidTag', "Unclosed tag '" + tags[0].tagName + "'.", getLineNumberForPosition(xmlData, tags[0].tagStartPos));
+  } else if (tags.length > 0) {
+    return getErrorObject('InvalidXml', "Invalid '" +
+      JSON.stringify(tags.map(t => t.tagName), null, 4).replace(/\r?\n/g, '') +
+      "' found.", { line: 1, col: 1 });
   }
 
   return true;
 }
-function isWhiteSpace(char){
-  return char === ' ' || char === '\t' || char === '\n'  || char === '\r';
+function isWhiteSpace(char) {
+  return char === ' ' || char === '\t' || char === '\n' || char === '\r';
 }
 /**
  * Read Processing insstructions and skip
@@ -30751,25 +30766,25 @@ function validateAttributeString(attrStr, options) {
   for (let i = 0; i < matches.length; i++) {
     if (matches[i][1].length === 0) {
       //nospace before attribute name: a="sd"b="saf"
-      return getErrorObject('InvalidAttr', "Attribute '"+matches[i][2]+"' has no space in starting.", getPositionFromMatch(matches[i]))
+      return getErrorObject('InvalidAttr', "Attribute '" + matches[i][2] + "' has no space in starting.", getPositionFromMatch(matches[i]))
     } else if (matches[i][3] !== undefined && matches[i][4] === undefined) {
-      return getErrorObject('InvalidAttr', "Attribute '"+matches[i][2]+"' is without value.", getPositionFromMatch(matches[i]));
+      return getErrorObject('InvalidAttr', "Attribute '" + matches[i][2] + "' is without value.", getPositionFromMatch(matches[i]));
     } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
       //independent attribute: ab
-      return getErrorObject('InvalidAttr', "boolean attribute '"+matches[i][2]+"' is not allowed.", getPositionFromMatch(matches[i]));
+      return getErrorObject('InvalidAttr', "boolean attribute '" + matches[i][2] + "' is not allowed.", getPositionFromMatch(matches[i]));
     }
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
     if (!validateAttrName(attrName)) {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(matches[i]));
+      return getErrorObject('InvalidAttr', "Attribute '" + attrName + "' is an invalid name.", getPositionFromMatch(matches[i]));
     }
-    if (!attrNames.hasOwnProperty(attrName)) {
+    if (!Object.prototype.hasOwnProperty.call(attrNames, attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is repeated.", getPositionFromMatch(matches[i]));
+      return getErrorObject('InvalidAttr', "Attribute '" + attrName + "' is repeated.", getPositionFromMatch(matches[i]));
     }
   }
 
@@ -30848,6 +30863,14 @@ function getPositionFromMatch(match) {
   return match.startIndex + match[1].length;
 }
 
+const defaultOnDangerousProperty = (name) => {
+  if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return "__" + name;
+  }
+  return name;
+};
+
+
 const defaultOptions$1 = {
   preserveOrder: false,
   attributeNamePrefix: '@_',
@@ -30888,7 +30911,37 @@ const defaultOptions$1 = {
   },
   // skipEmptyListItem: false
   captureMetaData: false,
+  maxNestedTags: 100,
+  strictReservedNames: true,
+  jPath: true, // if true, pass jPath string to callbacks; if false, pass matcher instance
+  onDangerousProperty: defaultOnDangerousProperty
 };
+
+
+/**
+ * Validates that a property name is safe to use
+ * @param {string} propertyName - The property name to validate
+ * @param {string} optionName - The option field name (for error message)
+ * @throws {Error} If property name is dangerous
+ */
+function validatePropertyName(propertyName, optionName) {
+  if (typeof propertyName !== 'string') {
+    return; // Only validate string property names
+  }
+
+  const normalized = propertyName.toLowerCase();
+  if (DANGEROUS_PROPERTY_NAMES.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+
+  if (criticalProperties.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+}
 
 /**
  * Normalizes processEntities option for backward compatibility
@@ -30904,6 +30957,7 @@ function normalizeProcessEntities(value) {
       maxExpansionDepth: 10,
       maxTotalExpansions: 1000,
       maxExpandedLength: 100000,
+      maxEntityCount: 100,
       allowedTags: null,
       tagFilter: null
     };
@@ -30912,11 +30966,12 @@ function normalizeProcessEntities(value) {
   // Object config - merge with defaults
   if (typeof value === 'object' && value !== null) {
     return {
-      enabled: value.enabled !== false, // default true if not specified
-      maxEntitySize: value.maxEntitySize ?? 10000,
-      maxExpansionDepth: value.maxExpansionDepth ?? 10,
-      maxTotalExpansions: value.maxTotalExpansions ?? 1000,
-      maxExpandedLength: value.maxExpandedLength ?? 100000,
+      enabled: value.enabled !== false,
+      maxEntitySize: Math.max(1, value.maxEntitySize ?? 10000),
+      maxExpansionDepth: Math.max(1, value.maxExpansionDepth ?? 10),
+      maxTotalExpansions: Math.max(1, value.maxTotalExpansions ?? 1000),
+      maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 100000),
+      maxEntityCount: Math.max(1, value.maxEntityCount ?? 100),
       allowedTags: value.allowedTags ?? null,
       tagFilter: value.tagFilter ?? null
     };
@@ -30929,8 +30984,39 @@ function normalizeProcessEntities(value) {
 const buildOptions = function (options) {
   const built = Object.assign({}, defaultOptions$1, options);
 
+  // Validate property names to prevent prototype pollution
+  const propertyNameOptions = [
+    { value: built.attributeNamePrefix, name: 'attributeNamePrefix' },
+    { value: built.attributesGroupName, name: 'attributesGroupName' },
+    { value: built.textNodeName, name: 'textNodeName' },
+    { value: built.cdataPropName, name: 'cdataPropName' },
+    { value: built.commentPropName, name: 'commentPropName' }
+  ];
+
+  for (const { value, name } of propertyNameOptions) {
+    if (value) {
+      validatePropertyName(value, name);
+    }
+  }
+
+  if (built.onDangerousProperty === null) {
+    built.onDangerousProperty = defaultOnDangerousProperty;
+  }
+
   // Always normalize processEntities for backward compatibility and validation
   built.processEntities = normalizeProcessEntities(built.processEntities);
+
+  // Convert old-style stopNodes for backward compatibility
+  if (built.stopNodes && Array.isArray(built.stopNodes)) {
+    built.stopNodes = built.stopNodes.map(node => {
+      if (typeof node === 'string' && node.startsWith('*.')) {
+        // Old syntax: *.tagname meant "tagname anywhere"
+        // Convert to new syntax: ..tagname
+        return '..' + node.substring(2);
+      }
+      return node;
+    });
+  }
   //console.debug(built.processEntities)
   return built;
 };
@@ -30943,23 +31029,23 @@ if (typeof Symbol !== "function") {
   METADATA_SYMBOL$1 = Symbol("XML Node Metadata");
 }
 
-class XmlNode{
+class XmlNode {
   constructor(tagname) {
     this.tagname = tagname;
     this.child = []; //nested tags, text, cdata, comments in order
-    this[":@"] = {}; //attributes map
+    this[":@"] = Object.create(null); //attributes map
   }
-  add(key,val){
+  add(key, val) {
     // this.child.push( {name : key, val: val, isCdata: isCdata });
-    if(key === "__proto__") key = "#__proto__";
-    this.child.push( {[key]: val });
+    if (key === "__proto__") key = "#__proto__";
+    this.child.push({ [key]: val });
   }
   addChild(node, startIndex) {
-    if(node.tagname === "__proto__") node.tagname = "#__proto__";
-    if(node[":@"] && Object.keys(node[":@"]).length > 0){
-      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"] });
-    }else {
-      this.child.push( { [node.tagname]: node.child });
+    if (node.tagname === "__proto__") node.tagname = "#__proto__";
+    if (node[":@"] && Object.keys(node[":@"]).length > 0) {
+      this.child.push({ [node.tagname]: node.child, [":@"]: node[":@"] });
+    } else {
+      this.child.push({ [node.tagname]: node.child });
     }
     // if requested, add the startIndex
     if (startIndex !== undefined) {
@@ -30981,8 +31067,9 @@ class DocTypeReader {
     }
 
     readDocType(xmlData, i) {
+        const entities = Object.create(null);
+        let entityCount = 0;
 
-        const entities = {};
         if (xmlData[i + 3] === 'O' &&
             xmlData[i + 4] === 'C' &&
             xmlData[i + 5] === 'T' &&
@@ -31000,11 +31087,20 @@ class DocTypeReader {
                         let entityName, val;
                         [entityName, val, i] = this.readEntityExp(xmlData, i + 1, this.suppressValidationErr);
                         if (val.indexOf("&") === -1) { //Parameter entities are not supported
-                            const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
+                            if (this.options.enabled !== false &&
+                                this.options.maxEntityCount != null &&
+                                entityCount >= this.options.maxEntityCount) {
+                                throw new Error(
+                                    `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
+                                );
+                            }
+                            //const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
+                            const escaped = entityName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             entities[entityName] = {
                                 regx: RegExp(`&${escaped};`, "g"),
                                 val: val
                             };
+                            entityCount++;
                         }
                     }
                     else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {
@@ -31064,11 +31160,12 @@ class DocTypeReader {
         i = skipWhitespace(xmlData, i);
 
         // Read entity name
-        let entityName = "";
+        const startIndex = i;
         while (i < xmlData.length && !/\s/.test(xmlData[i]) && xmlData[i] !== '"' && xmlData[i] !== "'") {
-            entityName += xmlData[i];
             i++;
         }
+        let entityName = xmlData.substring(startIndex, i);
+
         validateEntityName(entityName);
 
         // Skip whitespace after entity name
@@ -31089,7 +31186,7 @@ class DocTypeReader {
 
         // Validate entity size
         if (this.options.enabled !== false &&
-            this.options.maxEntitySize &&
+            this.options.maxEntitySize != null &&
             entityValue.length > this.options.maxEntitySize) {
             throw new Error(
                 `Entity "${entityName}" size (${entityValue.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`
@@ -31105,11 +31202,13 @@ class DocTypeReader {
         i = skipWhitespace(xmlData, i);
 
         // Read notation name
-        let notationName = "";
+
+        const startIndex = i;
         while (i < xmlData.length && !/\s/.test(xmlData[i])) {
-            notationName += xmlData[i];
             i++;
         }
+        let notationName = xmlData.substring(startIndex, i);
+
         !this.suppressValidationErr && validateEntityName(notationName);
 
         // Skip whitespace after notation name
@@ -31159,10 +31258,11 @@ class DocTypeReader {
         }
         i++;
 
+        const startIndex = i;
         while (i < xmlData.length && xmlData[i] !== startChar) {
-            identifierVal += xmlData[i];
             i++;
         }
+        identifierVal = xmlData.substring(startIndex, i);
 
         if (xmlData[i] !== startChar) {
             throw new Error(`Unterminated ${type} value`);
@@ -31182,11 +31282,11 @@ class DocTypeReader {
         i = skipWhitespace(xmlData, i);
 
         // Read element name
-        let elementName = "";
+        const startIndex = i;
         while (i < xmlData.length && !/\s/.test(xmlData[i])) {
-            elementName += xmlData[i];
             i++;
         }
+        let elementName = xmlData.substring(startIndex, i);
 
         // Validate element name
         if (!this.suppressValidationErr && !isName(elementName)) {
@@ -31203,10 +31303,12 @@ class DocTypeReader {
             i++; // Move past '('
 
             // Read content model
+            const startIndex = i;
             while (i < xmlData.length && xmlData[i] !== ")") {
-                contentModel += xmlData[i];
                 i++;
             }
+            contentModel = xmlData.substring(startIndex, i);
+
             if (xmlData[i] !== ")") {
                 throw new Error("Unterminated content model");
             }
@@ -31227,11 +31329,11 @@ class DocTypeReader {
         i = skipWhitespace(xmlData, i);
 
         // Read element name
-        let elementName = "";
+        let startIndex = i;
         while (i < xmlData.length && !/\s/.test(xmlData[i])) {
-            elementName += xmlData[i];
             i++;
         }
+        let elementName = xmlData.substring(startIndex, i);
 
         // Validate element name
         validateEntityName(elementName);
@@ -31240,11 +31342,11 @@ class DocTypeReader {
         i = skipWhitespace(xmlData, i);
 
         // Read attribute name
-        let attributeName = "";
+        startIndex = i;
         while (i < xmlData.length && !/\s/.test(xmlData[i])) {
-            attributeName += xmlData[i];
             i++;
         }
+        let attributeName = xmlData.substring(startIndex, i);
 
         // Validate attribute name
         if (!validateEntityName(attributeName)) {
@@ -31272,11 +31374,13 @@ class DocTypeReader {
             // Read the list of allowed notations
             let allowedNotations = [];
             while (i < xmlData.length && xmlData[i] !== ")") {
-                let notation = "";
+
+
+                const startIndex = i;
                 while (i < xmlData.length && xmlData[i] !== "|" && xmlData[i] !== ")") {
-                    notation += xmlData[i];
                     i++;
                 }
+                let notation = xmlData.substring(startIndex, i);
 
                 // Validate notation name
                 notation = notation.trim();
@@ -31302,10 +31406,11 @@ class DocTypeReader {
             attributeType += " (" + allowedNotations.join("|") + ")";
         } else {
             // Handle simple types (e.g., CDATA, ID, IDREF, etc.)
+            const startIndex = i;
             while (i < xmlData.length && !/\s/.test(xmlData[i])) {
-                attributeType += xmlData[i];
                 i++;
             }
+            attributeType += xmlData.substring(startIndex, i);
 
             // Validate simple attribute type
             const validTypes = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
@@ -31369,48 +31474,51 @@ const numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
 // const octRegex = /^0x[a-z0-9]+/;
 // const binRegex = /0x[a-z0-9]+/;
 
- 
+
 const consider = {
-    hex :  true,
+    hex: true,
     // oct: false,
     leadingZeros: true,
     decimalPoint: "\.",
     eNotation: true,
-    //skipLike: /regex/
+    //skipLike: /regex/,
+    infinity: "original", // "null", "infinity" (Infinity type), "string" ("Infinity" (the string literal))
 };
 
-function toNumber(str, options = {}){
-    options = Object.assign({}, consider, options );
-    if(!str || typeof str !== "string" ) return str;
-    
-    let trimmedStr  = str.trim();
-    
-    if(options.skipLike !== undefined && options.skipLike.test(trimmedStr)) return str;
-    else if(str==="0") return 0;
+function toNumber(str, options = {}) {
+    options = Object.assign({}, consider, options);
+    if (!str || typeof str !== "string") return str;
+
+    let trimmedStr = str.trim();
+
+    if (options.skipLike !== undefined && options.skipLike.test(trimmedStr)) return str;
+    else if (str === "0") return 0;
     else if (options.hex && hexRegex.test(trimmedStr)) {
         return parse_int(trimmedStr, 16);
-    // }else if (options.oct && octRegex.test(str)) {
-    //     return Number.parseInt(val, 8);
-    }else if (trimmedStr.includes('e') || trimmedStr.includes('E')) { //eNotation
-        return resolveEnotation(str,trimmedStr,options);
-    // }else if (options.parseBin && binRegex.test(str)) {
-    //     return Number.parseInt(val, 2);
-    }else {
+        // }else if (options.oct && octRegex.test(str)) {
+        //     return Number.parseInt(val, 8);
+    } else if (!isFinite(trimmedStr)) { //Infinity
+        return handleInfinity(str, Number(trimmedStr), options);
+    } else if (trimmedStr.includes('e') || trimmedStr.includes('E')) { //eNotation
+        return resolveEnotation(str, trimmedStr, options);
+        // }else if (options.parseBin && binRegex.test(str)) {
+        //     return Number.parseInt(val, 2);
+    } else {
         //separate negative sign, leading zeros, and rest number
         const match = numRegex.exec(trimmedStr);
         // +00.123 => [ , '+', '00', '.123', ..
-        if(match){
+        if (match) {
             const sign = match[1] || "";
             const leadingZeros = match[2];
             let numTrimmedByZeros = trimZeros(match[3]); //complete num without leading zeros
             const decimalAdjacentToLeadingZeros = sign ? // 0., -00., 000.
-                str[leadingZeros.length+1] === "." 
+                str[leadingZeros.length + 1] === "."
                 : str[leadingZeros.length] === ".";
 
             //trim ending zeros for floating number
-            if(!options.leadingZeros //leading zeros are not allowed
-                && (leadingZeros.length > 1 
-                    || (leadingZeros.length === 1 && !decimalAdjacentToLeadingZeros))){
+            if (!options.leadingZeros //leading zeros are not allowed
+                && (leadingZeros.length > 1
+                    || (leadingZeros.length === 1 && !decimalAdjacentToLeadingZeros))) {
                 // 00, 00.3, +03.24, 03, 03.24
                 return str;
             }
@@ -31418,54 +31526,59 @@ function toNumber(str, options = {}){
                 const num = Number(trimmedStr);
                 const parsedStr = String(num);
 
-                if( num === 0) return num;
-                if(parsedStr.search(/[eE]/) !== -1){ //given number is long and parsed to eNotation
-                    if(options.eNotation) return num;
+                if (num === 0) return num;
+                if (parsedStr.search(/[eE]/) !== -1) { //given number is long and parsed to eNotation
+                    if (options.eNotation) return num;
                     else return str;
-                }else if(trimmedStr.indexOf(".") !== -1){ //floating number
-                    if(parsedStr === "0") return num; //0.0
-                    else if(parsedStr === numTrimmedByZeros) return num; //0.456. 0.79000
-                    else if( parsedStr === `${sign}${numTrimmedByZeros}`) return num;
+                } else if (trimmedStr.indexOf(".") !== -1) { //floating number
+                    if (parsedStr === "0") return num; //0.0
+                    else if (parsedStr === numTrimmedByZeros) return num; //0.456. 0.79000
+                    else if (parsedStr === `${sign}${numTrimmedByZeros}`) return num;
                     else return str;
                 }
-                
-                let n = leadingZeros? numTrimmedByZeros : trimmedStr;
-                if(leadingZeros){
+
+                let n = leadingZeros ? numTrimmedByZeros : trimmedStr;
+                if (leadingZeros) {
                     // -009 => -9
-                    return (n === parsedStr) || (sign+n === parsedStr) ? num : str
-                }else  {
+                    return (n === parsedStr) || (sign + n === parsedStr) ? num : str
+                } else {
                     // +9
-                    return (n === parsedStr) || (n === sign+parsedStr) ? num : str
+                    return (n === parsedStr) || (n === sign + parsedStr) ? num : str
                 }
             }
-        }else { //non-numeric string
+        } else { //non-numeric string
             return str;
         }
     }
 }
 
 const eNotationRegx = /^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/;
-function resolveEnotation(str,trimmedStr,options){
-    if(!options.eNotation) return str;
-    const notation = trimmedStr.match(eNotationRegx); 
-    if(notation){
+function resolveEnotation(str, trimmedStr, options) {
+    if (!options.eNotation) return str;
+    const notation = trimmedStr.match(eNotationRegx);
+    if (notation) {
         let sign = notation[1] || "";
         const eChar = notation[3].indexOf("e") === -1 ? "E" : "e";
         const leadingZeros = notation[2];
         const eAdjacentToLeadingZeros = sign ? // 0E.
-            str[leadingZeros.length+1] === eChar 
+            str[leadingZeros.length + 1] === eChar
             : str[leadingZeros.length] === eChar;
 
-        if(leadingZeros.length > 1 && eAdjacentToLeadingZeros) return str;
-        else if(leadingZeros.length === 1 
-            && (notation[3].startsWith(`.${eChar}`) || notation[3][0] === eChar)){
-                return Number(trimmedStr);
-        }else if(options.leadingZeros && !eAdjacentToLeadingZeros){ //accept with leading zeros
-            //remove leading 0s
-            trimmedStr = (notation[1] || "") + notation[3];
+        if (leadingZeros.length > 1 && eAdjacentToLeadingZeros) return str;
+        else if (leadingZeros.length === 1
+            && (notation[3].startsWith(`.${eChar}`) || notation[3][0] === eChar)) {
             return Number(trimmedStr);
-        }else return str;
-    }else {
+        } else if (leadingZeros.length > 0) {
+            // Has leading zeros — only accept if leadingZeros option allows it
+            if (options.leadingZeros && !eAdjacentToLeadingZeros) {
+                trimmedStr = (notation[1] || "") + notation[3];
+                return Number(trimmedStr);
+            } else return str;
+        } else {
+            // No leading zeros — always valid e-notation, parse it
+            return Number(trimmedStr);
+        }
+    } else {
         return str;
     }
 }
@@ -31475,26 +31588,49 @@ function resolveEnotation(str,trimmedStr,options){
  * @param {string} numStr without leading zeros
  * @returns 
  */
-function trimZeros(numStr){
-    if(numStr && numStr.indexOf(".") !== -1){//float
+function trimZeros(numStr) {
+    if (numStr && numStr.indexOf(".") !== -1) {//float
         numStr = numStr.replace(/0+$/, ""); //remove ending zeros
-        if(numStr === ".")  numStr = "0";
-        else if(numStr[0] === ".")  numStr = "0"+numStr;
-        else if(numStr[numStr.length-1] === ".")  numStr = numStr.substring(0,numStr.length-1);
+        if (numStr === ".") numStr = "0";
+        else if (numStr[0] === ".") numStr = "0" + numStr;
+        else if (numStr[numStr.length - 1] === ".") numStr = numStr.substring(0, numStr.length - 1);
         return numStr;
     }
     return numStr;
 }
 
-function parse_int(numStr, base){
+function parse_int(numStr, base) {
     //polyfill
-    if(parseInt) return parseInt(numStr, base);
-    else if(Number.parseInt) return Number.parseInt(numStr, base);
-    else if(window && window.parseInt) return window.parseInt(numStr, base);
+    if (parseInt) return parseInt(numStr, base);
+    else if (Number.parseInt) return Number.parseInt(numStr, base);
+    else if (window && window.parseInt) return window.parseInt(numStr, base);
     else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported")
 }
 
-function getIgnoreAttributesFn(ignoreAttributes) {
+/**
+ * Handle infinite values based on user option
+ * @param {string} str - original input string
+ * @param {number} num - parsed number (Infinity or -Infinity)
+ * @param {object} options - user options
+ * @returns {string|number|null} based on infinity option
+ */
+function handleInfinity(str, num, options) {
+    const isPositive = num === Infinity;
+
+    switch (options.infinity.toLowerCase()) {
+        case "null":
+            return null;
+        case "infinity":
+            return num; // Return Infinity or -Infinity
+        case "string":
+            return isPositive ? "Infinity" : "-Infinity";
+        case "original":
+        default:
+            return str; // Return original string like "1e1000"
+    }
+}
+
+function getIgnoreAttributesFn$1(ignoreAttributes) {
     if (typeof ignoreAttributes === 'function') {
         return ignoreAttributes
     }
@@ -31513,12 +31649,795 @@ function getIgnoreAttributesFn(ignoreAttributes) {
     return () => false
 }
 
+/**
+ * Expression - Parses and stores a tag pattern expression
+ * 
+ * Patterns are parsed once and stored in an optimized structure for fast matching.
+ * 
+ * @example
+ * const expr = new Expression("root.users.user");
+ * const expr2 = new Expression("..user[id]:first");
+ * const expr3 = new Expression("root/users/user", { separator: '/' });
+ */
+class Expression {
+  /**
+   * Create a new Expression
+   * @param {string} pattern - Pattern string (e.g., "root.users.user", "..user[id]")
+   * @param {Object} options - Configuration options
+   * @param {string} options.separator - Path separator (default: '.')
+   */
+  constructor(pattern, options = {}) {
+    this.pattern = pattern;
+    this.separator = options.separator || '.';
+    this.segments = this._parse(pattern);
+
+    // Cache expensive checks for performance (O(1) instead of O(n))
+    this._hasDeepWildcard = this.segments.some(seg => seg.type === 'deep-wildcard');
+    this._hasAttributeCondition = this.segments.some(seg => seg.attrName !== undefined);
+    this._hasPositionSelector = this.segments.some(seg => seg.position !== undefined);
+  }
+
+  /**
+   * Parse pattern string into segments
+   * @private
+   * @param {string} pattern - Pattern to parse
+   * @returns {Array} Array of segment objects
+   */
+  _parse(pattern) {
+    const segments = [];
+
+    // Split by separator but handle ".." specially
+    let i = 0;
+    let currentPart = '';
+
+    while (i < pattern.length) {
+      if (pattern[i] === this.separator) {
+        // Check if next char is also separator (deep wildcard)
+        if (i + 1 < pattern.length && pattern[i + 1] === this.separator) {
+          // Flush current part if any
+          if (currentPart.trim()) {
+            segments.push(this._parseSegment(currentPart.trim()));
+            currentPart = '';
+          }
+          // Add deep wildcard
+          segments.push({ type: 'deep-wildcard' });
+          i += 2; // Skip both separators
+        } else {
+          // Regular separator
+          if (currentPart.trim()) {
+            segments.push(this._parseSegment(currentPart.trim()));
+          }
+          currentPart = '';
+          i++;
+        }
+      } else {
+        currentPart += pattern[i];
+        i++;
+      }
+    }
+
+    // Flush remaining part
+    if (currentPart.trim()) {
+      segments.push(this._parseSegment(currentPart.trim()));
+    }
+
+    return segments;
+  }
+
+  /**
+   * Parse a single segment
+   * @private
+   * @param {string} part - Segment string (e.g., "user", "ns::user", "user[id]", "ns::user:first")
+   * @returns {Object} Segment object
+   */
+  _parseSegment(part) {
+    const segment = { type: 'tag' };
+
+    // NEW NAMESPACE SYNTAX (v2.0):
+    // ============================
+    // Namespace uses DOUBLE colon (::)
+    // Position uses SINGLE colon (:)
+    // 
+    // Examples:
+    //   "user"              → tag
+    //   "user:first"        → tag + position
+    //   "user[id]"          → tag + attribute
+    //   "user[id]:first"    → tag + attribute + position
+    //   "ns::user"          → namespace + tag
+    //   "ns::user:first"    → namespace + tag + position
+    //   "ns::user[id]"      → namespace + tag + attribute
+    //   "ns::user[id]:first" → namespace + tag + attribute + position
+    //   "ns::first"         → namespace + tag named "first" (NO ambiguity!)
+    //
+    // This eliminates all ambiguity:
+    //   :: = namespace separator
+    //   :  = position selector
+    //   [] = attributes
+
+    // Step 1: Extract brackets [attr] or [attr=value]
+    let bracketContent = null;
+    let withoutBrackets = part;
+
+    const bracketMatch = part.match(/^([^\[]+)(\[[^\]]*\])(.*)$/);
+    if (bracketMatch) {
+      withoutBrackets = bracketMatch[1] + bracketMatch[3];
+      if (bracketMatch[2]) {
+        const content = bracketMatch[2].slice(1, -1);
+        if (content) {
+          bracketContent = content;
+        }
+      }
+    }
+
+    // Step 2: Check for namespace (double colon ::)
+    let namespace = undefined;
+    let tagAndPosition = withoutBrackets;
+
+    if (withoutBrackets.includes('::')) {
+      const nsIndex = withoutBrackets.indexOf('::');
+      namespace = withoutBrackets.substring(0, nsIndex).trim();
+      tagAndPosition = withoutBrackets.substring(nsIndex + 2).trim(); // Skip ::
+
+      if (!namespace) {
+        throw new Error(`Invalid namespace in pattern: ${part}`);
+      }
+    }
+
+    // Step 3: Parse tag and position (single colon :)
+    let tag = undefined;
+    let positionMatch = null;
+
+    if (tagAndPosition.includes(':')) {
+      const colonIndex = tagAndPosition.lastIndexOf(':'); // Use last colon for position
+      const tagPart = tagAndPosition.substring(0, colonIndex).trim();
+      const posPart = tagAndPosition.substring(colonIndex + 1).trim();
+
+      // Verify position is a valid keyword
+      const isPositionKeyword = ['first', 'last', 'odd', 'even'].includes(posPart) ||
+        /^nth\(\d+\)$/.test(posPart);
+
+      if (isPositionKeyword) {
+        tag = tagPart;
+        positionMatch = posPart;
+      } else {
+        // Not a valid position keyword, treat whole thing as tag
+        tag = tagAndPosition;
+      }
+    } else {
+      tag = tagAndPosition;
+    }
+
+    if (!tag) {
+      throw new Error(`Invalid segment pattern: ${part}`);
+    }
+
+    segment.tag = tag;
+    if (namespace) {
+      segment.namespace = namespace;
+    }
+
+    // Step 4: Parse attributes
+    if (bracketContent) {
+      if (bracketContent.includes('=')) {
+        const eqIndex = bracketContent.indexOf('=');
+        segment.attrName = bracketContent.substring(0, eqIndex).trim();
+        segment.attrValue = bracketContent.substring(eqIndex + 1).trim();
+      } else {
+        segment.attrName = bracketContent.trim();
+      }
+    }
+
+    // Step 5: Parse position selector
+    if (positionMatch) {
+      const nthMatch = positionMatch.match(/^nth\((\d+)\)$/);
+      if (nthMatch) {
+        segment.position = 'nth';
+        segment.positionValue = parseInt(nthMatch[1], 10);
+      } else {
+        segment.position = positionMatch;
+      }
+    }
+
+    return segment;
+  }
+
+  /**
+   * Get the number of segments
+   * @returns {number}
+   */
+  get length() {
+    return this.segments.length;
+  }
+
+  /**
+   * Check if expression contains deep wildcard
+   * @returns {boolean}
+   */
+  hasDeepWildcard() {
+    return this._hasDeepWildcard;
+  }
+
+  /**
+   * Check if expression has attribute conditions
+   * @returns {boolean}
+   */
+  hasAttributeCondition() {
+    return this._hasAttributeCondition;
+  }
+
+  /**
+   * Check if expression has position selectors
+   * @returns {boolean}
+   */
+  hasPositionSelector() {
+    return this._hasPositionSelector;
+  }
+
+  /**
+   * Get string representation
+   * @returns {string}
+   */
+  toString() {
+    return this.pattern;
+  }
+}
+
+/**
+ * Matcher - Tracks current path in XML/JSON tree and matches against Expressions
+ * 
+ * The matcher maintains a stack of nodes representing the current path from root to
+ * current tag. It only stores attribute values for the current (top) node to minimize
+ * memory usage. Sibling tracking is used to auto-calculate position and counter.
+ * 
+ * @example
+ * const matcher = new Matcher();
+ * matcher.push("root", {});
+ * matcher.push("users", {});
+ * matcher.push("user", { id: "123", type: "admin" });
+ * 
+ * const expr = new Expression("root.users.user");
+ * matcher.matches(expr); // true
+ */
+
+/**
+ * Names of methods that mutate Matcher state.
+ * Any attempt to call these on a read-only view throws a TypeError.
+ * @type {Set<string>}
+ */
+const MUTATING_METHODS = new Set(['push', 'pop', 'reset', 'updateCurrent', 'restore']);
+
+class Matcher {
+  /**
+   * Create a new Matcher
+   * @param {Object} options - Configuration options
+   * @param {string} options.separator - Default path separator (default: '.')
+   */
+  constructor(options = {}) {
+    this.separator = options.separator || '.';
+    this.path = [];
+    this.siblingStacks = [];
+    // Each path node: { tag: string, values: object, position: number, counter: number }
+    // values only present for current (last) node
+    // Each siblingStacks entry: Map<tagName, count> tracking occurrences at each level
+  }
+
+  /**
+   * Push a new tag onto the path
+   * @param {string} tagName - Name of the tag
+   * @param {Object} attrValues - Attribute key-value pairs for current node (optional)
+   * @param {string} namespace - Namespace for the tag (optional)
+   */
+  push(tagName, attrValues = null, namespace = null) {
+    // Remove values from previous current node (now becoming ancestor)
+    if (this.path.length > 0) {
+      const prev = this.path[this.path.length - 1];
+      prev.values = undefined;
+    }
+
+    // Get or create sibling tracking for current level
+    const currentLevel = this.path.length;
+    if (!this.siblingStacks[currentLevel]) {
+      this.siblingStacks[currentLevel] = new Map();
+    }
+
+    const siblings = this.siblingStacks[currentLevel];
+
+    // Create a unique key for sibling tracking that includes namespace
+    const siblingKey = namespace ? `${namespace}:${tagName}` : tagName;
+
+    // Calculate counter (how many times this tag appeared at this level)
+    const counter = siblings.get(siblingKey) || 0;
+
+    // Calculate position (total children at this level so far)
+    let position = 0;
+    for (const count of siblings.values()) {
+      position += count;
+    }
+
+    // Update sibling count for this tag
+    siblings.set(siblingKey, counter + 1);
+
+    // Create new node
+    const node = {
+      tag: tagName,
+      position: position,
+      counter: counter
+    };
+
+    // Store namespace if provided
+    if (namespace !== null && namespace !== undefined) {
+      node.namespace = namespace;
+    }
+
+    // Store values only for current node
+    if (attrValues !== null && attrValues !== undefined) {
+      node.values = attrValues;
+    }
+
+    this.path.push(node);
+  }
+
+  /**
+   * Pop the last tag from the path
+   * @returns {Object|undefined} The popped node
+   */
+  pop() {
+    if (this.path.length === 0) {
+      return undefined;
+    }
+
+    const node = this.path.pop();
+
+    // Clean up sibling tracking for levels deeper than current
+    // After pop, path.length is the new depth
+    // We need to clean up siblingStacks[path.length + 1] and beyond
+    if (this.siblingStacks.length > this.path.length + 1) {
+      this.siblingStacks.length = this.path.length + 1;
+    }
+
+    return node;
+  }
+
+  /**
+   * Update current node's attribute values
+   * Useful when attributes are parsed after push
+   * @param {Object} attrValues - Attribute values
+   */
+  updateCurrent(attrValues) {
+    if (this.path.length > 0) {
+      const current = this.path[this.path.length - 1];
+      if (attrValues !== null && attrValues !== undefined) {
+        current.values = attrValues;
+      }
+    }
+  }
+
+  /**
+   * Get current tag name
+   * @returns {string|undefined}
+   */
+  getCurrentTag() {
+    return this.path.length > 0 ? this.path[this.path.length - 1].tag : undefined;
+  }
+
+  /**
+   * Get current namespace
+   * @returns {string|undefined}
+   */
+  getCurrentNamespace() {
+    return this.path.length > 0 ? this.path[this.path.length - 1].namespace : undefined;
+  }
+
+  /**
+   * Get current node's attribute value
+   * @param {string} attrName - Attribute name
+   * @returns {*} Attribute value or undefined
+   */
+  getAttrValue(attrName) {
+    if (this.path.length === 0) return undefined;
+    const current = this.path[this.path.length - 1];
+    return current.values?.[attrName];
+  }
+
+  /**
+   * Check if current node has an attribute
+   * @param {string} attrName - Attribute name
+   * @returns {boolean}
+   */
+  hasAttr(attrName) {
+    if (this.path.length === 0) return false;
+    const current = this.path[this.path.length - 1];
+    return current.values !== undefined && attrName in current.values;
+  }
+
+  /**
+   * Get current node's sibling position (child index in parent)
+   * @returns {number}
+   */
+  getPosition() {
+    if (this.path.length === 0) return -1;
+    return this.path[this.path.length - 1].position ?? 0;
+  }
+
+  /**
+   * Get current node's repeat counter (occurrence count of this tag name)
+   * @returns {number}
+   */
+  getCounter() {
+    if (this.path.length === 0) return -1;
+    return this.path[this.path.length - 1].counter ?? 0;
+  }
+
+  /**
+   * Get current node's sibling index (alias for getPosition for backward compatibility)
+   * @returns {number}
+   * @deprecated Use getPosition() or getCounter() instead
+   */
+  getIndex() {
+    return this.getPosition();
+  }
+
+  /**
+   * Get current path depth
+   * @returns {number}
+   */
+  getDepth() {
+    return this.path.length;
+  }
+
+  /**
+   * Get path as string
+   * @param {string} separator - Optional separator (uses default if not provided)
+   * @param {boolean} includeNamespace - Whether to include namespace in output (default: true)
+   * @returns {string}
+   */
+  toString(separator, includeNamespace = true) {
+    const sep = separator || this.separator;
+    return this.path.map(n => {
+      if (includeNamespace && n.namespace) {
+        return `${n.namespace}:${n.tag}`;
+      }
+      return n.tag;
+    }).join(sep);
+  }
+
+  /**
+   * Get path as array of tag names
+   * @returns {string[]}
+   */
+  toArray() {
+    return this.path.map(n => n.tag);
+  }
+
+  /**
+   * Reset the path to empty
+   */
+  reset() {
+    this.path = [];
+    this.siblingStacks = [];
+  }
+
+  /**
+   * Match current path against an Expression
+   * @param {Expression} expression - The expression to match against
+   * @returns {boolean} True if current path matches the expression
+   */
+  matches(expression) {
+    const segments = expression.segments;
+
+    if (segments.length === 0) {
+      return false;
+    }
+
+    // Handle deep wildcard patterns
+    if (expression.hasDeepWildcard()) {
+      return this._matchWithDeepWildcard(segments);
+    }
+
+    // Simple path matching (no deep wildcards)
+    return this._matchSimple(segments);
+  }
+
+  /**
+   * Match simple path (no deep wildcards)
+   * @private
+   */
+  _matchSimple(segments) {
+    // Path must be same length as segments
+    if (this.path.length !== segments.length) {
+      return false;
+    }
+
+    // Match each segment bottom-to-top
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
+      const node = this.path[i];
+      const isCurrentNode = (i === this.path.length - 1);
+
+      if (!this._matchSegment(segment, node, isCurrentNode)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Match path with deep wildcards
+   * @private
+   */
+  _matchWithDeepWildcard(segments) {
+    let pathIdx = this.path.length - 1;  // Start from current node (bottom)
+    let segIdx = segments.length - 1;     // Start from last segment
+
+    while (segIdx >= 0 && pathIdx >= 0) {
+      const segment = segments[segIdx];
+
+      if (segment.type === 'deep-wildcard') {
+        // ".." matches zero or more levels
+        segIdx--;
+
+        if (segIdx < 0) {
+          // Pattern ends with "..", always matches
+          return true;
+        }
+
+        // Find where next segment matches in the path
+        const nextSeg = segments[segIdx];
+        let found = false;
+
+        for (let i = pathIdx; i >= 0; i--) {
+          const isCurrentNode = (i === this.path.length - 1);
+          if (this._matchSegment(nextSeg, this.path[i], isCurrentNode)) {
+            pathIdx = i - 1;
+            segIdx--;
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          return false;
+        }
+      } else {
+        // Regular segment
+        const isCurrentNode = (pathIdx === this.path.length - 1);
+        if (!this._matchSegment(segment, this.path[pathIdx], isCurrentNode)) {
+          return false;
+        }
+        pathIdx--;
+        segIdx--;
+      }
+    }
+
+    // All segments must be consumed
+    return segIdx < 0;
+  }
+
+  /**
+   * Match a single segment against a node
+   * @private
+   * @param {Object} segment - Segment from Expression
+   * @param {Object} node - Node from path
+   * @param {boolean} isCurrentNode - Whether this is the current (last) node
+   * @returns {boolean}
+   */
+  _matchSegment(segment, node, isCurrentNode) {
+    // Match tag name (* is wildcard)
+    if (segment.tag !== '*' && segment.tag !== node.tag) {
+      return false;
+    }
+
+    // Match namespace if specified in segment
+    if (segment.namespace !== undefined) {
+      // Segment has namespace - node must match it
+      if (segment.namespace !== '*' && segment.namespace !== node.namespace) {
+        return false;
+      }
+    }
+    // If segment has no namespace, it matches nodes with or without namespace
+
+    // Match attribute name (check if node has this attribute)
+    // Can only check for current node since ancestors don't have values
+    if (segment.attrName !== undefined) {
+      if (!isCurrentNode) {
+        // Can't check attributes for ancestor nodes (values not stored)
+        return false;
+      }
+
+      if (!node.values || !(segment.attrName in node.values)) {
+        return false;
+      }
+
+      // Match attribute value (only possible for current node)
+      if (segment.attrValue !== undefined) {
+        const actualValue = node.values[segment.attrName];
+        // Both should be strings
+        if (String(actualValue) !== String(segment.attrValue)) {
+          return false;
+        }
+      }
+    }
+
+    // Match position (only for current node)
+    if (segment.position !== undefined) {
+      if (!isCurrentNode) {
+        // Can't check position for ancestor nodes
+        return false;
+      }
+
+      const counter = node.counter ?? 0;
+
+      if (segment.position === 'first' && counter !== 0) {
+        return false;
+      } else if (segment.position === 'odd' && counter % 2 !== 1) {
+        return false;
+      } else if (segment.position === 'even' && counter % 2 !== 0) {
+        return false;
+      } else if (segment.position === 'nth') {
+        if (counter !== segment.positionValue) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Create a snapshot of current state
+   * @returns {Object} State snapshot
+   */
+  snapshot() {
+    return {
+      path: this.path.map(node => ({ ...node })),
+      siblingStacks: this.siblingStacks.map(map => new Map(map))
+    };
+  }
+
+  /**
+   * Restore state from snapshot
+   * @param {Object} snapshot - State snapshot
+   */
+  restore(snapshot) {
+    this.path = snapshot.path.map(node => ({ ...node }));
+    this.siblingStacks = snapshot.siblingStacks.map(map => new Map(map));
+  }
+
+  /**
+   * Return a read-only view of this matcher.
+   *
+   * The returned object exposes all query/inspection methods but throws a
+   * TypeError if any state-mutating method is called (`push`, `pop`, `reset`,
+   * `updateCurrent`, `restore`).  Property reads (e.g. `.path`, `.separator`)
+   * are allowed but the returned arrays/objects are frozen so callers cannot
+   * mutate internal state through them either.
+   *
+   * @returns {ReadOnlyMatcher} A proxy that forwards read operations and blocks writes.
+   *
+   * @example
+   * const matcher = new Matcher();
+   * matcher.push("root", {});
+   *
+   * const ro = matcher.readOnly();
+   * ro.matches(expr);      // ✓ works
+   * ro.getCurrentTag();    // ✓ works
+   * ro.push("child", {}); // ✗ throws TypeError
+   * ro.reset();            // ✗ throws TypeError
+   */
+  readOnly() {
+    const self = this;
+
+    return new Proxy(self, {
+      get(target, prop, receiver) {
+        // Block mutating methods
+        if (MUTATING_METHODS.has(prop)) {
+          return () => {
+            throw new TypeError(
+              `Cannot call '${prop}' on a read-only Matcher. ` +
+              `Obtain a writable instance to mutate state.`
+            );
+          };
+        }
+
+        const value = Reflect.get(target, prop, receiver);
+
+        // Freeze array/object properties so callers can't mutate internal
+        // state through direct property access (e.g. matcher.path.push(...))
+        if (prop === 'path' || prop === 'siblingStacks') {
+          return Object.freeze(
+            Array.isArray(value)
+              ? value.map(item =>
+                item instanceof Map
+                  ? Object.freeze(new Map(item))   // freeze a copy of each Map
+                  : Object.freeze({ ...item })      // freeze a copy of each node
+              )
+              : value
+          );
+        }
+
+        // Bind methods so `this` inside them still refers to the real Matcher
+        if (typeof value === 'function') {
+          return value.bind(target);
+        }
+
+        return value;
+      },
+
+      // Prevent any property assignment on the read-only view
+      set(_target, prop) {
+        throw new TypeError(
+          `Cannot set property '${String(prop)}' on a read-only Matcher.`
+        );
+      },
+
+      // Prevent property deletion
+      deleteProperty(_target, prop) {
+        throw new TypeError(
+          `Cannot delete property '${String(prop)}' from a read-only Matcher.`
+        );
+      }
+    });
+  }
+}
+
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
 //   .replace(/NAME/g, util.nameRegexp);
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
+
+// Helper functions for attribute and namespace handling
+
+/**
+ * Extract raw attributes (without prefix) from prefixed attribute map
+ * @param {object} prefixedAttrs - Attributes with prefix from buildAttributesMap
+ * @param {object} options - Parser options containing attributeNamePrefix
+ * @returns {object} Raw attributes for matcher
+ */
+function extractRawAttributes(prefixedAttrs, options) {
+  if (!prefixedAttrs) return {};
+
+  // Handle attributesGroupName option
+  const attrs = options.attributesGroupName
+    ? prefixedAttrs[options.attributesGroupName]
+    : prefixedAttrs;
+
+  if (!attrs) return {};
+
+  const rawAttrs = {};
+  for (const key in attrs) {
+    // Remove the attribute prefix to get raw name
+    if (key.startsWith(options.attributeNamePrefix)) {
+      const rawName = key.substring(options.attributeNamePrefix.length);
+      rawAttrs[rawName] = attrs[key];
+    } else {
+      // Attribute without prefix (shouldn't normally happen, but be safe)
+      rawAttrs[key] = attrs[key];
+    }
+  }
+  return rawAttrs;
+}
+
+/**
+ * Extract namespace from raw tag name
+ * @param {string} rawTagName - Tag name possibly with namespace (e.g., "soap:Envelope")
+ * @returns {string|undefined} Namespace or undefined
+ */
+function extractNamespace(rawTagName) {
+  if (!rawTagName || typeof rawTagName !== 'string') return undefined;
+
+  const colonIndex = rawTagName.indexOf(':');
+  if (colonIndex !== -1 && colonIndex > 0) {
+    const ns = rawTagName.substring(0, colonIndex);
+    // Don't treat xmlns as a namespace
+    if (ns !== 'xmlns') {
+      return ns;
+    }
+  }
+  return undefined;
+}
 
 class OrderedObjParser {
   constructor(options) {
@@ -31560,20 +32479,31 @@ class OrderedObjParser {
     this.readStopNodeData = readStopNodeData;
     this.saveTextToParentTag = saveTextToParentTag;
     this.addChild = addChild;
-    this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
+    this.ignoreAttributesFn = getIgnoreAttributesFn$1(this.options.ignoreAttributes);
     this.entityExpansionCount = 0;
     this.currentExpandedLength = 0;
 
+    // Initialize path matcher for path-expression-matcher
+    this.matcher = new Matcher();
+
+    // Live read-only proxy of matcher — PEM creates and caches this internally.
+    // All user callbacks receive this instead of the mutable matcher.
+    this.readonlyMatcher = this.matcher.readOnly();
+
+    // Flag to track if current node is a stop node (optimization)
+    this.isCurrentNodeStopNode = false;
+
+    // Pre-compile stopNodes expressions
     if (this.options.stopNodes && this.options.stopNodes.length > 0) {
-      this.stopNodesExact = new Set();
-      this.stopNodesWildcard = new Set();
+      this.stopNodeExpressions = [];
       for (let i = 0; i < this.options.stopNodes.length; i++) {
         const stopNodeExp = this.options.stopNodes[i];
-        if (typeof stopNodeExp !== 'string') continue;
-        if (stopNodeExp.startsWith("*.")) {
-          this.stopNodesWildcard.add(stopNodeExp.substring(2));
-        } else {
-          this.stopNodesExact.add(stopNodeExp);
+        if (typeof stopNodeExp === 'string') {
+          // Convert string to Expression object
+          this.stopNodeExpressions.push(new Expression(stopNodeExp));
+        } else if (stopNodeExp instanceof Expression) {
+          // Already an Expression object
+          this.stopNodeExpressions.push(stopNodeExp);
         }
       }
     }
@@ -31596,7 +32526,7 @@ function addExternalEntities(externalEntities) {
 /**
  * @param {string} val
  * @param {string} tagName
- * @param {string} jPath
+ * @param {string|Matcher} jPath - jPath string or Matcher instance based on options.jPath
  * @param {boolean} dontTrim
  * @param {boolean} hasAttributes
  * @param {boolean} isLeafNode
@@ -31610,7 +32540,9 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode,
     if (val.length > 0) {
       if (!escapeEntities) val = this.replaceEntitiesValue(val, tagName, jPath);
 
-      const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+      // Pass jPath string or matcher based on options.jPath setting
+      const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+      const newval = this.options.tagValueProcessor(tagName, val, jPathOrMatcher, hasAttributes, isLeafNode);
       if (newval === null || newval === undefined) {
         //don't parse
         return val;
@@ -31657,24 +32589,58 @@ function buildAttributesMap(attrStr, jPath, tagName) {
     const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
     const attrs = {};
+
+    // First pass: parse all attributes and update matcher with raw values
+    // This ensures the matcher has all attribute values when processors run
+    const rawAttrsForMatcher = {};
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
-      if (this.ignoreAttributesFn(attrName, jPath)) {
+      const oldVal = matches[i][4];
+
+      if (attrName.length && oldVal !== undefined) {
+        let parsedVal = oldVal;
+        if (this.options.trimValues) {
+          parsedVal = parsedVal.trim();
+        }
+        parsedVal = this.replaceEntitiesValue(parsedVal, tagName, this.readonlyMatcher);
+        rawAttrsForMatcher[attrName] = parsedVal;
+      }
+    }
+
+    // Update matcher with raw attribute values BEFORE running processors
+    if (Object.keys(rawAttrsForMatcher).length > 0 && typeof jPath === 'object' && jPath.updateCurrent) {
+      jPath.updateCurrent(rawAttrsForMatcher);
+    }
+
+    // Second pass: now process attributes with matcher having full attribute context
+    for (let i = 0; i < len; i++) {
+      const attrName = this.resolveNameSpace(matches[i][1]);
+
+      // Convert jPath to string if needed for ignoreAttributesFn
+      const jPathStr = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
+      if (this.ignoreAttributesFn(attrName, jPathStr)) {
         continue
       }
+
       let oldVal = matches[i][4];
       let aName = this.options.attributeNamePrefix + attrName;
+
       if (attrName.length) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
         }
-        if (aName === "__proto__") aName = "#__proto__";
+        //if (aName === "__proto__") aName = "#__proto__";
+        aName = sanitizeName(aName, this.options);
+
         if (oldVal !== undefined) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
           }
-          oldVal = this.replaceEntitiesValue(oldVal, tagName, jPath);
-          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
+          oldVal = this.replaceEntitiesValue(oldVal, tagName, this.readonlyMatcher);
+
+          // Pass jPath string or readonlyMatcher based on options.jPath setting
+          const jPathOrMatcher = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
+          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPathOrMatcher);
           if (newVal === null || newVal === undefined) {
             //don't parse
             attrs[aName] = oldVal;
@@ -31694,6 +32660,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
         }
       }
     }
+
     if (!Object.keys(attrs).length) {
       return;
     }
@@ -31711,7 +32678,9 @@ const parseXml = function (xmlData) {
   const xmlObj = new XmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
-  let jPath = "";
+
+  // Reset matcher for new document
+  this.matcher.reset();
 
   // Reset entity expansion counters for this document
   this.entityExpansionCount = 0;
@@ -31734,27 +32703,25 @@ const parseXml = function (xmlData) {
           }
         }
 
-        if (this.options.transformTagName) {
-          tagName = this.options.transformTagName(tagName);
-        }
+        tagName = transformTagName(this.options.transformTagName, tagName, "", this.options).tagName;
 
         if (currentNode) {
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
         }
 
         //check if last tag of nested tag was unpaired tag
-        const lastTagName = jPath.substring(jPath.lastIndexOf(".") + 1);
+        const lastTagName = this.matcher.getCurrentTag();
         if (tagName && this.options.unpairedTags.indexOf(tagName) !== -1) {
           throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
         }
-        let propIndex = 0;
         if (lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1) {
-          propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.') - 1);
+          // Pop the unpaired tag
+          this.matcher.pop();
           this.tagsNodeStack.pop();
-        } else {
-          propIndex = jPath.lastIndexOf(".");
         }
-        jPath = jPath.substring(0, propIndex);
+        // Pop the closing tag
+        this.matcher.pop();
+        this.isCurrentNodeStopNode = false; // Reset flag when closing tag
 
         currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
         textData = "";
@@ -31764,16 +32731,16 @@ const parseXml = function (xmlData) {
         let tagData = readTagExp(xmlData, i, false, "?>");
         if (!tagData) throw new Error("Pi Tag is not closed.");
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
         if ((this.options.ignoreDeclaration && tagData.tagName === "?xml") || this.options.ignorePiTags) ; else {
 
           const childNode = new XmlNode(tagData.tagName);
           childNode.add(this.options.textNodeName, "");
 
           if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
+            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName);
           }
-          this.addChild(currentNode, childNode, jPath, i);
+          this.addChild(currentNode, childNode, this.readonlyMatcher, i);
         }
 
 
@@ -31783,7 +32750,7 @@ const parseXml = function (xmlData) {
         if (this.options.commentPropName) {
           const comment = xmlData.substring(i + 4, endIndex - 2);
 
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
 
           currentNode.add(this.options.commentPropName, [{ [this.options.textNodeName]: comment }]);
         }
@@ -31796,9 +32763,9 @@ const parseXml = function (xmlData) {
         const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9, closeIndex);
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
 
-        let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
+        let val = this.parseTextData(tagExp, currentNode.tagname, this.readonlyMatcher, true, false, true, true);
         if (val == undefined) val = "";
 
         //cdata should be set even if it is 0 length string
@@ -31811,26 +32778,36 @@ const parseXml = function (xmlData) {
         i = closeIndex + 2;
       } else {//Opening tag
         let result = readTagExp(xmlData, i, this.options.removeNSPrefix);
+
+        // Safety check: readTagExp can return undefined
+        if (!result) {
+          // Log context for debugging
+          const context = xmlData.substring(Math.max(0, i - 50), Math.min(xmlData.length, i + 50));
+          throw new Error(`readTagExp returned undefined at position ${i}. Context: "${context}"`);
+        }
+
         let tagName = result.tagName;
         const rawTagName = result.rawTagName;
         let tagExp = result.tagExp;
         let attrExpPresent = result.attrExpPresent;
         let closeIndex = result.closeIndex;
 
-        if (this.options.transformTagName) {
-          //console.log(tagExp, tagName)
-          const newTagName = this.options.transformTagName(tagName);
-          if (tagExp === tagName) {
-            tagExp = newTagName;
-          }
-          tagName = newTagName;
+        ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp, this.options));
+
+        if (this.options.strictReservedNames &&
+          (tagName === this.options.commentPropName
+            || tagName === this.options.cdataPropName
+            || tagName === this.options.textNodeName
+            || tagName === this.options.attributesGroupName
+          )) {
+          throw new Error(`Invalid tag name: ${tagName}`);
         }
 
         //save text as child node
         if (currentNode && textData) {
           if (currentNode.tagname !== '!xml') {
             //when nested tag is found
-            textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
+            textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher, false);
           }
         }
 
@@ -31838,28 +32815,64 @@ const parseXml = function (xmlData) {
         const lastTag = currentNode;
         if (lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1) {
           currentNode = this.tagsNodeStack.pop();
-          jPath = jPath.substring(0, jPath.lastIndexOf("."));
+          this.matcher.pop();
         }
+
+        // Clean up self-closing syntax BEFORE processing attributes
+        // This is where tagExp gets the trailing / removed
+        let isSelfClosing = false;
+        if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+          isSelfClosing = true;
+          if (tagName[tagName.length - 1] === "/") {
+            tagName = tagName.substr(0, tagName.length - 1);
+            tagExp = tagName;
+          } else {
+            tagExp = tagExp.substr(0, tagExp.length - 1);
+          }
+
+          // Re-check attrExpPresent after cleaning
+          attrExpPresent = (tagName !== tagExp);
+        }
+
+        // Now process attributes with CLEAN tagExp (no trailing /)
+        let prefixedAttrs = null;
+        let namespace = undefined;
+
+        // Extract namespace from rawTagName
+        namespace = extractNamespace(rawTagName);
+
+        // Push tag to matcher FIRST (with empty attrs for now) so callbacks see correct path
         if (tagName !== xmlObj.tagname) {
-          jPath += jPath ? "." + tagName : tagName;
+          this.matcher.push(tagName, {}, namespace);
         }
+
+        // Now build attributes - callbacks will see correct matcher state
+        if (tagName !== tagExp && attrExpPresent) {
+          // Build attributes (returns prefixed attributes for the tree)
+          // Note: buildAttributesMap now internally updates the matcher with raw attributes
+          prefixedAttrs = this.buildAttributesMap(tagExp, this.matcher, tagName);
+
+          if (prefixedAttrs) {
+            // Extract raw attributes (without prefix) for our use
+            extractRawAttributes(prefixedAttrs, this.options);
+          }
+        }
+
+        // Now check if this is a stop node (after attributes are set)
+        if (tagName !== xmlObj.tagname) {
+          this.isCurrentNodeStopNode = this.isItStopNode(this.stopNodeExpressions, this.matcher);
+        }
+
         const startIndex = i;
-        if (this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, jPath, tagName)) {
+        if (this.isCurrentNodeStopNode) {
           let tagContent = "";
-          //self-closing tag
-          if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
-            if (tagName[tagName.length - 1] === "/") { //remove trailing '/'
-              tagName = tagName.substr(0, tagName.length - 1);
-              jPath = jPath.substr(0, jPath.length - 1);
-              tagExp = tagName;
-            } else {
-              tagExp = tagExp.substr(0, tagExp.length - 1);
-            }
+
+          // For self-closing tags, content is empty
+          if (isSelfClosing) {
             i = result.closeIndex;
           }
           //unpaired tag
           else if (this.options.unpairedTags.indexOf(tagName) !== -1) {
-
             i = result.closeIndex;
           }
           //normal tag
@@ -31873,52 +32886,54 @@ const parseXml = function (xmlData) {
 
           const childNode = new XmlNode(tagName);
 
-          if (tagName !== tagExp && attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
-          }
-          if (tagContent) {
-            tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
+          if (prefixedAttrs) {
+            childNode[":@"] = prefixedAttrs;
           }
 
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          // For stop nodes, store raw content as-is without any processing
           childNode.add(this.options.textNodeName, tagContent);
 
-          this.addChild(currentNode, childNode, jPath, startIndex);
+          this.matcher.pop(); // Pop the stop node tag
+          this.isCurrentNodeStopNode = false; // Reset flag
+
+          this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
         } else {
           //selfClosing tag
-          if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
-            if (tagName[tagName.length - 1] === "/") { //remove trailing '/'
-              tagName = tagName.substr(0, tagName.length - 1);
-              jPath = jPath.substr(0, jPath.length - 1);
-              tagExp = tagName;
-            } else {
-              tagExp = tagExp.substr(0, tagExp.length - 1);
-            }
-
-            if (this.options.transformTagName) {
-              const newTagName = this.options.transformTagName(tagName);
-              if (tagExp === tagName) {
-                tagExp = newTagName;
-              }
-              tagName = newTagName;
-            }
+          if (isSelfClosing) {
+            ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp, this.options));
 
             const childNode = new XmlNode(tagName);
-            if (tagName !== tagExp && attrExpPresent) {
-              childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
             }
-            this.addChild(currentNode, childNode, jPath, startIndex);
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+            this.matcher.pop(); // Pop self-closing tag
+            this.isCurrentNodeStopNode = false; // Reset flag
+          }
+          else if (this.options.unpairedTags.indexOf(tagName) !== -1) {//unpaired tag
+            const childNode = new XmlNode(tagName);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
+            }
+            this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+            this.matcher.pop(); // Pop unpaired tag
+            this.isCurrentNodeStopNode = false; // Reset flag
+            i = result.closeIndex;
+            // Continue to next iteration without changing currentNode
+            continue;
           }
           //opening tag
           else {
             const childNode = new XmlNode(tagName);
+            if (this.tagsNodeStack.length > this.options.maxNestedTags) {
+              throw new Error("Maximum nested tags exceeded");
+            }
             this.tagsNodeStack.push(currentNode);
 
-            if (tagName !== tagExp && attrExpPresent) {
-              childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
             }
-            this.addChild(currentNode, childNode, jPath, startIndex);
+            this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
             currentNode = childNode;
           }
           textData = "";
@@ -31932,10 +32947,13 @@ const parseXml = function (xmlData) {
   return xmlObj.child;
 };
 
-function addChild(currentNode, childNode, jPath, startIndex) {
+function addChild(currentNode, childNode, matcher, startIndex) {
   // unset startIndex if not requested
   if (!this.options.captureMetaData) startIndex = undefined;
-  const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"]);
+
+  // Pass jPath string or matcher based on options.jPath setting
+  const jPathOrMatcher = this.options.jPath ? matcher.toString() : matcher;
+  const result = this.options.updateTag(childNode.tagname, jPathOrMatcher, childNode[":@"]);
   if (result === false) ; else if (typeof result === "string") {
     childNode.tagname = result;
     currentNode.addChild(childNode, startIndex);
@@ -31944,33 +32962,40 @@ function addChild(currentNode, childNode, jPath, startIndex) {
   }
 }
 
-const replaceEntitiesValue$1 = function (val, tagName, jPath) {
-  // Performance optimization: Early return if no entities to replace
-  if (val.indexOf('&') === -1) {
-    return val;
-  }
-
+/**
+ * @param {object} val - Entity object with regex and val properties
+ * @param {string} tagName - Tag name
+ * @param {string|Matcher} jPath - jPath string or Matcher instance based on options.jPath
+ */
+function replaceEntitiesValue$1(val, tagName, jPath) {
   const entityConfig = this.options.processEntities;
 
-  if (!entityConfig.enabled) {
+  if (!entityConfig || !entityConfig.enabled) {
     return val;
   }
 
-  // Check tag-specific filtering
+  // Check if tag is allowed to contain entities
   if (entityConfig.allowedTags) {
-    if (!entityConfig.allowedTags.includes(tagName)) {
-      return val; // Skip entity replacement for current tag as not set
+    const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+    const allowed = Array.isArray(entityConfig.allowedTags)
+      ? entityConfig.allowedTags.includes(tagName)
+      : entityConfig.allowedTags(tagName, jPathOrMatcher);
+
+    if (!allowed) {
+      return val;
     }
   }
 
+  // Apply custom tag filter if provided
   if (entityConfig.tagFilter) {
-    if (!entityConfig.tagFilter(tagName, jPath)) {
+    const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+    if (!entityConfig.tagFilter(tagName, jPathOrMatcher)) {
       return val; // Skip based on custom filter
     }
   }
 
   // Replace DOCTYPE entities
-  for (let entityName in this.docTypeEntities) {
+  for (const entityName of Object.keys(this.docTypeEntities)) {
     const entity = this.docTypeEntities[entityName];
     const matches = val.match(entity.regx);
 
@@ -32002,19 +33027,38 @@ const replaceEntitiesValue$1 = function (val, tagName, jPath) {
       }
     }
   }
-  if (val.indexOf('&') === -1) return val;  // Early exit
-
   // Replace standard entities
-  for (let entityName in this.lastEntities) {
+  for (const entityName of Object.keys(this.lastEntities)) {
     const entity = this.lastEntities[entityName];
+    const matches = val.match(entity.regex);
+    if (matches) {
+      this.entityExpansionCount += matches.length;
+      if (entityConfig.maxTotalExpansions &&
+        this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+        throw new Error(
+          `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+        );
+      }
+    }
     val = val.replace(entity.regex, entity.val);
   }
-  if (val.indexOf('&') === -1) return val;  // Early exit
+  if (val.indexOf('&') === -1) return val;
 
   // Replace HTML entities if enabled
   if (this.options.htmlEntities) {
-    for (let entityName in this.htmlEntities) {
+    for (const entityName of Object.keys(this.htmlEntities)) {
       const entity = this.htmlEntities[entityName];
+      const matches = val.match(entity.regex);
+      if (matches) {
+        //console.log(matches);
+        this.entityExpansionCount += matches.length;
+        if (entityConfig.maxTotalExpansions &&
+          this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+          throw new Error(
+            `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+          );
+        }
+      }
       val = val.replace(entity.regex, entity.val);
     }
   }
@@ -32023,22 +33067,22 @@ const replaceEntitiesValue$1 = function (val, tagName, jPath) {
   val = val.replace(this.ampEntity.regex, this.ampEntity.val);
 
   return val;
-};
+}
 
 
-function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
+function saveTextToParentTag(textData, parentNode, matcher, isLeafNode) {
   if (textData) { //store previously collected data as textNode
-    if (isLeafNode === undefined) isLeafNode = currentNode.child.length === 0;
+    if (isLeafNode === undefined) isLeafNode = parentNode.child.length === 0;
 
     textData = this.parseTextData(textData,
-      currentNode.tagname,
-      jPath,
+      parentNode.tagname,
+      matcher,
       false,
-      currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
+      parentNode[":@"] ? Object.keys(parentNode[":@"]).length !== 0 : false,
       isLeafNode);
 
     if (textData !== undefined && textData !== "")
-      currentNode.add(this.options.textNodeName, textData);
+      parentNode.add(this.options.textNodeName, textData);
     textData = "";
   }
   return textData;
@@ -32046,14 +33090,17 @@ function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
 
 //TODO: use jPath to simplify the logic
 /**
- * @param {Set} stopNodesExact
- * @param {Set} stopNodesWildcard
- * @param {string} jPath
- * @param {string} currentTagName
+ * @param {Array<Expression>} stopNodeExpressions - Array of compiled Expression objects
+ * @param {Matcher} matcher - Current path matcher
  */
-function isItStopNode(stopNodesExact, stopNodesWildcard, jPath, currentTagName) {
-  if (stopNodesWildcard && stopNodesWildcard.has(currentTagName)) return true;
-  if (stopNodesExact && stopNodesExact.has(jPath)) return true;
+function isItStopNode(stopNodeExpressions, matcher) {
+  if (!stopNodeExpressions || stopNodeExpressions.length === 0) return false;
+
+  for (let i = 0; i < stopNodeExpressions.length; i++) {
+    if (matcher.matches(stopNodeExpressions[i])) {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -32208,97 +33255,173 @@ function fromCodePoint(str, base, prefix) {
   }
 }
 
+function transformTagName(fn, tagName, tagExp, options) {
+  if (fn) {
+    const newTagName = fn(tagName);
+    if (tagExp === tagName) {
+      tagExp = newTagName;
+    }
+    tagName = newTagName;
+  }
+  tagName = sanitizeName(tagName, options);
+  return { tagName, tagExp };
+}
+
+
+
+function sanitizeName(name, options) {
+  if (criticalProperties.includes(name)) {
+    throw new Error(`[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`);
+  } else if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return options.onDangerousProperty(name);
+  }
+  return name;
+}
+
 const METADATA_SYMBOL = XmlNode.getMetaDataSymbol();
+
+/**
+ * Helper function to strip attribute prefix from attribute map
+ * @param {object} attrs - Attributes with prefix (e.g., {"@_class": "code"})
+ * @param {string} prefix - Attribute prefix to remove (e.g., "@_")
+ * @returns {object} Attributes without prefix (e.g., {"class": "code"})
+ */
+function stripAttributePrefix(attrs, prefix) {
+  if (!attrs || typeof attrs !== 'object') return {};
+  if (!prefix) return attrs;
+
+  const rawAttrs = {};
+  for (const key in attrs) {
+    if (key.startsWith(prefix)) {
+      const rawName = key.substring(prefix.length);
+      rawAttrs[rawName] = attrs[key];
+    } else {
+      // Attribute without prefix (shouldn't normally happen, but be safe)
+      rawAttrs[key] = attrs[key];
+    }
+  }
+  return rawAttrs;
+}
 
 /**
  * 
  * @param {array} node 
  * @param {any} options 
+ * @param {Matcher} matcher - Path matcher instance
  * @returns 
  */
-function prettify(node, options){
-  return compress( node, options);
+function prettify(node, options, matcher, readonlyMatcher) {
+  return compress(node, options, matcher, readonlyMatcher);
 }
 
 /**
- * 
  * @param {array} arr 
  * @param {object} options 
- * @param {string} jPath 
+ * @param {Matcher} matcher - Path matcher instance
  * @returns object
  */
-function compress(arr, options, jPath){
+function compress(arr, options, matcher, readonlyMatcher) {
   let text;
-  const compressedObj = {};
+  const compressedObj = {}; //This is intended to be a plain object
   for (let i = 0; i < arr.length; i++) {
     const tagObj = arr[i];
     const property = propName$1(tagObj);
-    let newJpath = "";
-    if(jPath === undefined) newJpath = property;
-    else newJpath = jPath + "." + property;
 
-    if(property === options.textNodeName){
-      if(text === undefined) text = tagObj[property];
+    // Push current property to matcher WITH RAW ATTRIBUTES (no prefix)
+    if (property !== undefined && property !== options.textNodeName) {
+      const rawAttrs = stripAttributePrefix(
+        tagObj[":@"] || {},
+        options.attributeNamePrefix
+      );
+      matcher.push(property, rawAttrs);
+    }
+
+    if (property === options.textNodeName) {
+      if (text === undefined) text = tagObj[property];
       else text += "" + tagObj[property];
-    }else if(property === undefined){
+    } else if (property === undefined) {
       continue;
-    }else if(tagObj[property]){
-      
-      let val = compress(tagObj[property], options, newJpath);
-      const isLeaf = isLeafTag(val, options);
-      if (tagObj[METADATA_SYMBOL] !== undefined) {
-        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
-      }
+    } else if (tagObj[property]) {
 
-      if(tagObj[":@"]){
-        assignAttributes( val, tagObj[":@"], newJpath, options);
-      }else if(Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode){
+      let val = compress(tagObj[property], options, matcher, readonlyMatcher);
+      const isLeaf = isLeafTag(val, options);
+
+      if (tagObj[":@"]) {
+        assignAttributes(val, tagObj[":@"], readonlyMatcher, options);
+      } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode) {
         val = val[options.textNodeName];
-      }else if(Object.keys(val).length === 0){
-        if(options.alwaysCreateTextNode) val[options.textNodeName] = "";
+      } else if (Object.keys(val).length === 0) {
+        if (options.alwaysCreateTextNode) val[options.textNodeName] = "";
         else val = "";
       }
 
-      if(compressedObj[property] !== undefined && compressedObj.hasOwnProperty(property)) {
-        if(!Array.isArray(compressedObj[property])) {
-            compressedObj[property] = [ compressedObj[property] ];
+      if (tagObj[METADATA_SYMBOL] !== undefined && typeof val === "object" && val !== null) {
+        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
+      }
+
+
+      if (compressedObj[property] !== undefined && Object.prototype.hasOwnProperty.call(compressedObj, property)) {
+        if (!Array.isArray(compressedObj[property])) {
+          compressedObj[property] = [compressedObj[property]];
         }
         compressedObj[property].push(val);
-      }else {
+      } else {
         //TODO: if a node is not an array, then check if it should be an array
         //also determine if it is a leaf node
-        if (options.isArray(property, newJpath, isLeaf )) {
+
+        // Pass jPath string or readonlyMatcher based on options.jPath setting
+        const jPathOrMatcher = options.jPath ? readonlyMatcher.toString() : readonlyMatcher;
+        if (options.isArray(property, jPathOrMatcher, isLeaf)) {
           compressedObj[property] = [val];
-        }else {
+        } else {
           compressedObj[property] = val;
         }
       }
+
+      // Pop property from matcher after processing
+      if (property !== undefined && property !== options.textNodeName) {
+        matcher.pop();
+      }
     }
-    
+
   }
   // if(text && text.length > 0) compressedObj[options.textNodeName] = text;
-  if(typeof text === "string"){
-    if(text.length > 0) compressedObj[options.textNodeName] = text;
-  }else if(text !== undefined) compressedObj[options.textNodeName] = text;
+  if (typeof text === "string") {
+    if (text.length > 0) compressedObj[options.textNodeName] = text;
+  } else if (text !== undefined) compressedObj[options.textNodeName] = text;
+
+
   return compressedObj;
 }
 
-function propName$1(obj){
+function propName$1(obj) {
   const keys = Object.keys(obj);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if(key !== ":@") return key;
+    if (key !== ":@") return key;
   }
 }
 
-function assignAttributes(obj, attrMap, jpath, options){
+function assignAttributes(obj, attrMap, readonlyMatcher, options) {
   if (attrMap) {
     const keys = Object.keys(attrMap);
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
-      const atrrName = keys[i];
-      if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
-        obj[atrrName] = [ attrMap[atrrName] ];
+      const atrrName = keys[i];  // This is the PREFIXED name (e.g., "@_class")
+
+      // Strip prefix for matcher path (for isArray callback)
+      const rawAttrName = atrrName.startsWith(options.attributeNamePrefix)
+        ? atrrName.substring(options.attributeNamePrefix.length)
+        : atrrName;
+
+      // For attributes, we need to create a temporary path
+      // Pass jPath string or matcher based on options.jPath setting
+      const jPathOrMatcher = options.jPath
+        ? readonlyMatcher.toString() + "." + rawAttrName
+        : readonlyMatcher;
+
+      if (options.isArray(atrrName, jPathOrMatcher, true, true)) {
+        obj[atrrName] = [attrMap[atrrName]];
       } else {
         obj[atrrName] = attrMap[atrrName];
       }
@@ -32306,10 +33429,10 @@ function assignAttributes(obj, attrMap, jpath, options){
   }
 }
 
-function isLeafTag(obj, options){
+function isLeafTag(obj, options) {
   const { textNodeName } = options;
   const propCount = Object.keys(obj).length;
-  
+
   if (propCount === 0) {
     return true;
   }
@@ -32324,38 +33447,38 @@ function isLeafTag(obj, options){
   return false;
 }
 
-class XMLParser{
-    
-    constructor(options){
+class XMLParser {
+
+    constructor(options) {
         this.externalEntities = {};
         this.options = buildOptions(options);
-        
+
     }
     /**
      * Parse XML dats to JS object 
      * @param {string|Uint8Array} xmlData 
      * @param {boolean|Object} validationOption 
      */
-    parse(xmlData,validationOption){
-        if(typeof xmlData !== "string" && xmlData.toString){
+    parse(xmlData, validationOption) {
+        if (typeof xmlData !== "string" && xmlData.toString) {
             xmlData = xmlData.toString();
-        }else if(typeof xmlData !== "string"){
+        } else if (typeof xmlData !== "string") {
             throw new Error("XML data is accepted in String or Bytes[] form.")
         }
-        
-        if( validationOption){
-            if(validationOption === true) validationOption = {}; //validate with default options
-            
+
+        if (validationOption) {
+            if (validationOption === true) validationOption = {}; //validate with default options
+
             const result = validate(xmlData, validationOption);
             if (result !== true) {
-              throw Error( `${result.err.msg}:${result.err.line}:${result.err.col}` )
+                throw Error(`${result.err.msg}:${result.err.line}:${result.err.col}`)
             }
-          }
+        }
         const orderedObjParser = new OrderedObjParser(this.options);
         orderedObjParser.addExternalEntities(this.externalEntities);
         const orderedResult = orderedObjParser.parseXml(xmlData);
-        if(this.options.preserveOrder || orderedResult === undefined) return orderedResult;
-        else return prettify(orderedResult, this.options);
+        if (this.options.preserveOrder || orderedResult === undefined) return orderedResult;
+        else return prettify(orderedResult, this.options, orderedObjParser.matcher, orderedObjParser.readonlyMatcher);
     }
 
     /**
@@ -32363,14 +33486,14 @@ class XMLParser{
      * @param {string} key 
      * @param {string} value 
      */
-    addEntity(key, value){
-        if(value.indexOf("&") !== -1){
+    addEntity(key, value) {
+        if (value.indexOf("&") !== -1) {
             throw new Error("Entity value can't have '&'")
-        }else if(key.indexOf("&") !== -1 || key.indexOf(";") !== -1){
+        } else if (key.indexOf("&") !== -1 || key.indexOf(";") !== -1) {
             throw new Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'")
-        }else if(value === "&"){
+        } else if (value === "&") {
             throw new Error("An entity with value '&' is not permitted");
-        }else {
+        } else {
             this.externalEntities[key] = value;
         }
     }
@@ -32403,25 +33526,61 @@ function toXml(jArray, options) {
     if (options.format && options.indentBy.length > 0) {
         indentation = EOL;
     }
-    return arrToStr(jArray, options, "", indentation);
+
+    // Pre-compile stopNode expressions for pattern matching
+    const stopNodeExpressions = [];
+    if (options.stopNodes && Array.isArray(options.stopNodes)) {
+        for (let i = 0; i < options.stopNodes.length; i++) {
+            const node = options.stopNodes[i];
+            if (typeof node === 'string') {
+                stopNodeExpressions.push(new Expression(node));
+            } else if (node instanceof Expression) {
+                stopNodeExpressions.push(node);
+            }
+        }
+    }
+
+    // Initialize matcher for path tracking
+    const matcher = new Matcher();
+
+    return arrToStr(jArray, options, indentation, matcher, stopNodeExpressions);
 }
 
-function arrToStr(arr, options, jPath, indentation) {
+function arrToStr(arr, options, indentation, matcher, stopNodeExpressions) {
     let xmlStr = "";
     let isPreviousElementTag = false;
+
+    if (options.maxNestedTags && matcher.getDepth() > options.maxNestedTags) {
+        throw new Error("Maximum nested tags exceeded");
+    }
+
+    if (!Array.isArray(arr)) {
+        // Non-array values (e.g. string tag values) should be treated as text content
+        if (arr !== undefined && arr !== null) {
+            let text = arr.toString();
+            text = replaceEntitiesValue(text, options);
+            return text;
+        }
+        return "";
+    }
 
     for (let i = 0; i < arr.length; i++) {
         const tagObj = arr[i];
         const tagName = propName(tagObj);
-        if(tagName === undefined) continue;
+        if (tagName === undefined) continue;
 
-        let newJPath = "";
-        if (jPath.length === 0) newJPath = tagName;
-        else newJPath = `${jPath}.${tagName}`;
+        // Extract attributes from ":@" property
+        const attrValues = extractAttributeValues(tagObj[":@"], options);
+
+        // Push tag to matcher WITH attributes
+        matcher.push(tagName, attrValues);
+
+        // Check if this is a stop node using Expression matching
+        const isStopNode = checkStopNode(matcher, stopNodeExpressions);
 
         if (tagName === options.textNodeName) {
             let tagText = tagObj[tagName];
-            if (!isStopNode(newJPath, options)) {
+            if (!isStopNode) {
                 tagText = options.tagValueProcessor(tagName, tagText);
                 tagText = replaceEntitiesValue(tagText, options);
             }
@@ -32430,6 +33589,7 @@ function arrToStr(arr, options, jPath, indentation) {
             }
             xmlStr += tagText;
             isPreviousElementTag = false;
+            matcher.pop();
             continue;
         } else if (tagName === options.cdataPropName) {
             if (isPreviousElementTag) {
@@ -32437,27 +33597,42 @@ function arrToStr(arr, options, jPath, indentation) {
             }
             xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
             isPreviousElementTag = false;
+            matcher.pop();
             continue;
         } else if (tagName === options.commentPropName) {
             xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
             isPreviousElementTag = true;
+            matcher.pop();
             continue;
         } else if (tagName[0] === "?") {
-            const attStr = attr_to_str(tagObj[":@"], options);
+            const attStr = attr_to_str(tagObj[":@"], options, isStopNode);
             const tempInd = tagName === "?xml" ? "" : indentation;
             let piTextNodeName = tagObj[tagName][0][options.textNodeName];
             piTextNodeName = piTextNodeName.length !== 0 ? " " + piTextNodeName : ""; //remove extra spacing
             xmlStr += tempInd + `<${tagName}${piTextNodeName}${attStr}?>`;
             isPreviousElementTag = true;
+            matcher.pop();
             continue;
         }
+
         let newIdentation = indentation;
         if (newIdentation !== "") {
             newIdentation += options.indentBy;
         }
-        const attStr = attr_to_str(tagObj[":@"], options);
+
+        // Pass isStopNode to attr_to_str so attributes are also not processed for stopNodes
+        const attStr = attr_to_str(tagObj[":@"], options, isStopNode);
         const tagStart = indentation + `<${tagName}${attStr}`;
-        const tagValue = arrToStr(tagObj[tagName], options, newJPath, newIdentation);
+
+        // If this is a stopNode, get raw content without processing
+        let tagValue;
+        if (isStopNode) {
+            tagValue = getRawContent$1(tagObj[tagName], options);
+        } else {
+
+            tagValue = arrToStr(tagObj[tagName], options, newIdentation, matcher, stopNodeExpressions);
+        }
+
         if (options.unpairedTags.indexOf(tagName) !== -1) {
             if (options.suppressUnpairedNode) xmlStr += tagStart + ">";
             else xmlStr += tagStart + "/>";
@@ -32475,27 +33650,94 @@ function arrToStr(arr, options, jPath, indentation) {
             xmlStr += `</${tagName}>`;
         }
         isPreviousElementTag = true;
+
+        // Pop tag from matcher
+        matcher.pop();
     }
 
     return xmlStr;
 }
 
-function propName(obj) {
-    const keys = Object.keys(obj);
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if(!obj.hasOwnProperty(key)) continue;
-        if (key !== ":@") return key;
+/**
+ * Extract attribute values from the ":@" object and return as plain object
+ * for passing to matcher.push()
+ */
+function extractAttributeValues(attrMap, options) {
+    if (!attrMap || options.ignoreAttributes) return null;
+
+    const attrValues = {};
+    let hasAttrs = false;
+
+    for (let attr in attrMap) {
+        if (!Object.prototype.hasOwnProperty.call(attrMap, attr)) continue;
+        // Remove the attribute prefix to get clean attribute name
+        const cleanAttrName = attr.startsWith(options.attributeNamePrefix)
+            ? attr.substr(options.attributeNamePrefix.length)
+            : attr;
+        attrValues[cleanAttrName] = attrMap[attr];
+        hasAttrs = true;
     }
+
+    return hasAttrs ? attrValues : null;
 }
 
-function attr_to_str(attrMap, options) {
+/**
+ * Extract raw content from a stopNode without any processing
+ * This preserves the content exactly as-is, including special characters
+ */
+function getRawContent$1(arr, options) {
+    if (!Array.isArray(arr)) {
+        // Non-array values return as-is
+        if (arr !== undefined && arr !== null) {
+            return arr.toString();
+        }
+        return "";
+    }
+
+    let content = "";
+    for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
+        const tagName = propName(item);
+
+        if (tagName === options.textNodeName) {
+            // Raw text content - NO processing, NO entity replacement
+            content += item[tagName];
+        } else if (tagName === options.cdataPropName) {
+            // CDATA content
+            content += item[tagName][0][options.textNodeName];
+        } else if (tagName === options.commentPropName) {
+            // Comment content
+            content += item[tagName][0][options.textNodeName];
+        } else if (tagName && tagName[0] === "?") {
+            // Processing instruction - skip for stopNodes
+            continue;
+        } else if (tagName) {
+            // Nested tags within stopNode
+            // Recursively get raw content and reconstruct the tag
+            // For stopNodes, we don't process attributes either
+            const attStr = attr_to_str_raw(item[":@"], options);
+            const nestedContent = getRawContent$1(item[tagName], options);
+
+            if (!nestedContent || nestedContent.length === 0) {
+                content += `<${tagName}${attStr}/>`;
+            } else {
+                content += `<${tagName}${attStr}>${nestedContent}</${tagName}>`;
+            }
+        }
+    }
+    return content;
+}
+
+/**
+ * Build attribute string for stopNodes - NO entity replacement
+ */
+function attr_to_str_raw(attrMap, options) {
     let attrStr = "";
     if (attrMap && !options.ignoreAttributes) {
         for (let attr in attrMap) {
-            if(!attrMap.hasOwnProperty(attr)) continue;
-            let attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
-            attrVal = replaceEntitiesValue(attrVal, options);
+            if (!Object.prototype.hasOwnProperty.call(attrMap, attr)) continue;
+            // For stopNodes, use raw value without processing
+            let attrVal = attrMap[attr];
             if (attrVal === true && options.suppressBooleanAttributes) {
                 attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}`;
             } else {
@@ -32506,11 +33748,48 @@ function attr_to_str(attrMap, options) {
     return attrStr;
 }
 
-function isStopNode(jPath, options) {
-    jPath = jPath.substr(0, jPath.length - options.textNodeName.length - 1);
-    let tagName = jPath.substr(jPath.lastIndexOf(".") + 1);
-    for (let index in options.stopNodes) {
-        if (options.stopNodes[index] === jPath || options.stopNodes[index] === "*." + tagName) return true;
+function propName(obj) {
+    const keys = Object.keys(obj);
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+        if (key !== ":@") return key;
+    }
+}
+
+function attr_to_str(attrMap, options, isStopNode) {
+    let attrStr = "";
+    if (attrMap && !options.ignoreAttributes) {
+        for (let attr in attrMap) {
+            if (!Object.prototype.hasOwnProperty.call(attrMap, attr)) continue;
+            let attrVal;
+
+            if (isStopNode) {
+                // For stopNodes, use raw value without any processing
+                attrVal = attrMap[attr];
+            } else {
+                // Normal processing: apply attributeValueProcessor and entity replacement
+                attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
+                attrVal = replaceEntitiesValue(attrVal, options);
+            }
+
+            if (attrVal === true && options.suppressBooleanAttributes) {
+                attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}`;
+            } else {
+                attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
+            }
+        }
+    }
+    return attrStr;
+}
+
+function checkStopNode(matcher, stopNodeExpressions) {
+    if (!stopNodeExpressions || stopNodeExpressions.length === 0) return false;
+
+    for (let i = 0; i < stopNodeExpressions.length; i++) {
+        if (matcher.matches(stopNodeExpressions[i])) {
+            return true;
+        }
     }
     return false;
 }
@@ -32525,6 +33804,25 @@ function replaceEntitiesValue(textValue, options) {
     return textValue;
 }
 
+function getIgnoreAttributesFn(ignoreAttributes) {
+    if (typeof ignoreAttributes === 'function') {
+        return ignoreAttributes
+    }
+    if (Array.isArray(ignoreAttributes)) {
+        return (attrName) => {
+            for (const pattern of ignoreAttributes) {
+                if (typeof pattern === 'string' && attrName === pattern) {
+                    return true
+                }
+                if (pattern instanceof RegExp && pattern.test(attrName)) {
+                    return true
+                }
+            }
+        }
+    }
+    return () => false
+}
+
 const defaultOptions = {
   attributeNamePrefix: '@_',
   attributesGroupName: false,
@@ -32536,10 +33834,10 @@ const defaultOptions = {
   suppressEmptyNode: false,
   suppressUnpairedNode: true,
   suppressBooleanAttributes: true,
-  tagValueProcessor: function(key, a) {
+  tagValueProcessor: function (key, a) {
     return a;
   },
-  attributeValueProcessor: function(attrName, a) {
+  attributeValueProcessor: function (attrName, a) {
     return a;
   },
   preserveOrder: false,
@@ -32556,13 +33854,42 @@ const defaultOptions = {
   stopNodes: [],
   // transformTagName: false,
   // transformAttributeName: false,
-  oneListGroup: false
+  oneListGroup: false,
+  maxNestedTags: 100,
+  jPath: true  // When true, callbacks receive string jPath; when false, receive Matcher instance
 };
 
 function Builder(options) {
   this.options = Object.assign({}, defaultOptions, options);
+
+  // Convert old-style stopNodes for backward compatibility
+  // Old syntax: "*.tag" meant "tag anywhere in tree"
+  // New syntax: "..tag" means "tag anywhere in tree"
+  if (this.options.stopNodes && Array.isArray(this.options.stopNodes)) {
+    this.options.stopNodes = this.options.stopNodes.map(node => {
+      if (typeof node === 'string' && node.startsWith('*.')) {
+        // Convert old wildcard syntax to deep wildcard
+        return '..' + node.substring(2);
+      }
+      return node;
+    });
+  }
+
+  // Pre-compile stopNode expressions for pattern matching
+  this.stopNodeExpressions = [];
+  if (this.options.stopNodes && Array.isArray(this.options.stopNodes)) {
+    for (let i = 0; i < this.options.stopNodes.length; i++) {
+      const node = this.options.stopNodes[i];
+      if (typeof node === 'string') {
+        this.stopNodeExpressions.push(new Expression(node));
+      } else if (node instanceof Expression) {
+        this.stopNodeExpressions.push(node);
+      }
+    }
+  }
+
   if (this.options.ignoreAttributes === true || this.options.attributesGroupName) {
-    this.isAttribute = function(/*a*/) {
+    this.isAttribute = function (/*a*/) {
       return false;
     };
   } else {
@@ -32578,7 +33905,7 @@ function Builder(options) {
     this.tagEndChar = '>\n';
     this.newLine = '\n';
   } else {
-    this.indentate = function() {
+    this.indentate = function () {
       return '';
     };
     this.tagEndChar = '>';
@@ -32586,25 +33913,35 @@ function Builder(options) {
   }
 }
 
-Builder.prototype.build = function(jObj) {
-  if(this.options.preserveOrder){
+Builder.prototype.build = function (jObj) {
+  if (this.options.preserveOrder) {
     return toXml(jObj, this.options);
-  }else {
-    if(Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1){
+  } else {
+    if (Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1) {
       jObj = {
-        [this.options.arrayNodeName] : jObj
+        [this.options.arrayNodeName]: jObj
       };
     }
-    return this.j2x(jObj, 0, []).val;
+    // Initialize matcher for path tracking
+    const matcher = new Matcher();
+    return this.j2x(jObj, 0, matcher).val;
   }
 };
 
-Builder.prototype.j2x = function(jObj, level, ajPath) {
+Builder.prototype.j2x = function (jObj, level, matcher) {
   let attrStr = '';
   let val = '';
-  const jPath = ajPath.join('.');
+  if (this.options.maxNestedTags && matcher.getDepth() >= this.options.maxNestedTags) {
+    throw new Error("Maximum nested tags exceeded");
+  }
+  // Get jPath based on option: string for backward compatibility, or Matcher for new features
+  const jPath = this.options.jPath ? matcher.toString() : matcher;
+
+  // Check if current node is a stopNode (will be used for attribute encoding)
+  const isCurrentStopNode = this.checkStopNode(matcher);
+
   for (let key in jObj) {
-    if(!Object.prototype.hasOwnProperty.call(jObj, key)) continue;
+    if (!Object.prototype.hasOwnProperty.call(jObj, key)) continue;
     if (typeof jObj[key] === 'undefined') {
       // supress undefined node only if it is not an attribute
       if (this.isAttribute(key)) {
@@ -32623,19 +33960,34 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
       }
       // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
     } else if (jObj[key] instanceof Date) {
-      val += this.buildTextValNode(jObj[key], key, '', level);
+      val += this.buildTextValNode(jObj[key], key, '', level, matcher);
     } else if (typeof jObj[key] !== 'object') {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr && !this.ignoreAttributesFn(attr, jPath)) {
-        attrStr += this.buildAttrPairStr(attr, '' + jObj[key]);
+        attrStr += this.buildAttrPairStr(attr, '' + jObj[key], isCurrentStopNode);
       } else if (!attr) {
         //tag value
         if (key === this.options.textNodeName) {
           let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
           val += this.replaceEntitiesValue(newval);
         } else {
-          val += this.buildTextValNode(jObj[key], key, '', level);
+          // Check if this is a stopNode before building
+          matcher.push(key);
+          const isStopNode = this.checkStopNode(matcher);
+          matcher.pop();
+
+          if (isStopNode) {
+            // Build as raw content without encoding
+            const textValue = '' + jObj[key];
+            if (textValue === '') {
+              val += this.indentate(level) + '<' + key + this.closeTag(key) + this.tagEndChar;
+            } else {
+              val += this.indentate(level) + '<' + key + '>' + textValue + '</' + key + this.tagEndChar;
+            }
+          } else {
+            val += this.buildTextValNode(jObj[key], key, '', level, matcher);
+          }
         }
       }
     } else if (Array.isArray(jObj[key])) {
@@ -32646,18 +33998,23 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
       for (let j = 0; j < arrLen; j++) {
         const item = jObj[key][j];
         if (typeof item === 'undefined') ; else if (item === null) {
-          if(key[0] === "?") val += this.indentate(level) + '<' + key + '?' + this.tagEndChar;
+          if (key[0] === "?") val += this.indentate(level) + '<' + key + '?' + this.tagEndChar;
           else val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
         } else if (typeof item === 'object') {
-          if(this.options.oneListGroup){
-            const result = this.j2x(item, level + 1, ajPath.concat(key));
+          if (this.options.oneListGroup) {
+            // Push tag to matcher before recursive call
+            matcher.push(key);
+            const result = this.j2x(item, level + 1, matcher);
+            // Pop tag from matcher after recursive call
+            matcher.pop();
+
             listTagVal += result.val;
             if (this.options.attributesGroupName && item.hasOwnProperty(this.options.attributesGroupName)) {
               listTagAttr += result.attrStr;
             }
-          }else {
-            listTagVal += this.processTextOrObjNode(item, key, level, ajPath);
+          } else {
+            listTagVal += this.processTextOrObjNode(item, key, level, matcher);
           }
         } else {
           if (this.options.oneListGroup) {
@@ -32665,11 +34022,26 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
             textValue = this.replaceEntitiesValue(textValue);
             listTagVal += textValue;
           } else {
-            listTagVal += this.buildTextValNode(item, key, '', level);
+            // Check if this is a stopNode before building
+            matcher.push(key);
+            const isStopNode = this.checkStopNode(matcher);
+            matcher.pop();
+
+            if (isStopNode) {
+              // Build as raw content without encoding
+              const textValue = '' + item;
+              if (textValue === '') {
+                listTagVal += this.indentate(level) + '<' + key + this.closeTag(key) + this.tagEndChar;
+              } else {
+                listTagVal += this.indentate(level) + '<' + key + '>' + textValue + '</' + key + this.tagEndChar;
+              }
+            } else {
+              listTagVal += this.buildTextValNode(item, key, '', level, matcher);
+            }
           }
         }
       }
-      if(this.options.oneListGroup){
+      if (this.options.oneListGroup) {
         listTagVal = this.buildObjectNode(listTagVal, key, listTagAttr, level);
       }
       val += listTagVal;
@@ -32679,99 +34051,269 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          attrStr += this.buildAttrPairStr(Ks[j], '' + jObj[key][Ks[j]]);
+          attrStr += this.buildAttrPairStr(Ks[j], '' + jObj[key][Ks[j]], isCurrentStopNode);
         }
       } else {
-        val += this.processTextOrObjNode(jObj[key], key, level, ajPath);
+        val += this.processTextOrObjNode(jObj[key], key, level, matcher);
       }
     }
   }
-  return {attrStr: attrStr, val: val};
+  return { attrStr: attrStr, val: val };
 };
 
-Builder.prototype.buildAttrPairStr = function(attrName, val){
-  val = this.options.attributeValueProcessor(attrName, '' + val);
-  val = this.replaceEntitiesValue(val);
+Builder.prototype.buildAttrPairStr = function (attrName, val, isStopNode) {
+  if (!isStopNode) {
+    val = this.options.attributeValueProcessor(attrName, '' + val);
+    val = this.replaceEntitiesValue(val);
+  }
   if (this.options.suppressBooleanAttributes && val === "true") {
     return ' ' + attrName;
   } else return ' ' + attrName + '="' + val + '"';
 };
 
-function processTextOrObjNode (object, key, level, ajPath) {
-  const result = this.j2x(object, level + 1, ajPath.concat(key));
+function processTextOrObjNode(object, key, level, matcher) {
+  // Extract attributes to pass to matcher
+  const attrValues = this.extractAttributes(object);
+
+  // Push tag to matcher before recursion WITH attributes
+  matcher.push(key, attrValues);
+
+  // Check if this entire node is a stopNode
+  const isStopNode = this.checkStopNode(matcher);
+
+  if (isStopNode) {
+    // For stopNodes, build raw content without entity encoding
+    const rawContent = this.buildRawContent(object);
+    const attrStr = this.buildAttributesForStopNode(object);
+    matcher.pop();
+    return this.buildObjectNode(rawContent, key, attrStr, level);
+  }
+
+  const result = this.j2x(object, level + 1, matcher);
+  // Pop tag from matcher after recursion
+  matcher.pop();
+
   if (object[this.options.textNodeName] !== undefined && Object.keys(object).length === 1) {
-    return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level);
+    return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level, matcher);
   } else {
     return this.buildObjectNode(result.val, key, result.attrStr, level);
   }
 }
 
-Builder.prototype.buildObjectNode = function(val, key, attrStr, level) {
-  if(val === ""){
-    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
+// Helper method to extract attributes from an object
+Builder.prototype.extractAttributes = function (obj) {
+  if (!obj || typeof obj !== 'object') return null;
+
+  const attrValues = {};
+  let hasAttrs = false;
+
+  // Check for attributesGroupName (when attributes are grouped)
+  if (this.options.attributesGroupName && obj[this.options.attributesGroupName]) {
+    const attrGroup = obj[this.options.attributesGroupName];
+    for (let attrKey in attrGroup) {
+      if (!Object.prototype.hasOwnProperty.call(attrGroup, attrKey)) continue;
+      // Remove attribute prefix if present
+      const cleanKey = attrKey.startsWith(this.options.attributeNamePrefix)
+        ? attrKey.substring(this.options.attributeNamePrefix.length)
+        : attrKey;
+      attrValues[cleanKey] = attrGroup[attrKey];
+      hasAttrs = true;
+    }
+  } else {
+    // Look for individual attributes (prefixed with attributeNamePrefix)
+    for (let key in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+      const attr = this.isAttribute(key);
+      if (attr) {
+        attrValues[attr] = obj[key];
+        hasAttrs = true;
+      }
+    }
+  }
+
+  return hasAttrs ? attrValues : null;
+};
+
+// Build raw content for stopNode without entity encoding
+Builder.prototype.buildRawContent = function (obj) {
+  if (typeof obj === 'string') {
+    return obj; // Already a string, return as-is
+  }
+
+  if (typeof obj !== 'object' || obj === null) {
+    return String(obj);
+  }
+
+  // Check if this is a stopNode data from parser: { "#text": "raw xml", "@_attr": "val" }
+  if (obj[this.options.textNodeName] !== undefined) {
+    return obj[this.options.textNodeName]; // Return raw text without encoding
+  }
+
+  // Build raw XML from nested structure
+  let content = '';
+
+  for (let key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+
+    // Skip attributes
+    if (this.isAttribute(key)) continue;
+    if (this.options.attributesGroupName && key === this.options.attributesGroupName) continue;
+
+    const value = obj[key];
+
+    if (key === this.options.textNodeName) {
+      content += value; // Raw text
+    } else if (Array.isArray(value)) {
+      // Array of same tag
+      for (let item of value) {
+        if (typeof item === 'string' || typeof item === 'number') {
+          content += `<${key}>${item}</${key}>`;
+        } else if (typeof item === 'object' && item !== null) {
+          const nestedContent = this.buildRawContent(item);
+          const nestedAttrs = this.buildAttributesForStopNode(item);
+          if (nestedContent === '') {
+            content += `<${key}${nestedAttrs}/>`;
+          } else {
+            content += `<${key}${nestedAttrs}>${nestedContent}</${key}>`;
+          }
+        }
+      }
+    } else if (typeof value === 'object' && value !== null) {
+      // Nested object
+      const nestedContent = this.buildRawContent(value);
+      const nestedAttrs = this.buildAttributesForStopNode(value);
+      if (nestedContent === '') {
+        content += `<${key}${nestedAttrs}/>`;
+      } else {
+        content += `<${key}${nestedAttrs}>${nestedContent}</${key}>`;
+      }
+    } else {
+      // Primitive value
+      content += `<${key}>${value}</${key}>`;
+    }
+  }
+
+  return content;
+};
+
+// Build attribute string for stopNode (no entity encoding)
+Builder.prototype.buildAttributesForStopNode = function (obj) {
+  if (!obj || typeof obj !== 'object') return '';
+
+  let attrStr = '';
+
+  // Check for attributesGroupName (when attributes are grouped)
+  if (this.options.attributesGroupName && obj[this.options.attributesGroupName]) {
+    const attrGroup = obj[this.options.attributesGroupName];
+    for (let attrKey in attrGroup) {
+      if (!Object.prototype.hasOwnProperty.call(attrGroup, attrKey)) continue;
+      const cleanKey = attrKey.startsWith(this.options.attributeNamePrefix)
+        ? attrKey.substring(this.options.attributeNamePrefix.length)
+        : attrKey;
+      const val = attrGroup[attrKey];
+      if (val === true && this.options.suppressBooleanAttributes) {
+        attrStr += ' ' + cleanKey;
+      } else {
+        attrStr += ' ' + cleanKey + '="' + val + '"'; // No encoding for stopNode
+      }
+    }
+  } else {
+    // Look for individual attributes
+    for (let key in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+      const attr = this.isAttribute(key);
+      if (attr) {
+        const val = obj[key];
+        if (val === true && this.options.suppressBooleanAttributes) {
+          attrStr += ' ' + attr;
+        } else {
+          attrStr += ' ' + attr + '="' + val + '"'; // No encoding for stopNode
+        }
+      }
+    }
+  }
+
+  return attrStr;
+};
+
+Builder.prototype.buildObjectNode = function (val, key, attrStr, level) {
+  if (val === "") {
+    if (key[0] === "?") return this.indentate(level) + '<' + key + attrStr + '?' + this.tagEndChar;
     else {
       return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
     }
-  }else {
+  } else {
 
     let tagEndExp = '</' + key + this.tagEndChar;
     let piClosingChar = "";
-    
-    if(key[0] === "?") {
+
+    if (key[0] === "?") {
       piClosingChar = "?";
       tagEndExp = "";
     }
-  
+
     // attrStr is an empty string in case the attribute came as undefined or null
     if ((attrStr || attrStr === '') && val.indexOf('<') === -1) {
-      return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
+      return (this.indentate(level) + '<' + key + attrStr + piClosingChar + '>' + val + tagEndExp);
     } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
       return this.indentate(level) + `<!--${val}-->` + this.newLine;
-    }else {
+    } else {
       return (
         this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
         val +
-        this.indentate(level) + tagEndExp    );
+        this.indentate(level) + tagEndExp);
     }
   }
 };
 
-Builder.prototype.closeTag = function(key){
+Builder.prototype.closeTag = function (key) {
   let closeTag = "";
-  if(this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
-    if(!this.options.suppressUnpairedNode) closeTag = "/";
-  }else if(this.options.suppressEmptyNode){ //empty
+  if (this.options.unpairedTags.indexOf(key) !== -1) { //unpaired
+    if (!this.options.suppressUnpairedNode) closeTag = "/";
+  } else if (this.options.suppressEmptyNode) { //empty
     closeTag = "/";
-  }else {
+  } else {
     closeTag = `></${key}`;
   }
   return closeTag;
 };
 
-Builder.prototype.buildTextValNode = function(val, key, attrStr, level) {
+Builder.prototype.checkStopNode = function (matcher) {
+  if (!this.stopNodeExpressions || this.stopNodeExpressions.length === 0) return false;
+
+  for (let i = 0; i < this.stopNodeExpressions.length; i++) {
+    if (matcher.matches(this.stopNodeExpressions[i])) {
+      return true;
+    }
+  }
+  return false;
+};
+
+Builder.prototype.buildTextValNode = function (val, key, attrStr, level, matcher) {
   if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
-    return this.indentate(level) + `<![CDATA[${val}]]>` +  this.newLine;
-  }else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
-    return this.indentate(level) + `<!--${val}-->` +  this.newLine;
-  }else if(key[0] === "?") {//PI tag
-    return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar; 
-  }else {
+    return this.indentate(level) + `<![CDATA[${val}]]>` + this.newLine;
+  } else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
+    return this.indentate(level) + `<!--${val}-->` + this.newLine;
+  } else if (key[0] === "?") {//PI tag
+    return this.indentate(level) + '<' + key + attrStr + '?' + this.tagEndChar;
+  } else {
+    // Normal processing: apply tagValueProcessor and entity replacement
     let textValue = this.options.tagValueProcessor(key, val);
     textValue = this.replaceEntitiesValue(textValue);
-  
-    if( textValue === ''){
+
+    if (textValue === '') {
       return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
-    }else {
+    } else {
       return this.indentate(level) + '<' + key + attrStr + '>' +
-         textValue +
+        textValue +
         '</' + key + this.tagEndChar;
     }
   }
 };
 
-Builder.prototype.replaceEntitiesValue = function(textValue){
-  if(textValue && textValue.length > 0 && this.options.processEntities){
-    for (let i=0; i<this.options.entities.length; i++) {
+Builder.prototype.replaceEntitiesValue = function (textValue) {
+  if (textValue && textValue.length > 0 && this.options.processEntities) {
+    for (let i = 0; i < this.options.entities.length; i++) {
       const entity = this.options.entities[i];
       textValue = textValue.replace(entity.regex, entity.val);
     }
@@ -33586,7 +35128,7 @@ function createCoreFacade(core) {
 
 var Gt=(n,t,e)=>{let s=n instanceof RegExp?ce(n,e):n,i=t instanceof RegExp?ce(t,e):t,r=s!==null&&i!=null&&ss(s,i,e);return r&&{start:r[0],end:r[1],pre:e.slice(0,r[0]),body:e.slice(r[0]+s.length,r[1]),post:e.slice(r[1]+i.length)}},ce=(n,t)=>{let e=t.match(n);return e?e[0]:null},ss=(n,t,e)=>{let s,i,r,o,h,a=e.indexOf(n),l=e.indexOf(t,a+1),u=a;if(a>=0&&l>0){if(n===t)return [a,l];for(s=[],r=e.length;u>=0&&!h;){if(u===a)s.push(u),a=e.indexOf(n,u+1);else if(s.length===1){let c=s.pop();c!==void 0&&(h=[c,l]);}else i=s.pop(),i!==void 0&&i<r&&(r=i,o=l),l=e.indexOf(t,u+1);u=a<l&&a>=0?a:l;}s.length&&o!==void 0&&(h=[r,o]);}return h};var fe="\0SLASH"+Math.random()+"\0",ue="\0OPEN"+Math.random()+"\0",qt="\0CLOSE"+Math.random()+"\0",de="\0COMMA"+Math.random()+"\0",pe="\0PERIOD"+Math.random()+"\0",is=new RegExp(fe,"g"),rs=new RegExp(ue,"g"),ns=new RegExp(qt,"g"),os=new RegExp(de,"g"),hs=new RegExp(pe,"g"),as=/\\\\/g,ls=/\\{/g,cs=/\\}/g,fs=/\\,/g,us=/\\./g,ds=1e5;function Ht(n){return isNaN(n)?n.charCodeAt(0):parseInt(n,10)}function ps(n){return n.replace(as,fe).replace(ls,ue).replace(cs,qt).replace(fs,de).replace(us,pe)}function ms$1(n){return n.replace(is,"\\").replace(rs,"{").replace(ns,"}").replace(os,",").replace(hs,".")}function me(n){if(!n)return [""];let t=[],e=Gt("{","}",n);if(!e)return n.split(",");let{pre:s,body:i,post:r}=e,o=s.split(",");o[o.length-1]+="{"+i+"}";let h=me(r);return r.length&&(o[o.length-1]+=h.shift(),o.push.apply(o,h)),t.push.apply(t,o),t}function ge(n,t={}){if(!n)return [];let{max:e=ds}=t;return n.slice(0,2)==="{}"&&(n="\\{\\}"+n.slice(2)),ht(ps(n),e,true).map(ms$1)}function gs(n){return "{"+n+"}"}function ws(n){return /^-?0\d/.test(n)}function ys(n,t){return n<=t}function bs(n,t){return n>=t}function ht(n,t,e){let s=[],i=Gt("{","}",n);if(!i)return [n];let r=i.pre,o=i.post.length?ht(i.post,t,false):[""];if(/\$$/.test(i.pre))for(let h=0;h<o.length&&h<t;h++){let a=r+"{"+i.body+"}"+o[h];s.push(a);}else {let h=/^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(i.body),a=/^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(i.body),l=h||a,u=i.body.indexOf(",")>=0;if(!l&&!u)return i.post.match(/,(?!,).*\}/)?(n=i.pre+"{"+i.body+qt+i.post,ht(n,t,true)):[n];let c;if(l)c=i.body.split(/\.\./);else if(c=me(i.body),c.length===1&&c[0]!==void 0&&(c=ht(c[0],t,false).map(gs),c.length===1))return o.map(f=>i.pre+c[0]+f);let d;if(l&&c[0]!==void 0&&c[1]!==void 0){let f=Ht(c[0]),m=Ht(c[1]),p=Math.max(c[0].length,c[1].length),w=c.length===3&&c[2]!==void 0?Math.abs(Ht(c[2])):1,g=ys;m<f&&(w*=-1,g=bs);let E=c.some(ws);d=[];for(let y=f;g(y,m);y+=w){let b;if(a)b=String.fromCharCode(y),b==="\\"&&(b="");else if(b=String(y),E){let z=p-b.length;if(z>0){let $=new Array(z+1).join("0");y<0?b="-"+$+b.slice(1):b=$+b;}}d.push(b);}}else {d=[];for(let f=0;f<c.length;f++)d.push.apply(d,ht(c[f],t,false));}for(let f=0;f<d.length;f++)for(let m=0;m<o.length&&s.length<t;m++){let p=r+d[f]+o[m];(!e||l||p)&&s.push(p);}}return s}var at=n=>{if(typeof n!="string")throw new TypeError("invalid pattern");if(n.length>65536)throw new TypeError("pattern is too long")};var Ss={"[:alnum:]":["\\p{L}\\p{Nl}\\p{Nd}",true],"[:alpha:]":["\\p{L}\\p{Nl}",true],"[:ascii:]":["\\x00-\\x7f",false],"[:blank:]":["\\p{Zs}\\t",true],"[:cntrl:]":["\\p{Cc}",true],"[:digit:]":["\\p{Nd}",true],"[:graph:]":["\\p{Z}\\p{C}",true,true],"[:lower:]":["\\p{Ll}",true],"[:print:]":["\\p{C}",true],"[:punct:]":["\\p{P}",true],"[:space:]":["\\p{Z}\\t\\r\\n\\v\\f",true],"[:upper:]":["\\p{Lu}",true],"[:word:]":["\\p{L}\\p{Nl}\\p{Nd}\\p{Pc}",true],"[:xdigit:]":["A-Fa-f0-9",false]},lt=n=>n.replace(/[[\]\\-]/g,"\\$&"),Es=n=>n.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&"),we=n=>n.join(""),ye=(n,t)=>{let e=t;if(n.charAt(e)!=="[")throw new Error("not in a brace expression");let s=[],i=[],r=e+1,o=false,h=false,a=false,l=false,u=e,c="";t:for(;r<n.length;){let p=n.charAt(r);if((p==="!"||p==="^")&&r===e+1){l=true,r++;continue}if(p==="]"&&o&&!a){u=r+1;break}if(o=true,p==="\\"&&!a){a=true,r++;continue}if(p==="["&&!a){for(let[w,[g,S,E]]of Object.entries(Ss))if(n.startsWith(w,r)){if(c)return ["$.",false,n.length-e,true];r+=w.length,E?i.push(g):s.push(g),h=h||S;continue t}}if(a=false,c){p>c?s.push(lt(c)+"-"+lt(p)):p===c&&s.push(lt(p)),c="",r++;continue}if(n.startsWith("-]",r+1)){s.push(lt(p+"-")),r+=2;continue}if(n.startsWith("-",r+1)){c=p,r+=2;continue}s.push(lt(p)),r++;}if(u<r)return ["",false,0,false];if(!s.length&&!i.length)return ["$.",false,n.length-e,true];if(i.length===0&&s.length===1&&/^\\?.$/.test(s[0])&&!l){let p=s[0].length===2?s[0].slice(-1):s[0];return [Es(p),false,u-e,false]}let d="["+(l?"^":"")+we(s)+"]",f="["+(l?"":"^")+we(i)+"]";return [s.length&&i.length?"("+d+"|"+f+")":s.length?d:f,h,u-e,true]};var W=(n,{windowsPathsNoEscape:t=false,magicalBraces:e=true}={})=>e?t?n.replace(/\[([^\/\\])\]/g,"$1"):n.replace(/((?!\\).|^)\[([^\/\\])\]/g,"$1$2").replace(/\\([^\/])/g,"$1"):t?n.replace(/\[([^\/\\{}])\]/g,"$1"):n.replace(/((?!\\).|^)\[([^\/\\{}])\]/g,"$1$2").replace(/\\([^\/{}])/g,"$1");var xs=new Set(["!","?","+","*","@"]),be=n=>xs.has(n),vs="(?!(?:^|/)\\.\\.?(?:$|/))",Ct="(?!\\.)",Cs=new Set(["[","."]),Ts=new Set(["..","."]),As=new Set("().*{}+?[]^$\\!"),ks=n=>n.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&"),Kt="[^/]",Se=Kt+"*?",Ee=Kt+"+?",Q=class n{type;#t;#s;#n=false;#r=[];#o;#S;#w;#c=false;#h;#u;#f=false;constructor(t,e,s={}){this.type=t,t&&(this.#s=true),this.#o=e,this.#t=this.#o?this.#o.#t:this,this.#h=this.#t===this?s:this.#t.#h,this.#w=this.#t===this?[]:this.#t.#w,t==="!"&&!this.#t.#c&&this.#w.push(this),this.#S=this.#o?this.#o.#r.length:0;}get hasMagic(){if(this.#s!==void 0)return this.#s;for(let t of this.#r)if(typeof t!="string"&&(t.type||t.hasMagic))return this.#s=true;return this.#s}toString(){return this.#u!==void 0?this.#u:this.type?this.#u=this.type+"("+this.#r.map(t=>String(t)).join("|")+")":this.#u=this.#r.map(t=>String(t)).join("")}#a(){if(this!==this.#t)throw new Error("should only call on root");if(this.#c)return this;this.toString(),this.#c=true;let t;for(;t=this.#w.pop();){if(t.type!=="!")continue;let e=t,s=e.#o;for(;s;){for(let i=e.#S+1;!s.type&&i<s.#r.length;i++)for(let r of t.#r){if(typeof r=="string")throw new Error("string part in extglob AST??");r.copyIn(s.#r[i]);}e=s,s=e.#o;}}return this}push(...t){for(let e of t)if(e!==""){if(typeof e!="string"&&!(e instanceof n&&e.#o===this))throw new Error("invalid part: "+e);this.#r.push(e);}}toJSON(){let t=this.type===null?this.#r.slice().map(e=>typeof e=="string"?e:e.toJSON()):[this.type,...this.#r.map(e=>e.toJSON())];return this.isStart()&&!this.type&&t.unshift([]),this.isEnd()&&(this===this.#t||this.#t.#c&&this.#o?.type==="!")&&t.push({}),t}isStart(){if(this.#t===this)return  true;if(!this.#o?.isStart())return  false;if(this.#S===0)return  true;let t=this.#o;for(let e=0;e<this.#S;e++){let s=t.#r[e];if(!(s instanceof n&&s.type==="!"))return  false}return  true}isEnd(){if(this.#t===this||this.#o?.type==="!")return  true;if(!this.#o?.isEnd())return  false;if(!this.type)return this.#o?.isEnd();let t=this.#o?this.#o.#r.length:0;return this.#S===t-1}copyIn(t){typeof t=="string"?this.push(t):this.push(t.clone(this));}clone(t){let e=new n(this.type,t);for(let s of this.#r)e.copyIn(s);return e}static#i(t,e,s,i){let r=false,o=false,h=-1,a=false;if(e.type===null){let f=s,m="";for(;f<t.length;){let p=t.charAt(f++);if(r||p==="\\"){r=!r,m+=p;continue}if(o){f===h+1?(p==="^"||p==="!")&&(a=true):p==="]"&&!(f===h+2&&a)&&(o=false),m+=p;continue}else if(p==="["){o=true,h=f,a=false,m+=p;continue}if(!i.noext&&be(p)&&t.charAt(f)==="("){e.push(m),m="";let w=new n(p,e);f=n.#i(t,w,f,i),e.push(w);continue}m+=p;}return e.push(m),f}let l=s+1,u=new n(null,e),c=[],d="";for(;l<t.length;){let f=t.charAt(l++);if(r||f==="\\"){r=!r,d+=f;continue}if(o){l===h+1?(f==="^"||f==="!")&&(a=true):f==="]"&&!(l===h+2&&a)&&(o=false),d+=f;continue}else if(f==="["){o=true,h=l,a=false,d+=f;continue}if(be(f)&&t.charAt(l)==="("){u.push(d),d="";let m=new n(f,u);u.push(m),l=n.#i(t,m,l,i);continue}if(f==="|"){u.push(d),d="",c.push(u),u=new n(null,e);continue}if(f===")")return d===""&&e.#r.length===0&&(e.#f=true),u.push(d),d="",e.push(...c,u),l;d+=f;}return e.type=null,e.#s=void 0,e.#r=[t.substring(s-1)],l}static fromGlob(t,e={}){let s=new n(null,void 0,e);return n.#i(t,s,0,e),s}toMMPattern(){if(this!==this.#t)return this.#t.toMMPattern();let t=this.toString(),[e,s,i,r]=this.toRegExpSource();if(!(i||this.#s||this.#h.nocase&&!this.#h.nocaseMagicOnly&&t.toUpperCase()!==t.toLowerCase()))return s;let h=(this.#h.nocase?"i":"")+(r?"u":"");return Object.assign(new RegExp(`^${e}$`,h),{_src:e,_glob:t})}get options(){return this.#h}toRegExpSource(t){let e=t??!!this.#h.dot;if(this.#t===this&&this.#a(),!this.type){let a=this.isStart()&&this.isEnd()&&!this.#r.some(f=>typeof f!="string"),l=this.#r.map(f=>{let[m,p,w,g]=typeof f=="string"?n.#E(f,this.#s,a):f.toRegExpSource(t);return this.#s=this.#s||w,this.#n=this.#n||g,m}).join(""),u="";if(this.isStart()&&typeof this.#r[0]=="string"&&!(this.#r.length===1&&Ts.has(this.#r[0]))){let m=Cs,p=e&&m.has(l.charAt(0))||l.startsWith("\\.")&&m.has(l.charAt(2))||l.startsWith("\\.\\.")&&m.has(l.charAt(4)),w=!e&&!t&&m.has(l.charAt(0));u=p?vs:w?Ct:"";}let c="";return this.isEnd()&&this.#t.#c&&this.#o?.type==="!"&&(c="(?:$|\\/)"),[u+l+c,W(l),this.#s=!!this.#s,this.#n]}let s=this.type==="*"||this.type==="+",i=this.type==="!"?"(?:(?!(?:":"(?:",r=this.#d(e);if(this.isStart()&&this.isEnd()&&!r&&this.type!=="!"){let a=this.toString();return this.#r=[a],this.type=null,this.#s=void 0,[a,W(this.toString()),false,false]}let o=!s||t||e||!Ct?"":this.#d(true);o===r&&(o=""),o&&(r=`(?:${r})(?:${o})*?`);let h="";if(this.type==="!"&&this.#f)h=(this.isStart()&&!e?Ct:"")+Ee;else {let a=this.type==="!"?"))"+(this.isStart()&&!e&&!t?Ct:"")+Se+")":this.type==="@"?")":this.type==="?"?")?":this.type==="+"&&o?")":this.type==="*"&&o?")?":`)${this.type}`;h=i+r+a;}return [h,W(r),this.#s=!!this.#s,this.#n]}#d(t){return this.#r.map(e=>{if(typeof e=="string")throw new Error("string type in extglob ast??");let[s,i,r,o]=e.toRegExpSource(t);return this.#n=this.#n||o,s}).filter(e=>!(this.isStart()&&this.isEnd())||!!e).join("|")}static#E(t,e,s=false){let i=false,r="",o=false,h=false;for(let a=0;a<t.length;a++){let l=t.charAt(a);if(i){i=false,r+=(As.has(l)?"\\":"")+l;continue}if(l==="*"){if(h)continue;h=true,r+=s&&/^[*]+$/.test(t)?Ee:Se,e=true;continue}else h=false;if(l==="\\"){a===t.length-1?r+="\\\\":i=true;continue}if(l==="["){let[u,c,d,f]=ye(t,a);if(d){r+=u,o=o||c,a+=d-1,e=e||f;continue}}if(l==="?"){r+=Kt,e=true;continue}r+=ks(l);}return [r,W(t),!!e,o]}};var tt=(n,{windowsPathsNoEscape:t=false,magicalBraces:e=false}={})=>e?t?n.replace(/[?*()[\]{}]/g,"[$&]"):n.replace(/[?*()[\]\\{}]/g,"\\$&"):t?n.replace(/[?*()[\]]/g,"[$&]"):n.replace(/[?*()[\]\\]/g,"\\$&");var O=(n,t,e={})=>(at(t),!e.nocomment&&t.charAt(0)==="#"?false:new D(t,e).match(n)),Rs=/^\*+([^+@!?\*\[\(]*)$/,Os=n=>t=>!t.startsWith(".")&&t.endsWith(n),Fs=n=>t=>t.endsWith(n),Ds=n=>(n=n.toLowerCase(),t=>!t.startsWith(".")&&t.toLowerCase().endsWith(n)),Ms=n=>(n=n.toLowerCase(),t=>t.toLowerCase().endsWith(n)),Ns=/^\*+\.\*+$/,_s=n=>!n.startsWith(".")&&n.includes("."),Ls=n=>n!=="."&&n!==".."&&n.includes("."),Ws=/^\.\*+$/,Ps=n=>n!=="."&&n!==".."&&n.startsWith("."),js=/^\*+$/,Is=n=>n.length!==0&&!n.startsWith("."),zs=n=>n.length!==0&&n!=="."&&n!=="..",Bs=/^\?+([^+@!?\*\[\(]*)?$/,Us=([n,t=""])=>{let e=Ce([n]);return t?(t=t.toLowerCase(),s=>e(s)&&s.toLowerCase().endsWith(t)):e},$s=([n,t=""])=>{let e=Te([n]);return t?(t=t.toLowerCase(),s=>e(s)&&s.toLowerCase().endsWith(t)):e},Gs=([n,t=""])=>{let e=Te([n]);return t?s=>e(s)&&s.endsWith(t):e},Hs=([n,t=""])=>{let e=Ce([n]);return t?s=>e(s)&&s.endsWith(t):e},Ce=([n])=>{let t=n.length;return e=>e.length===t&&!e.startsWith(".")},Te=([n])=>{let t=n.length;return e=>e.length===t&&e!=="."&&e!==".."},Ae=typeof process=="object"&&process?typeof process.env=="object"&&process.env&&process.env.__MINIMATCH_TESTING_PLATFORM__||process.platform:"posix",xe={win32:{sep:"\\"},posix:{sep:"/"}},qs=Ae==="win32"?xe.win32.sep:xe.posix.sep;O.sep=qs;var A=Symbol("globstar **");O.GLOBSTAR=A;var Ks="[^/]",Vs=Ks+"*?",Ys="(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?",Xs="(?:(?!(?:\\/|^)\\.).)*?",Js=(n,t={})=>e=>O(e,n,t);O.filter=Js;var N=(n,t={})=>Object.assign({},n,t),Zs=n=>{if(!n||typeof n!="object"||!Object.keys(n).length)return O;let t=O;return Object.assign((s,i,r={})=>t(s,i,N(n,r)),{Minimatch:class extends t.Minimatch{constructor(i,r={}){super(i,N(n,r));}static defaults(i){return t.defaults(N(n,i)).Minimatch}},AST:class extends t.AST{constructor(i,r,o={}){super(i,r,N(n,o));}static fromGlob(i,r={}){return t.AST.fromGlob(i,N(n,r))}},unescape:(s,i={})=>t.unescape(s,N(n,i)),escape:(s,i={})=>t.escape(s,N(n,i)),filter:(s,i={})=>t.filter(s,N(n,i)),defaults:s=>t.defaults(N(n,s)),makeRe:(s,i={})=>t.makeRe(s,N(n,i)),braceExpand:(s,i={})=>t.braceExpand(s,N(n,i)),match:(s,i,r={})=>t.match(s,i,N(n,r)),sep:t.sep,GLOBSTAR:A})};O.defaults=Zs;var ke=(n,t={})=>(at(n),t.nobrace||!/\{(?:(?!\{).)*\}/.test(n)?[n]:ge(n,{max:t.braceExpandMax}));O.braceExpand=ke;var Qs=(n,t={})=>new D(n,t).makeRe();O.makeRe=Qs;var ti=(n,t,e={})=>{let s=new D(t,e);return n=n.filter(i=>s.match(i)),s.options.nonull&&!n.length&&n.push(t),n};O.match=ti;var ve=/[?*]|[+@!]\(.*?\)|\[|\]/,ei=n=>n.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&"),D=class{options;set;pattern;windowsPathsNoEscape;nonegate;negate;comment;empty;preserveMultipleSlashes;partial;globSet;globParts;nocase;isWindows;platform;windowsNoMagicRoot;regexp;constructor(t,e={}){at(t),e=e||{},this.options=e,this.pattern=t,this.platform=e.platform||Ae,this.isWindows=this.platform==="win32";let s="allowWindowsEscape";this.windowsPathsNoEscape=!!e.windowsPathsNoEscape||e[s]===false,this.windowsPathsNoEscape&&(this.pattern=this.pattern.replace(/\\/g,"/")),this.preserveMultipleSlashes=!!e.preserveMultipleSlashes,this.regexp=null,this.negate=false,this.nonegate=!!e.nonegate,this.comment=false,this.empty=false,this.partial=!!e.partial,this.nocase=!!this.options.nocase,this.windowsNoMagicRoot=e.windowsNoMagicRoot!==void 0?e.windowsNoMagicRoot:!!(this.isWindows&&this.nocase),this.globSet=[],this.globParts=[],this.set=[],this.make();}hasMagic(){if(this.options.magicalBraces&&this.set.length>1)return  true;for(let t of this.set)for(let e of t)if(typeof e!="string")return  true;return  false}debug(...t){}make(){let t=this.pattern,e=this.options;if(!e.nocomment&&t.charAt(0)==="#"){this.comment=true;return}if(!t){this.empty=true;return}this.parseNegate(),this.globSet=[...new Set(this.braceExpand())],e.debug&&(this.debug=(...r)=>console.error(...r)),this.debug(this.pattern,this.globSet);let s=this.globSet.map(r=>this.slashSplit(r));this.globParts=this.preprocess(s),this.debug(this.pattern,this.globParts);let i=this.globParts.map((r,o,h)=>{if(this.isWindows&&this.windowsNoMagicRoot){let a=r[0]===""&&r[1]===""&&(r[2]==="?"||!ve.test(r[2]))&&!ve.test(r[3]),l=/^[a-z]:/i.test(r[0]);if(a)return [...r.slice(0,4),...r.slice(4).map(u=>this.parse(u))];if(l)return [r[0],...r.slice(1).map(u=>this.parse(u))]}return r.map(a=>this.parse(a))});if(this.debug(this.pattern,i),this.set=i.filter(r=>r.indexOf(false)===-1),this.isWindows)for(let r=0;r<this.set.length;r++){let o=this.set[r];o[0]===""&&o[1]===""&&this.globParts[r][2]==="?"&&typeof o[3]=="string"&&/^[a-z]:$/i.test(o[3])&&(o[2]="?");}this.debug(this.pattern,this.set);}preprocess(t){if(this.options.noglobstar)for(let s=0;s<t.length;s++)for(let i=0;i<t[s].length;i++)t[s][i]==="**"&&(t[s][i]="*");let{optimizationLevel:e=1}=this.options;return e>=2?(t=this.firstPhasePreProcess(t),t=this.secondPhasePreProcess(t)):e>=1?t=this.levelOneOptimize(t):t=this.adjascentGlobstarOptimize(t),t}adjascentGlobstarOptimize(t){return t.map(e=>{let s=-1;for(;(s=e.indexOf("**",s+1))!==-1;){let i=s;for(;e[i+1]==="**";)i++;i!==s&&e.splice(s,i-s);}return e})}levelOneOptimize(t){return t.map(e=>(e=e.reduce((s,i)=>{let r=s[s.length-1];return i==="**"&&r==="**"?s:i===".."&&r&&r!==".."&&r!=="."&&r!=="**"?(s.pop(),s):(s.push(i),s)},[]),e.length===0?[""]:e))}levelTwoFileOptimize(t){Array.isArray(t)||(t=this.slashSplit(t));let e=false;do{if(e=false,!this.preserveMultipleSlashes){for(let i=1;i<t.length-1;i++){let r=t[i];i===1&&r===""&&t[0]===""||(r==="."||r==="")&&(e=true,t.splice(i,1),i--);}t[0]==="."&&t.length===2&&(t[1]==="."||t[1]==="")&&(e=true,t.pop());}let s=0;for(;(s=t.indexOf("..",s+1))!==-1;){let i=t[s-1];i&&i!=="."&&i!==".."&&i!=="**"&&(e=true,t.splice(s-1,2),s-=2);}}while(e);return t.length===0?[""]:t}firstPhasePreProcess(t){let e=false;do{e=false;for(let s of t){let i=-1;for(;(i=s.indexOf("**",i+1))!==-1;){let o=i;for(;s[o+1]==="**";)o++;o>i&&s.splice(i+1,o-i);let h=s[i+1],a=s[i+2],l=s[i+3];if(h!==".."||!a||a==="."||a===".."||!l||l==="."||l==="..")continue;e=true,s.splice(i,1);let u=s.slice(0);u[i]="**",t.push(u),i--;}if(!this.preserveMultipleSlashes){for(let o=1;o<s.length-1;o++){let h=s[o];o===1&&h===""&&s[0]===""||(h==="."||h==="")&&(e=true,s.splice(o,1),o--);}s[0]==="."&&s.length===2&&(s[1]==="."||s[1]==="")&&(e=true,s.pop());}let r=0;for(;(r=s.indexOf("..",r+1))!==-1;){let o=s[r-1];if(o&&o!=="."&&o!==".."&&o!=="**"){e=true;let a=r===1&&s[r+1]==="**"?["."]:[];s.splice(r-1,2,...a),s.length===0&&s.push(""),r-=2;}}}}while(e);return t}secondPhasePreProcess(t){for(let e=0;e<t.length-1;e++)for(let s=e+1;s<t.length;s++){let i=this.partsMatch(t[e],t[s],!this.preserveMultipleSlashes);if(i){t[e]=[],t[s]=i;break}}return t.filter(e=>e.length)}partsMatch(t,e,s=false){let i=0,r=0,o=[],h="";for(;i<t.length&&r<e.length;)if(t[i]===e[r])o.push(h==="b"?e[r]:t[i]),i++,r++;else if(s&&t[i]==="**"&&e[r]===t[i+1])o.push(t[i]),i++;else if(s&&e[r]==="**"&&t[i]===e[r+1])o.push(e[r]),r++;else if(t[i]==="*"&&e[r]&&(this.options.dot||!e[r].startsWith("."))&&e[r]!=="**"){if(h==="b")return  false;h="a",o.push(t[i]),i++,r++;}else if(e[r]==="*"&&t[i]&&(this.options.dot||!t[i].startsWith("."))&&t[i]!=="**"){if(h==="a")return  false;h="b",o.push(e[r]),i++,r++;}else return  false;return t.length===e.length&&o}parseNegate(){if(this.nonegate)return;let t=this.pattern,e=false,s=0;for(let i=0;i<t.length&&t.charAt(i)==="!";i++)e=!e,s++;s&&(this.pattern=t.slice(s)),this.negate=e;}matchOne(t,e,s=false){let i=this.options;if(this.isWindows){let p=typeof t[0]=="string"&&/^[a-z]:$/i.test(t[0]),w=!p&&t[0]===""&&t[1]===""&&t[2]==="?"&&/^[a-z]:$/i.test(t[3]),g=typeof e[0]=="string"&&/^[a-z]:$/i.test(e[0]),S=!g&&e[0]===""&&e[1]===""&&e[2]==="?"&&typeof e[3]=="string"&&/^[a-z]:$/i.test(e[3]),E=w?3:p?0:void 0,y=S?3:g?0:void 0;if(typeof E=="number"&&typeof y=="number"){let[b,z]=[t[E],e[y]];b.toLowerCase()===z.toLowerCase()&&(e[y]=b,y>E?e=e.slice(y):E>y&&(t=t.slice(E)));}}let{optimizationLevel:r=1}=this.options;r>=2&&(t=this.levelTwoFileOptimize(t)),this.debug("matchOne",this,{file:t,pattern:e}),this.debug("matchOne",t.length,e.length);for(var o=0,h=0,a=t.length,l=e.length;o<a&&h<l;o++,h++){this.debug("matchOne loop");var u=e[h],c=t[o];if(this.debug(e,u,c),u===false)return  false;if(u===A){this.debug("GLOBSTAR",[e,u,c]);var d=o,f=h+1;if(f===l){for(this.debug("** at the end");o<a;o++)if(t[o]==="."||t[o]===".."||!i.dot&&t[o].charAt(0)===".")return  false;return  true}for(;d<a;){var m=t[d];if(this.debug(`
 globstar while`,t,d,e,f,m),this.matchOne(t.slice(d),e.slice(f),s))return this.debug("globstar found match!",d,a,m),true;if(m==="."||m===".."||!i.dot&&m.charAt(0)==="."){this.debug("dot detected!",t,d,e,f);break}this.debug("globstar swallow a segment, and continue"),d++;}return !!(s&&(this.debug(`
->>> no match, partial?`,t,d,e,f),d===a))}let p;if(typeof u=="string"?(p=c===u,this.debug("string match",u,c,p)):(p=u.test(c),this.debug("pattern match",u,c,p)),!p)return  false}if(o===a&&h===l)return  true;if(o===a)return s;if(h===l)return o===a-1&&t[o]==="";throw new Error("wtf?")}braceExpand(){return ke(this.pattern,this.options)}parse(t){at(t);let e=this.options;if(t==="**")return A;if(t==="")return "";let s,i=null;(s=t.match(js))?i=e.dot?zs:Is:(s=t.match(Rs))?i=(e.nocase?e.dot?Ms:Ds:e.dot?Fs:Os)(s[1]):(s=t.match(Bs))?i=(e.nocase?e.dot?$s:Us:e.dot?Gs:Hs)(s):(s=t.match(Ns))?i=e.dot?Ls:_s:(s=t.match(Ws))&&(i=Ps);let r=Q.fromGlob(t,this.options).toMMPattern();return i&&typeof r=="object"&&Reflect.defineProperty(r,"test",{value:i}),r}makeRe(){if(this.regexp||this.regexp===false)return this.regexp;let t=this.set;if(!t.length)return this.regexp=false,this.regexp;let e=this.options,s=e.noglobstar?Vs:e.dot?Ys:Xs,i=new Set(e.nocase?["i"]:[]),r=t.map(a=>{let l=a.map(c=>{if(c instanceof RegExp)for(let d of c.flags.split(""))i.add(d);return typeof c=="string"?ei(c):c===A?A:c._src});l.forEach((c,d)=>{let f=l[d+1],m=l[d-1];c!==A||m===A||(m===void 0?f!==void 0&&f!==A?l[d+1]="(?:\\/|"+s+"\\/)?"+f:l[d]=s:f===void 0?l[d-1]=m+"(?:\\/|\\/"+s+")?":f!==A&&(l[d-1]=m+"(?:\\/|\\/"+s+"\\/)"+f,l[d+1]=A));});let u=l.filter(c=>c!==A);if(this.partial&&u.length>=1){let c=[];for(let d=1;d<=u.length;d++)c.push(u.slice(0,d).join("/"));return "(?:"+c.join("|")+")"}return u.join("/")}).join("|"),[o,h]=t.length>1?["(?:",")"]:["",""];r="^"+o+r+h+"$",this.partial&&(r="^(?:\\/|"+o+r.slice(1,-1)+h+")$"),this.negate&&(r="^(?!"+r+").+$");try{this.regexp=new RegExp(r,[...i].join(""));}catch{this.regexp=false;}return this.regexp}slashSplit(t){return this.preserveMultipleSlashes?t.split("/"):this.isWindows&&/^\/\/[^\/]+/.test(t)?["",...t.split(/\/+/)]:t.split(/\/+/)}match(t,e=this.partial){if(this.debug("match",t,this.pattern),this.comment)return  false;if(this.empty)return t==="";if(t==="/"&&e)return  true;let s=this.options;this.isWindows&&(t=t.split("\\").join("/"));let i=this.slashSplit(t);this.debug(this.pattern,"split",i);let r=this.set;this.debug(this.pattern,"set",r);let o=i[i.length-1];if(!o)for(let h=i.length-2;!o&&h>=0;h--)o=i[h];for(let h=0;h<r.length;h++){let a=r[h],l=i;if(s.matchBase&&a.length===1&&(l=[o]),this.matchOne(l,a,e))return s.flipNegate?true:!this.negate}return s.flipNegate?false:this.negate}static defaults(t){return O.defaults(t).Minimatch}};O.AST=Q;O.Minimatch=D;O.escape=tt;O.unescape=W;var si=typeof performance=="object"&&performance&&typeof performance.now=="function"?performance:Date,Oe=new Set,Vt=typeof process=="object"&&process?process:{},Fe=(n,t,e,s)=>{typeof Vt.emitWarning=="function"?Vt.emitWarning(n,t,e,s):console.error(`[${e}] ${t}: ${n}`);},At=globalThis.AbortController,Re=globalThis.AbortSignal;if(typeof At>"u"){Re=class{onabort;_onabort=[];reason;aborted=false;addEventListener(e,s){this._onabort.push(s);}},At=class{constructor(){t();}signal=new Re;abort(e){if(!this.signal.aborted){this.signal.reason=e,this.signal.aborted=true;for(let s of this.signal._onabort)s(e);this.signal.onabort?.(e);}}};let n=Vt.env?.LRU_CACHE_IGNORE_AC_WARNING!=="1",t=()=>{n&&(n=false,Fe("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.","NO_ABORT_CONTROLLER","ENOTSUP",t));};}var ii=n=>!Oe.has(n);var q=n=>n&&n===Math.floor(n)&&n>0&&isFinite(n),De=n=>q(n)?n<=Math.pow(2,8)?Uint8Array:n<=Math.pow(2,16)?Uint16Array:n<=Math.pow(2,32)?Uint32Array:n<=Number.MAX_SAFE_INTEGER?Tt:null:null,Tt=class extends Array{constructor(n){super(n),this.fill(0);}},ri=class ct{heap;length;static#t=false;static create(t){let e=De(t);if(!e)return [];ct.#t=true;let s=new ct(t,e);return ct.#t=false,s}constructor(t,e){if(!ct.#t)throw new TypeError("instantiate Stack using Stack.create(n)");this.heap=new e(t),this.length=0;}push(t){this.heap[this.length++]=t;}pop(){return this.heap[--this.length]}},ft=class Me{#t;#s;#n;#r;#o;#S;#w;#c;get perf(){return this.#c}ttl;ttlResolution;ttlAutopurge;updateAgeOnGet;updateAgeOnHas;allowStale;noDisposeOnSet;noUpdateTTL;maxEntrySize;sizeCalculation;noDeleteOnFetchRejection;noDeleteOnStaleGet;allowStaleOnFetchAbort;allowStaleOnFetchRejection;ignoreFetchAbort;#h;#u;#f;#a;#i;#d;#E;#b;#p;#R;#m;#C;#T;#g;#y;#x;#A;#e;#_;static unsafeExposeInternals(t){return {starts:t.#T,ttls:t.#g,autopurgeTimers:t.#y,sizes:t.#C,keyMap:t.#f,keyList:t.#a,valList:t.#i,next:t.#d,prev:t.#E,get head(){return t.#b},get tail(){return t.#p},free:t.#R,isBackgroundFetch:e=>t.#l(e),backgroundFetch:(e,s,i,r)=>t.#U(e,s,i,r),moveToTail:e=>t.#W(e),indexes:e=>t.#F(e),rindexes:e=>t.#D(e),isStale:e=>t.#v(e)}}get max(){return this.#t}get maxSize(){return this.#s}get calculatedSize(){return this.#u}get size(){return this.#h}get fetchMethod(){return this.#S}get memoMethod(){return this.#w}get dispose(){return this.#n}get onInsert(){return this.#r}get disposeAfter(){return this.#o}constructor(t){let{max:e=0,ttl:s,ttlResolution:i=1,ttlAutopurge:r,updateAgeOnGet:o,updateAgeOnHas:h,allowStale:a,dispose:l,onInsert:u,disposeAfter:c,noDisposeOnSet:d,noUpdateTTL:f,maxSize:m=0,maxEntrySize:p=0,sizeCalculation:w,fetchMethod:g,memoMethod:S,noDeleteOnFetchRejection:E,noDeleteOnStaleGet:y,allowStaleOnFetchRejection:b,allowStaleOnFetchAbort:z,ignoreFetchAbort:$,perf:J}=t;if(J!==void 0&&typeof J?.now!="function")throw new TypeError("perf option must have a now() method if specified");if(this.#c=J??si,e!==0&&!q(e))throw new TypeError("max option must be a nonnegative integer");let Z=e?De(e):Array;if(!Z)throw new Error("invalid max value: "+e);if(this.#t=e,this.#s=m,this.maxEntrySize=p||this.#s,this.sizeCalculation=w,this.sizeCalculation){if(!this.#s&&!this.maxEntrySize)throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");if(typeof this.sizeCalculation!="function")throw new TypeError("sizeCalculation set to non-function")}if(S!==void 0&&typeof S!="function")throw new TypeError("memoMethod must be a function if defined");if(this.#w=S,g!==void 0&&typeof g!="function")throw new TypeError("fetchMethod must be a function if specified");if(this.#S=g,this.#A=!!g,this.#f=new Map,this.#a=new Array(e).fill(void 0),this.#i=new Array(e).fill(void 0),this.#d=new Z(e),this.#E=new Z(e),this.#b=0,this.#p=0,this.#R=ri.create(e),this.#h=0,this.#u=0,typeof l=="function"&&(this.#n=l),typeof u=="function"&&(this.#r=u),typeof c=="function"?(this.#o=c,this.#m=[]):(this.#o=void 0,this.#m=void 0),this.#x=!!this.#n,this.#_=!!this.#r,this.#e=!!this.#o,this.noDisposeOnSet=!!d,this.noUpdateTTL=!!f,this.noDeleteOnFetchRejection=!!E,this.allowStaleOnFetchRejection=!!b,this.allowStaleOnFetchAbort=!!z,this.ignoreFetchAbort=!!$,this.maxEntrySize!==0){if(this.#s!==0&&!q(this.#s))throw new TypeError("maxSize must be a positive integer if specified");if(!q(this.maxEntrySize))throw new TypeError("maxEntrySize must be a positive integer if specified");this.#G();}if(this.allowStale=!!a,this.noDeleteOnStaleGet=!!y,this.updateAgeOnGet=!!o,this.updateAgeOnHas=!!h,this.ttlResolution=q(i)||i===0?i:1,this.ttlAutopurge=!!r,this.ttl=s||0,this.ttl){if(!q(this.ttl))throw new TypeError("ttl must be a positive integer if specified");this.#M();}if(this.#t===0&&this.ttl===0&&this.#s===0)throw new TypeError("At least one of max, maxSize, or ttl is required");if(!this.ttlAutopurge&&!this.#t&&!this.#s){let $t="LRU_CACHE_UNBOUNDED";ii($t)&&(Oe.add($t),Fe("TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.","UnboundedCacheWarning",$t,Me));}}getRemainingTTL(t){return this.#f.has(t)?1/0:0}#M(){let t=new Tt(this.#t),e=new Tt(this.#t);this.#g=t,this.#T=e;let s=this.ttlAutopurge?new Array(this.#t):void 0;this.#y=s,this.#j=(o,h,a=this.#c.now())=>{if(e[o]=h!==0?a:0,t[o]=h,s?.[o]&&(clearTimeout(s[o]),s[o]=void 0),h!==0&&s){let l=setTimeout(()=>{this.#v(o)&&this.#O(this.#a[o],"expire");},h+1);l.unref&&l.unref(),s[o]=l;}},this.#k=o=>{e[o]=t[o]!==0?this.#c.now():0;},this.#N=(o,h)=>{if(t[h]){let a=t[h],l=e[h];if(!a||!l)return;o.ttl=a,o.start=l,o.now=i||r();let u=o.now-l;o.remainingTTL=a-u;}};let i=0,r=()=>{let o=this.#c.now();if(this.ttlResolution>0){i=o;let h=setTimeout(()=>i=0,this.ttlResolution);h.unref&&h.unref();}return o};this.getRemainingTTL=o=>{let h=this.#f.get(o);if(h===void 0)return 0;let a=t[h],l=e[h];if(!a||!l)return 1/0;let u=(i||r())-l;return a-u},this.#v=o=>{let h=e[o],a=t[o];return !!a&&!!h&&(i||r())-h>a};}#k=()=>{};#N=()=>{};#j=()=>{};#v=()=>false;#G(){let t=new Tt(this.#t);this.#u=0,this.#C=t,this.#P=e=>{this.#u-=t[e],t[e]=0;},this.#I=(e,s,i,r)=>{if(this.#l(s))return 0;if(!q(i))if(r){if(typeof r!="function")throw new TypeError("sizeCalculation must be a function");if(i=r(s,e),!q(i))throw new TypeError("sizeCalculation return invalid (expect positive integer)")}else throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");return i},this.#L=(e,s,i)=>{if(t[e]=s,this.#s){let r=this.#s-t[e];for(;this.#u>r;)this.#B(true);}this.#u+=t[e],i&&(i.entrySize=s,i.totalCalculatedSize=this.#u);};}#P=t=>{};#L=(t,e,s)=>{};#I=(t,e,s,i)=>{if(s||i)throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");return 0};*#F({allowStale:t=this.allowStale}={}){if(this.#h)for(let e=this.#p;!(!this.#z(e)||((t||!this.#v(e))&&(yield e),e===this.#b));)e=this.#E[e];}*#D({allowStale:t=this.allowStale}={}){if(this.#h)for(let e=this.#b;!(!this.#z(e)||((t||!this.#v(e))&&(yield e),e===this.#p));)e=this.#d[e];}#z(t){return t!==void 0&&this.#f.get(this.#a[t])===t}*entries(){for(let t of this.#F())this.#i[t]!==void 0&&this.#a[t]!==void 0&&!this.#l(this.#i[t])&&(yield [this.#a[t],this.#i[t]]);}*rentries(){for(let t of this.#D())this.#i[t]!==void 0&&this.#a[t]!==void 0&&!this.#l(this.#i[t])&&(yield [this.#a[t],this.#i[t]]);}*keys(){for(let t of this.#F()){let e=this.#a[t];e!==void 0&&!this.#l(this.#i[t])&&(yield e);}}*rkeys(){for(let t of this.#D()){let e=this.#a[t];e!==void 0&&!this.#l(this.#i[t])&&(yield e);}}*values(){for(let t of this.#F())this.#i[t]!==void 0&&!this.#l(this.#i[t])&&(yield this.#i[t]);}*rvalues(){for(let t of this.#D())this.#i[t]!==void 0&&!this.#l(this.#i[t])&&(yield this.#i[t]);}[Symbol.iterator](){return this.entries()}[Symbol.toStringTag]="LRUCache";find(t,e={}){for(let s of this.#F()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;if(r!==void 0&&t(r,this.#a[s],this))return this.get(this.#a[s],e)}}forEach(t,e=this){for(let s of this.#F()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;r!==void 0&&t.call(e,r,this.#a[s],this);}}rforEach(t,e=this){for(let s of this.#D()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;r!==void 0&&t.call(e,r,this.#a[s],this);}}purgeStale(){let t=false;for(let e of this.#D({allowStale:true}))this.#v(e)&&(this.#O(this.#a[e],"expire"),t=true);return t}info(t){let e=this.#f.get(t);if(e===void 0)return;let s=this.#i[e],i=this.#l(s)?s.__staleWhileFetching:s;if(i===void 0)return;let r={value:i};if(this.#g&&this.#T){let o=this.#g[e],h=this.#T[e];if(o&&h){let a=o-(this.#c.now()-h);r.ttl=a,r.start=Date.now();}}return this.#C&&(r.size=this.#C[e]),r}dump(){let t=[];for(let e of this.#F({allowStale:true})){let s=this.#a[e],i=this.#i[e],r=this.#l(i)?i.__staleWhileFetching:i;if(r===void 0||s===void 0)continue;let o={value:r};if(this.#g&&this.#T){o.ttl=this.#g[e];let h=this.#c.now()-this.#T[e];o.start=Math.floor(Date.now()-h);}this.#C&&(o.size=this.#C[e]),t.unshift([s,o]);}return t}load(t){this.clear();for(let[e,s]of t){if(s.start){let i=Date.now()-s.start;s.start=this.#c.now()-i;}this.set(e,s.value,s);}}set(t,e,s={}){if(e===void 0)return this.delete(t),this;let{ttl:i=this.ttl,start:r,noDisposeOnSet:o=this.noDisposeOnSet,sizeCalculation:h=this.sizeCalculation,status:a}=s,{noUpdateTTL:l=this.noUpdateTTL}=s,u=this.#I(t,e,s.size||0,h);if(this.maxEntrySize&&u>this.maxEntrySize)return a&&(a.set="miss",a.maxEntrySizeExceeded=true),this.#O(t,"set"),this;let c=this.#h===0?void 0:this.#f.get(t);if(c===void 0)c=this.#h===0?this.#p:this.#R.length!==0?this.#R.pop():this.#h===this.#t?this.#B(false):this.#h,this.#a[c]=t,this.#i[c]=e,this.#f.set(t,c),this.#d[this.#p]=c,this.#E[c]=this.#p,this.#p=c,this.#h++,this.#L(c,u,a),a&&(a.set="add"),l=false,this.#_&&this.#r?.(e,t,"add");else {this.#W(c);let d=this.#i[c];if(e!==d){if(this.#A&&this.#l(d)){d.__abortController.abort(new Error("replaced"));let{__staleWhileFetching:f}=d;f!==void 0&&!o&&(this.#x&&this.#n?.(f,t,"set"),this.#e&&this.#m?.push([f,t,"set"]));}else o||(this.#x&&this.#n?.(d,t,"set"),this.#e&&this.#m?.push([d,t,"set"]));if(this.#P(c),this.#L(c,u,a),this.#i[c]=e,a){a.set="replace";let f=d&&this.#l(d)?d.__staleWhileFetching:d;f!==void 0&&(a.oldValue=f);}}else a&&(a.set="update");this.#_&&this.onInsert?.(e,t,e===d?"update":"replace");}if(i!==0&&!this.#g&&this.#M(),this.#g&&(l||this.#j(c,i,r),a&&this.#N(a,c)),!o&&this.#e&&this.#m){let d=this.#m,f;for(;f=d?.shift();)this.#o?.(...f);}return this}pop(){try{for(;this.#h;){let t=this.#i[this.#b];if(this.#B(!0),this.#l(t)){if(t.__staleWhileFetching)return t.__staleWhileFetching}else if(t!==void 0)return t}}finally{if(this.#e&&this.#m){let t=this.#m,e;for(;e=t?.shift();)this.#o?.(...e);}}}#B(t){let e=this.#b,s=this.#a[e],i=this.#i[e];return this.#A&&this.#l(i)?i.__abortController.abort(new Error("evicted")):(this.#x||this.#e)&&(this.#x&&this.#n?.(i,s,"evict"),this.#e&&this.#m?.push([i,s,"evict"])),this.#P(e),this.#y?.[e]&&(clearTimeout(this.#y[e]),this.#y[e]=void 0),t&&(this.#a[e]=void 0,this.#i[e]=void 0,this.#R.push(e)),this.#h===1?(this.#b=this.#p=0,this.#R.length=0):this.#b=this.#d[e],this.#f.delete(s),this.#h--,e}has(t,e={}){let{updateAgeOnHas:s=this.updateAgeOnHas,status:i}=e,r=this.#f.get(t);if(r!==void 0){let o=this.#i[r];if(this.#l(o)&&o.__staleWhileFetching===void 0)return  false;if(this.#v(r))i&&(i.has="stale",this.#N(i,r));else return s&&this.#k(r),i&&(i.has="hit",this.#N(i,r)),true}else i&&(i.has="miss");return  false}peek(t,e={}){let{allowStale:s=this.allowStale}=e,i=this.#f.get(t);if(i===void 0||!s&&this.#v(i))return;let r=this.#i[i];return this.#l(r)?r.__staleWhileFetching:r}#U(t,e,s,i){let r=e===void 0?void 0:this.#i[e];if(this.#l(r))return r;let o=new At,{signal:h}=s;h?.addEventListener("abort",()=>o.abort(h.reason),{signal:o.signal});let a={signal:o.signal,options:s,context:i},l=(p,w=false)=>{let{aborted:g}=o.signal,S=s.ignoreFetchAbort&&p!==void 0,E=s.ignoreFetchAbort||!!(s.allowStaleOnFetchAbort&&p!==void 0);if(s.status&&(g&&!w?(s.status.fetchAborted=true,s.status.fetchError=o.signal.reason,S&&(s.status.fetchAbortIgnored=true)):s.status.fetchResolved=true),g&&!S&&!w)return c(o.signal.reason,E);let y=f,b=this.#i[e];return (b===f||S&&w&&b===void 0)&&(p===void 0?y.__staleWhileFetching!==void 0?this.#i[e]=y.__staleWhileFetching:this.#O(t,"fetch"):(s.status&&(s.status.fetchUpdated=true),this.set(t,p,a.options))),p},u=p=>(s.status&&(s.status.fetchRejected=true,s.status.fetchError=p),c(p,false)),c=(p,w)=>{let{aborted:g}=o.signal,S=g&&s.allowStaleOnFetchAbort,E=S||s.allowStaleOnFetchRejection,y=E||s.noDeleteOnFetchRejection,b=f;if(this.#i[e]===f&&(!y||!w&&b.__staleWhileFetching===void 0?this.#O(t,"fetch"):S||(this.#i[e]=b.__staleWhileFetching)),E)return s.status&&b.__staleWhileFetching!==void 0&&(s.status.returnedStale=true),b.__staleWhileFetching;if(b.__returned===b)throw p},d=(p,w)=>{let g=this.#S?.(t,r,a);g&&g instanceof Promise&&g.then(S=>p(S===void 0?void 0:S),w),o.signal.addEventListener("abort",()=>{(!s.ignoreFetchAbort||s.allowStaleOnFetchAbort)&&(p(void 0),s.allowStaleOnFetchAbort&&(p=S=>l(S,true)));});};s.status&&(s.status.fetchDispatched=true);let f=new Promise(d).then(l,u),m=Object.assign(f,{__abortController:o,__staleWhileFetching:r,__returned:void 0});return e===void 0?(this.set(t,m,{...a.options,status:void 0}),e=this.#f.get(t)):this.#i[e]=m,m}#l(t){if(!this.#A)return  false;let e=t;return !!e&&e instanceof Promise&&e.hasOwnProperty("__staleWhileFetching")&&e.__abortController instanceof At}async fetch(t,e={}){let{allowStale:s=this.allowStale,updateAgeOnGet:i=this.updateAgeOnGet,noDeleteOnStaleGet:r=this.noDeleteOnStaleGet,ttl:o=this.ttl,noDisposeOnSet:h=this.noDisposeOnSet,size:a=0,sizeCalculation:l=this.sizeCalculation,noUpdateTTL:u=this.noUpdateTTL,noDeleteOnFetchRejection:c=this.noDeleteOnFetchRejection,allowStaleOnFetchRejection:d=this.allowStaleOnFetchRejection,ignoreFetchAbort:f=this.ignoreFetchAbort,allowStaleOnFetchAbort:m=this.allowStaleOnFetchAbort,context:p,forceRefresh:w=false,status:g,signal:S}=e;if(!this.#A)return g&&(g.fetch="get"),this.get(t,{allowStale:s,updateAgeOnGet:i,noDeleteOnStaleGet:r,status:g});let E={allowStale:s,updateAgeOnGet:i,noDeleteOnStaleGet:r,ttl:o,noDisposeOnSet:h,size:a,sizeCalculation:l,noUpdateTTL:u,noDeleteOnFetchRejection:c,allowStaleOnFetchRejection:d,allowStaleOnFetchAbort:m,ignoreFetchAbort:f,status:g,signal:S},y=this.#f.get(t);if(y===void 0){g&&(g.fetch="miss");let b=this.#U(t,y,E,p);return b.__returned=b}else {let b=this.#i[y];if(this.#l(b)){let Z=s&&b.__staleWhileFetching!==void 0;return g&&(g.fetch="inflight",Z&&(g.returnedStale=true)),Z?b.__staleWhileFetching:b.__returned=b}let z=this.#v(y);if(!w&&!z)return g&&(g.fetch="hit"),this.#W(y),i&&this.#k(y),g&&this.#N(g,y),b;let $=this.#U(t,y,E,p),J=$.__staleWhileFetching!==void 0&&s;return g&&(g.fetch=z?"stale":"refresh",J&&z&&(g.returnedStale=true)),J?$.__staleWhileFetching:$.__returned=$}}async forceFetch(t,e={}){let s=await this.fetch(t,e);if(s===void 0)throw new Error("fetch() returned undefined");return s}memo(t,e={}){let s=this.#w;if(!s)throw new Error("no memoMethod provided to constructor");let{context:i,forceRefresh:r,...o}=e,h=this.get(t,o);if(!r&&h!==void 0)return h;let a=s(t,h,{options:o,context:i});return this.set(t,a,o),a}get(t,e={}){let{allowStale:s=this.allowStale,updateAgeOnGet:i=this.updateAgeOnGet,noDeleteOnStaleGet:r=this.noDeleteOnStaleGet,status:o}=e,h=this.#f.get(t);if(h!==void 0){let a=this.#i[h],l=this.#l(a);return o&&this.#N(o,h),this.#v(h)?(o&&(o.get="stale"),l?(o&&s&&a.__staleWhileFetching!==void 0&&(o.returnedStale=true),s?a.__staleWhileFetching:void 0):(r||this.#O(t,"expire"),o&&s&&(o.returnedStale=true),s?a:void 0)):(o&&(o.get="hit"),l?a.__staleWhileFetching:(this.#W(h),i&&this.#k(h),a))}else o&&(o.get="miss");}#$(t,e){this.#E[e]=t,this.#d[t]=e;}#W(t){t!==this.#p&&(t===this.#b?this.#b=this.#d[t]:this.#$(this.#E[t],this.#d[t]),this.#$(this.#p,t),this.#p=t);}delete(t){return this.#O(t,"delete")}#O(t,e){let s=false;if(this.#h!==0){let i=this.#f.get(t);if(i!==void 0)if(this.#y?.[i]&&(clearTimeout(this.#y?.[i]),this.#y[i]=void 0),s=true,this.#h===1)this.#H(e);else {this.#P(i);let r=this.#i[i];if(this.#l(r)?r.__abortController.abort(new Error("deleted")):(this.#x||this.#e)&&(this.#x&&this.#n?.(r,t,e),this.#e&&this.#m?.push([r,t,e])),this.#f.delete(t),this.#a[i]=void 0,this.#i[i]=void 0,i===this.#p)this.#p=this.#E[i];else if(i===this.#b)this.#b=this.#d[i];else {let o=this.#E[i];this.#d[o]=this.#d[i];let h=this.#d[i];this.#E[h]=this.#E[i];}this.#h--,this.#R.push(i);}}if(this.#e&&this.#m?.length){let i=this.#m,r;for(;r=i?.shift();)this.#o?.(...r);}return s}clear(){return this.#H("delete")}#H(t){for(let e of this.#D({allowStale:true})){let s=this.#i[e];if(this.#l(s))s.__abortController.abort(new Error("deleted"));else {let i=this.#a[e];this.#x&&this.#n?.(s,i,t),this.#e&&this.#m?.push([s,i,t]);}}if(this.#f.clear(),this.#i.fill(void 0),this.#a.fill(void 0),this.#g&&this.#T){this.#g.fill(0),this.#T.fill(0);for(let e of this.#y??[])e!==void 0&&clearTimeout(e);this.#y?.fill(void 0);}if(this.#C&&this.#C.fill(0),this.#b=0,this.#p=0,this.#R.length=0,this.#u=0,this.#h=0,this.#e&&this.#m){let e=this.#m,s;for(;s=e?.shift();)this.#o?.(...s);}}};var Ne=typeof process=="object"&&process?process:{stdout:null,stderr:null},oi=n=>!!n&&typeof n=="object"&&(n instanceof V||n instanceof require$$0$8||hi(n)||ai(n)),hi=n=>!!n&&typeof n=="object"&&n instanceof EventEmitter&&typeof n.pipe=="function"&&n.pipe!==require$$0$8.Writable.prototype.pipe,ai=n=>!!n&&typeof n=="object"&&n instanceof EventEmitter&&typeof n.write=="function"&&typeof n.end=="function",G=Symbol("EOF"),H=Symbol("maybeEmitEnd"),K=Symbol("emittedEnd"),kt=Symbol("emittingEnd"),ut=Symbol("emittedError"),Rt=Symbol("closed"),_e=Symbol("read"),Ot=Symbol("flush"),Le=Symbol("flushChunk"),P=Symbol("encoding"),et=Symbol("decoder"),v=Symbol("flowing"),dt=Symbol("paused"),st=Symbol("resume"),C=Symbol("buffer"),F=Symbol("pipes"),T=Symbol("bufferLength"),Yt=Symbol("bufferPush"),Ft=Symbol("bufferShift"),k=Symbol("objectMode"),x=Symbol("destroyed"),Xt=Symbol("error"),Jt=Symbol("emitData"),We=Symbol("emitEnd"),Zt=Symbol("emitEnd2"),B=Symbol("async"),Qt=Symbol("abort"),Dt=Symbol("aborted"),pt=Symbol("signal"),Y=Symbol("dataListeners"),M=Symbol("discarded"),mt=n=>Promise.resolve().then(n),li=n=>n(),ci=n=>n==="end"||n==="finish"||n==="prefinish",fi=n=>n instanceof ArrayBuffer||!!n&&typeof n=="object"&&n.constructor&&n.constructor.name==="ArrayBuffer"&&n.byteLength>=0,ui=n=>!Buffer.isBuffer(n)&&ArrayBuffer.isView(n),Mt=class{src;dest;opts;ondrain;constructor(t,e,s){this.src=t,this.dest=e,this.opts=s,this.ondrain=()=>t[st](),this.dest.on("drain",this.ondrain);}unpipe(){this.dest.removeListener("drain",this.ondrain);}proxyErrors(t){}end(){this.unpipe(),this.opts.end&&this.dest.end();}},te=class extends Mt{unpipe(){this.src.removeListener("error",this.proxyErrors),super.unpipe();}constructor(t,e,s){super(t,e,s),this.proxyErrors=i=>e.emit("error",i),t.on("error",this.proxyErrors);}},di=n=>!!n.objectMode,pi=n=>!n.objectMode&&!!n.encoding&&n.encoding!=="buffer",V=class extends EventEmitter{[v]=false;[dt]=false;[F]=[];[C]=[];[k];[P];[B];[et];[G]=false;[K]=false;[kt]=false;[Rt]=false;[ut]=null;[T]=0;[x]=false;[pt];[Dt]=false;[Y]=0;[M]=false;writable=true;readable=true;constructor(...t){let e=t[0]||{};if(super(),e.objectMode&&typeof e.encoding=="string")throw new TypeError("Encoding and objectMode may not be used together");di(e)?(this[k]=true,this[P]=null):pi(e)?(this[P]=e.encoding,this[k]=false):(this[k]=false,this[P]=null),this[B]=!!e.async,this[et]=this[P]?new StringDecoder$1(this[P]):null,e&&e.debugExposeBuffer===true&&Object.defineProperty(this,"buffer",{get:()=>this[C]}),e&&e.debugExposePipes===true&&Object.defineProperty(this,"pipes",{get:()=>this[F]});let{signal:s}=e;s&&(this[pt]=s,s.aborted?this[Qt]():s.addEventListener("abort",()=>this[Qt]()));}get bufferLength(){return this[T]}get encoding(){return this[P]}set encoding(t){throw new Error("Encoding must be set at instantiation time")}setEncoding(t){throw new Error("Encoding must be set at instantiation time")}get objectMode(){return this[k]}set objectMode(t){throw new Error("objectMode must be set at instantiation time")}get async(){return this[B]}set async(t){this[B]=this[B]||!!t;}[Qt](){this[Dt]=true,this.emit("abort",this[pt]?.reason),this.destroy(this[pt]?.reason);}get aborted(){return this[Dt]}set aborted(t){}write(t,e,s){if(this[Dt])return  false;if(this[G])throw new Error("write after end");if(this[x])return this.emit("error",Object.assign(new Error("Cannot call write after a stream was destroyed"),{code:"ERR_STREAM_DESTROYED"})),true;typeof e=="function"&&(s=e,e="utf8"),e||(e="utf8");let i=this[B]?mt:li;if(!this[k]&&!Buffer.isBuffer(t)){if(ui(t))t=Buffer.from(t.buffer,t.byteOffset,t.byteLength);else if(fi(t))t=Buffer.from(t);else if(typeof t!="string")throw new Error("Non-contiguous data written to non-objectMode stream")}return this[k]?(this[v]&&this[T]!==0&&this[Ot](true),this[v]?this.emit("data",t):this[Yt](t),this[T]!==0&&this.emit("readable"),s&&i(s),this[v]):t.length?(typeof t=="string"&&!(e===this[P]&&!this[et]?.lastNeed)&&(t=Buffer.from(t,e)),Buffer.isBuffer(t)&&this[P]&&(t=this[et].write(t)),this[v]&&this[T]!==0&&this[Ot](true),this[v]?this.emit("data",t):this[Yt](t),this[T]!==0&&this.emit("readable"),s&&i(s),this[v]):(this[T]!==0&&this.emit("readable"),s&&i(s),this[v])}read(t){if(this[x])return null;if(this[M]=false,this[T]===0||t===0||t&&t>this[T])return this[H](),null;this[k]&&(t=null),this[C].length>1&&!this[k]&&(this[C]=[this[P]?this[C].join(""):Buffer.concat(this[C],this[T])]);let e=this[_e](t||null,this[C][0]);return this[H](),e}[_e](t,e){if(this[k])this[Ft]();else {let s=e;t===s.length||t===null?this[Ft]():typeof s=="string"?(this[C][0]=s.slice(t),e=s.slice(0,t),this[T]-=t):(this[C][0]=s.subarray(t),e=s.subarray(0,t),this[T]-=t);}return this.emit("data",e),!this[C].length&&!this[G]&&this.emit("drain"),e}end(t,e,s){return typeof t=="function"&&(s=t,t=void 0),typeof e=="function"&&(s=e,e="utf8"),t!==void 0&&this.write(t,e),s&&this.once("end",s),this[G]=true,this.writable=false,(this[v]||!this[dt])&&this[H](),this}[st](){this[x]||(!this[Y]&&!this[F].length&&(this[M]=true),this[dt]=false,this[v]=true,this.emit("resume"),this[C].length?this[Ot]():this[G]?this[H]():this.emit("drain"));}resume(){return this[st]()}pause(){this[v]=false,this[dt]=true,this[M]=false;}get destroyed(){return this[x]}get flowing(){return this[v]}get paused(){return this[dt]}[Yt](t){this[k]?this[T]+=1:this[T]+=t.length,this[C].push(t);}[Ft](){return this[k]?this[T]-=1:this[T]-=this[C][0].length,this[C].shift()}[Ot](t=false){do;while(this[Le](this[Ft]())&&this[C].length);!t&&!this[C].length&&!this[G]&&this.emit("drain");}[Le](t){return this.emit("data",t),this[v]}pipe(t,e){if(this[x])return t;this[M]=false;let s=this[K];return e=e||{},t===Ne.stdout||t===Ne.stderr?e.end=false:e.end=e.end!==false,e.proxyErrors=!!e.proxyErrors,s?e.end&&t.end():(this[F].push(e.proxyErrors?new te(this,t,e):new Mt(this,t,e)),this[B]?mt(()=>this[st]()):this[st]()),t}unpipe(t){let e=this[F].find(s=>s.dest===t);e&&(this[F].length===1?(this[v]&&this[Y]===0&&(this[v]=false),this[F]=[]):this[F].splice(this[F].indexOf(e),1),e.unpipe());}addListener(t,e){return this.on(t,e)}on(t,e){let s=super.on(t,e);if(t==="data")this[M]=false,this[Y]++,!this[F].length&&!this[v]&&this[st]();else if(t==="readable"&&this[T]!==0)super.emit("readable");else if(ci(t)&&this[K])super.emit(t),this.removeAllListeners(t);else if(t==="error"&&this[ut]){let i=e;this[B]?mt(()=>i.call(this,this[ut])):i.call(this,this[ut]);}return s}removeListener(t,e){return this.off(t,e)}off(t,e){let s=super.off(t,e);return t==="data"&&(this[Y]=this.listeners("data").length,this[Y]===0&&!this[M]&&!this[F].length&&(this[v]=false)),s}removeAllListeners(t){let e=super.removeAllListeners(t);return (t==="data"||t===void 0)&&(this[Y]=0,!this[M]&&!this[F].length&&(this[v]=false)),e}get emittedEnd(){return this[K]}[H](){!this[kt]&&!this[K]&&!this[x]&&this[C].length===0&&this[G]&&(this[kt]=true,this.emit("end"),this.emit("prefinish"),this.emit("finish"),this[Rt]&&this.emit("close"),this[kt]=false);}emit(t,...e){let s=e[0];if(t!=="error"&&t!=="close"&&t!==x&&this[x])return  false;if(t==="data")return !this[k]&&!s?false:this[B]?(mt(()=>this[Jt](s)),true):this[Jt](s);if(t==="end")return this[We]();if(t==="close"){if(this[Rt]=true,!this[K]&&!this[x])return  false;let r=super.emit("close");return this.removeAllListeners("close"),r}else if(t==="error"){this[ut]=s,super.emit(Xt,s);let r=!this[pt]||this.listeners("error").length?super.emit("error",s):false;return this[H](),r}else if(t==="resume"){let r=super.emit("resume");return this[H](),r}else if(t==="finish"||t==="prefinish"){let r=super.emit(t);return this.removeAllListeners(t),r}let i=super.emit(t,...e);return this[H](),i}[Jt](t){for(let s of this[F])s.dest.write(t)===false&&this.pause();let e=this[M]?false:super.emit("data",t);return this[H](),e}[We](){return this[K]?false:(this[K]=true,this.readable=false,this[B]?(mt(()=>this[Zt]()),true):this[Zt]())}[Zt](){if(this[et]){let e=this[et].end();if(e){for(let s of this[F])s.dest.write(e);this[M]||super.emit("data",e);}}for(let e of this[F])e.end();let t=super.emit("end");return this.removeAllListeners("end"),t}async collect(){let t=Object.assign([],{dataLength:0});this[k]||(t.dataLength=0);let e=this.promise();return this.on("data",s=>{t.push(s),this[k]||(t.dataLength+=s.length);}),await e,t}async concat(){if(this[k])throw new Error("cannot concat in objectMode");let t=await this.collect();return this[P]?t.join(""):Buffer.concat(t,t.dataLength)}async promise(){return new Promise((t,e)=>{this.on(x,()=>e(new Error("stream destroyed"))),this.on("error",s=>e(s)),this.on("end",()=>t());})}[Symbol.asyncIterator](){this[M]=false;let t=false,e=async()=>(this.pause(),t=true,{value:void 0,done:true});return {next:()=>{if(t)return e();let i=this.read();if(i!==null)return Promise.resolve({done:false,value:i});if(this[G])return e();let r,o,h=c=>{this.off("data",a),this.off("end",l),this.off(x,u),e(),o(c);},a=c=>{this.off("error",h),this.off("end",l),this.off(x,u),this.pause(),r({value:c,done:!!this[G]});},l=()=>{this.off("error",h),this.off("data",a),this.off(x,u),e(),r({done:true,value:void 0});},u=()=>h(new Error("stream destroyed"));return new Promise((c,d)=>{o=d,r=c,this.once(x,u),this.once("error",h),this.once("end",l),this.once("data",a);})},throw:e,return:e,[Symbol.asyncIterator](){return this}}}[Symbol.iterator](){this[M]=false;let t=false,e=()=>(this.pause(),this.off(Xt,e),this.off(x,e),this.off("end",e),t=true,{done:true,value:void 0}),s=()=>{if(t)return e();let i=this.read();return i===null?e():{done:false,value:i}};return this.once("end",e),this.once(Xt,e),this.once(x,e),{next:s,throw:e,return:e,[Symbol.iterator](){return this}}}destroy(t){if(this[x])return t?this.emit("error",t):this.emit(x),this;this[x]=true,this[M]=true,this[C].length=0,this[T]=0;let e=this;return typeof e.close=="function"&&!this[Rt]&&e.close(),t?this.emit("error",t):this.emit(x),this}static get isStream(){return oi}};var vi=realpathSync.native,wt={lstatSync:lstatSync,readdir:readdir$2,readdirSync:readdirSync,readlinkSync:readlinkSync,realpathSync:vi,promises:{lstat:lstat$1,readdir:readdir$1,readlink:readlink,realpath:realpath}},Ue=n=>!n||n===wt||n===fs$2?wt:{...wt,...n,promises:{...wt.promises,...n.promises||{}}},$e=/^\\\\\?\\([a-z]:)\\?$/i,Ri=n=>n.replace(/\//g,"\\").replace($e,"$1\\"),Oi=/[\\\/]/,L=0,Ge=1,He=2,U=4,qe=6,Ke=8,X=10,Ve=12,_$1=15,gt=~_$1,se=16,je=32,yt=64,j=128,Nt=256,Lt=512,Ie=yt|j|Lt,Fi=1023,ie=n=>n.isFile()?Ke:n.isDirectory()?U:n.isSymbolicLink()?X:n.isCharacterDevice()?He:n.isBlockDevice()?qe:n.isSocket()?Ve:n.isFIFO()?Ge:L,ze=new ft({max:2**12}),bt=n=>{let t=ze.get(n);if(t)return t;let e=n.normalize("NFKD");return ze.set(n,e),e},Be=new ft({max:2**12}),_t=n=>{let t=Be.get(n);if(t)return t;let e=bt(n.toLowerCase());return Be.set(n,e),e},Wt=class extends ft{constructor(){super({max:256});}},ne=class extends ft{constructor(t=16*1024){super({maxSize:t,sizeCalculation:e=>e.length+1});}},Ye=Symbol("PathScurry setAsCwd"),R=class{name;root;roots;parent;nocase;isCWD=false;#t;#s;get dev(){return this.#s}#n;get mode(){return this.#n}#r;get nlink(){return this.#r}#o;get uid(){return this.#o}#S;get gid(){return this.#S}#w;get rdev(){return this.#w}#c;get blksize(){return this.#c}#h;get ino(){return this.#h}#u;get size(){return this.#u}#f;get blocks(){return this.#f}#a;get atimeMs(){return this.#a}#i;get mtimeMs(){return this.#i}#d;get ctimeMs(){return this.#d}#E;get birthtimeMs(){return this.#E}#b;get atime(){return this.#b}#p;get mtime(){return this.#p}#R;get ctime(){return this.#R}#m;get birthtime(){return this.#m}#C;#T;#g;#y;#x;#A;#e;#_;#M;#k;get parentPath(){return (this.parent||this).fullpath()}get path(){return this.parentPath}constructor(t,e=L,s,i,r,o,h){this.name=t,this.#C=r?_t(t):bt(t),this.#e=e&Fi,this.nocase=r,this.roots=i,this.root=s||this,this.#_=o,this.#g=h.fullpath,this.#x=h.relative,this.#A=h.relativePosix,this.parent=h.parent,this.parent?this.#t=this.parent.#t:this.#t=Ue(h.fs);}depth(){return this.#T!==void 0?this.#T:this.parent?this.#T=this.parent.depth()+1:this.#T=0}childrenCache(){return this.#_}resolve(t){if(!t)return this;let e=this.getRootString(t),i=t.substring(e.length).split(this.splitSep);return e?this.getRoot(e).#N(i):this.#N(i)}#N(t){let e=this;for(let s of t)e=e.child(s);return e}children(){let t=this.#_.get(this);if(t)return t;let e=Object.assign([],{provisional:0});return this.#_.set(this,e),this.#e&=~se,e}child(t,e){if(t===""||t===".")return this;if(t==="..")return this.parent||this;let s=this.children(),i=this.nocase?_t(t):bt(t);for(let a of s)if(a.#C===i)return a;let r=this.parent?this.sep:"",o=this.#g?this.#g+r+t:void 0,h=this.newChild(t,L,{...e,parent:this,fullpath:o});return this.canReaddir()||(h.#e|=j),s.push(h),h}relative(){if(this.isCWD)return "";if(this.#x!==void 0)return this.#x;let t=this.name,e=this.parent;if(!e)return this.#x=this.name;let s=e.relative();return s+(!s||!e.parent?"":this.sep)+t}relativePosix(){if(this.sep==="/")return this.relative();if(this.isCWD)return "";if(this.#A!==void 0)return this.#A;let t=this.name,e=this.parent;if(!e)return this.#A=this.fullpathPosix();let s=e.relativePosix();return s+(!s||!e.parent?"":"/")+t}fullpath(){if(this.#g!==void 0)return this.#g;let t=this.name,e=this.parent;if(!e)return this.#g=this.name;let i=e.fullpath()+(e.parent?this.sep:"")+t;return this.#g=i}fullpathPosix(){if(this.#y!==void 0)return this.#y;if(this.sep==="/")return this.#y=this.fullpath();if(!this.parent){let i=this.fullpath().replace(/\\/g,"/");return /^[a-z]:\//i.test(i)?this.#y=`//?/${i}`:this.#y=i}let t=this.parent,e=t.fullpathPosix(),s=e+(!e||!t.parent?"":"/")+this.name;return this.#y=s}isUnknown(){return (this.#e&_$1)===L}isType(t){return this[`is${t}`]()}getType(){return this.isUnknown()?"Unknown":this.isDirectory()?"Directory":this.isFile()?"File":this.isSymbolicLink()?"SymbolicLink":this.isFIFO()?"FIFO":this.isCharacterDevice()?"CharacterDevice":this.isBlockDevice()?"BlockDevice":this.isSocket()?"Socket":"Unknown"}isFile(){return (this.#e&_$1)===Ke}isDirectory(){return (this.#e&_$1)===U}isCharacterDevice(){return (this.#e&_$1)===He}isBlockDevice(){return (this.#e&_$1)===qe}isFIFO(){return (this.#e&_$1)===Ge}isSocket(){return (this.#e&_$1)===Ve}isSymbolicLink(){return (this.#e&X)===X}lstatCached(){return this.#e&je?this:void 0}readlinkCached(){return this.#M}realpathCached(){return this.#k}readdirCached(){let t=this.children();return t.slice(0,t.provisional)}canReadlink(){if(this.#M)return  true;if(!this.parent)return  false;let t=this.#e&_$1;return !(t!==L&&t!==X||this.#e&Nt||this.#e&j)}calledReaddir(){return !!(this.#e&se)}isENOENT(){return !!(this.#e&j)}isNamed(t){return this.nocase?this.#C===_t(t):this.#C===bt(t)}async readlink(){let t=this.#M;if(t)return t;if(this.canReadlink()&&this.parent)try{let e=await this.#t.promises.readlink(this.fullpath()),s=(await this.parent.realpath())?.resolve(e);if(s)return this.#M=s}catch(e){this.#D(e.code);return}}readlinkSync(){let t=this.#M;if(t)return t;if(this.canReadlink()&&this.parent)try{let e=this.#t.readlinkSync(this.fullpath()),s=this.parent.realpathSync()?.resolve(e);if(s)return this.#M=s}catch(e){this.#D(e.code);return}}#j(t){this.#e|=se;for(let e=t.provisional;e<t.length;e++){let s=t[e];s&&s.#v();}}#v(){this.#e&j||(this.#e=(this.#e|j)&gt,this.#G());}#G(){let t=this.children();t.provisional=0;for(let e of t)e.#v();}#P(){this.#e|=Lt,this.#L();}#L(){if(this.#e&yt)return;let t=this.#e;(t&_$1)===U&&(t&=gt),this.#e=t|yt,this.#G();}#I(t=""){t==="ENOTDIR"||t==="EPERM"?this.#L():t==="ENOENT"?this.#v():this.children().provisional=0;}#F(t=""){t==="ENOTDIR"?this.parent.#L():t==="ENOENT"&&this.#v();}#D(t=""){let e=this.#e;e|=Nt,t==="ENOENT"&&(e|=j),(t==="EINVAL"||t==="UNKNOWN")&&(e&=gt),this.#e=e,t==="ENOTDIR"&&this.parent&&this.parent.#L();}#z(t,e){return this.#U(t,e)||this.#B(t,e)}#B(t,e){let s=ie(t),i=this.newChild(t.name,s,{parent:this}),r=i.#e&_$1;return r!==U&&r!==X&&r!==L&&(i.#e|=yt),e.unshift(i),e.provisional++,i}#U(t,e){for(let s=e.provisional;s<e.length;s++){let i=e[s];if((this.nocase?_t(t.name):bt(t.name))===i.#C)return this.#l(t,i,s,e)}}#l(t,e,s,i){let r=e.name;return e.#e=e.#e&gt|ie(t),r!==t.name&&(e.name=t.name),s!==i.provisional&&(s===i.length-1?i.pop():i.splice(s,1),i.unshift(e)),i.provisional++,e}async lstat(){if((this.#e&j)===0)try{return this.#$(await this.#t.promises.lstat(this.fullpath())),this}catch(t){this.#F(t.code);}}lstatSync(){if((this.#e&j)===0)try{return this.#$(this.#t.lstatSync(this.fullpath())),this}catch(t){this.#F(t.code);}}#$(t){let{atime:e,atimeMs:s,birthtime:i,birthtimeMs:r,blksize:o,blocks:h,ctime:a,ctimeMs:l,dev:u,gid:c,ino:d,mode:f,mtime:m,mtimeMs:p,nlink:w,rdev:g,size:S,uid:E}=t;this.#b=e,this.#a=s,this.#m=i,this.#E=r,this.#c=o,this.#f=h,this.#R=a,this.#d=l,this.#s=u,this.#S=c,this.#h=d,this.#n=f,this.#p=m,this.#i=p,this.#r=w,this.#w=g,this.#u=S,this.#o=E;let y=ie(t);this.#e=this.#e&gt|y|je,y!==L&&y!==U&&y!==X&&(this.#e|=yt);}#W=[];#O=false;#H(t){this.#O=false;let e=this.#W.slice();this.#W.length=0,e.forEach(s=>s(null,t));}readdirCB(t,e=false){if(!this.canReaddir()){e?t(null,[]):queueMicrotask(()=>t(null,[]));return}let s=this.children();if(this.calledReaddir()){let r=s.slice(0,s.provisional);e?t(null,r):queueMicrotask(()=>t(null,r));return}if(this.#W.push(t),this.#O)return;this.#O=true;let i=this.fullpath();this.#t.readdir(i,{withFileTypes:true},(r,o)=>{if(r)this.#I(r.code),s.provisional=0;else {for(let h of o)this.#z(h,s);this.#j(s);}this.#H(s.slice(0,s.provisional));});}#q;async readdir(){if(!this.canReaddir())return [];let t=this.children();if(this.calledReaddir())return t.slice(0,t.provisional);let e=this.fullpath();if(this.#q)await this.#q;else {let s=()=>{};this.#q=new Promise(i=>s=i);try{for(let i of await this.#t.promises.readdir(e,{withFileTypes:!0}))this.#z(i,t);this.#j(t);}catch(i){this.#I(i.code),t.provisional=0;}this.#q=void 0,s();}return t.slice(0,t.provisional)}readdirSync(){if(!this.canReaddir())return [];let t=this.children();if(this.calledReaddir())return t.slice(0,t.provisional);let e=this.fullpath();try{for(let s of this.#t.readdirSync(e,{withFileTypes:!0}))this.#z(s,t);this.#j(t);}catch(s){this.#I(s.code),t.provisional=0;}return t.slice(0,t.provisional)}canReaddir(){if(this.#e&Ie)return  false;let t=_$1&this.#e;return t===L||t===U||t===X}shouldWalk(t,e){return (this.#e&U)===U&&!(this.#e&Ie)&&!t.has(this)&&(!e||e(this))}async realpath(){if(this.#k)return this.#k;if(!((Lt|Nt|j)&this.#e))try{let t=await this.#t.promises.realpath(this.fullpath());return this.#k=this.resolve(t)}catch{this.#P();}}realpathSync(){if(this.#k)return this.#k;if(!((Lt|Nt|j)&this.#e))try{let t=this.#t.realpathSync(this.fullpath());return this.#k=this.resolve(t)}catch{this.#P();}}[Ye](t){if(t===this)return;t.isCWD=false,this.isCWD=true;let e=new Set([]),s=[],i=this;for(;i&&i.parent;)e.add(i),i.#x=s.join(this.sep),i.#A=s.join("/"),i=i.parent,s.push("..");for(i=t;i&&i.parent&&!e.has(i);)i.#x=void 0,i.#A=void 0,i=i.parent;}},Pt=class n extends R{sep="\\";splitSep=Oi;constructor(t,e=L,s,i,r,o,h){super(t,e,s,i,r,o,h);}newChild(t,e=L,s={}){return new n(t,e,this.root,this.roots,this.nocase,this.childrenCache(),s)}getRootString(t){return win32.parse(t).root}getRoot(t){if(t=Ri(t.toUpperCase()),t===this.root.name)return this.root;for(let[e,s]of Object.entries(this.roots))if(this.sameRoot(t,e))return this.roots[t]=s;return this.roots[t]=new it(t,this).root}sameRoot(t,e=this.root.name){return t=t.toUpperCase().replace(/\//g,"\\").replace($e,"$1\\"),t===e}},jt=class n extends R{splitSep="/";sep="/";constructor(t,e=L,s,i,r,o,h){super(t,e,s,i,r,o,h);}getRootString(t){return t.startsWith("/")?"/":""}getRoot(t){return this.root}newChild(t,e=L,s={}){return new n(t,e,this.root,this.roots,this.nocase,this.childrenCache(),s)}},It=class{root;rootPath;roots;cwd;#t;#s;#n;nocase;#r;constructor(t=process.cwd(),e,s,{nocase:i,childrenCacheSize:r=16*1024,fs:o=wt}={}){this.#r=Ue(o),(t instanceof URL||t.startsWith("file://"))&&(t=fileURLToPath(t));let h=e.resolve(t);this.roots=Object.create(null),this.rootPath=this.parseRootPath(h),this.#t=new Wt,this.#s=new Wt,this.#n=new ne(r);let a=h.substring(this.rootPath.length).split(s);if(a.length===1&&!a[0]&&a.pop(),i===void 0)throw new TypeError("must provide nocase setting to PathScurryBase ctor");this.nocase=i,this.root=this.newRoot(this.#r),this.roots[this.rootPath]=this.root;let l=this.root,u=a.length-1,c=e.sep,d=this.rootPath,f=false;for(let m of a){let p=u--;l=l.child(m,{relative:new Array(p).fill("..").join(c),relativePosix:new Array(p).fill("..").join("/"),fullpath:d+=(f?"":c)+m}),f=true;}this.cwd=l;}depth(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.depth()}childrenCache(){return this.#n}resolve(...t){let e="";for(let r=t.length-1;r>=0;r--){let o=t[r];if(!(!o||o===".")&&(e=e?`${o}/${e}`:o,this.isAbsolute(o)))break}let s=this.#t.get(e);if(s!==void 0)return s;let i=this.cwd.resolve(e).fullpath();return this.#t.set(e,i),i}resolvePosix(...t){let e="";for(let r=t.length-1;r>=0;r--){let o=t[r];if(!(!o||o===".")&&(e=e?`${o}/${e}`:o,this.isAbsolute(o)))break}let s=this.#s.get(e);if(s!==void 0)return s;let i=this.cwd.resolve(e).fullpathPosix();return this.#s.set(e,i),i}relative(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.relative()}relativePosix(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.relativePosix()}basename(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.name}dirname(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),(t.parent||t).fullpath()}async readdir(t=this.cwd,e={withFileTypes:true}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s}=e;if(t.canReaddir()){let i=await t.readdir();return s?i:i.map(r=>r.name)}else return []}readdirSync(t=this.cwd,e={withFileTypes:true}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true}=e;return t.canReaddir()?s?t.readdirSync():t.readdirSync().map(i=>i.name):[]}async lstat(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.lstat()}lstatSync(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.lstatSync()}async readlink(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=await t.readlink();return e?s:s?.fullpath()}readlinkSync(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=t.readlinkSync();return e?s:s?.fullpath()}async realpath(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=await t.realpath();return e?s:s?.fullpath()}realpathSync(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=t.realpathSync();return e?s:s?.fullpath()}async walk(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=[];(!r||r(t))&&h.push(s?t:t.fullpath());let a=new Set,l=(c,d)=>{a.add(c),c.readdirCB((f,m)=>{if(f)return d(f);let p=m.length;if(!p)return d();let w=()=>{--p===0&&d();};for(let g of m)(!r||r(g))&&h.push(s?g:g.fullpath()),i&&g.isSymbolicLink()?g.realpath().then(S=>S?.isUnknown()?S.lstat():S).then(S=>S?.shouldWalk(a,o)?l(S,w):w()):g.shouldWalk(a,o)?l(g,w):w();},true);},u=t;return new Promise((c,d)=>{l(u,f=>{if(f)return d(f);c(h);});})}walkSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=[];(!r||r(t))&&h.push(s?t:t.fullpath());let a=new Set([t]);for(let l of a){let u=l.readdirSync();for(let c of u){(!r||r(c))&&h.push(s?c:c.fullpath());let d=c;if(c.isSymbolicLink()){if(!(i&&(d=c.realpathSync())))continue;d.isUnknown()&&d.lstatSync();}d.shouldWalk(a,o)&&a.add(d);}}return h}[Symbol.asyncIterator](){return this.iterate()}iterate(t=this.cwd,e={}){return typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd),this.stream(t,e)[Symbol.asyncIterator]()}[Symbol.iterator](){return this.iterateSync()}*iterateSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e;(!r||r(t))&&(yield s?t:t.fullpath());let h=new Set([t]);for(let a of h){let l=a.readdirSync();for(let u of l){(!r||r(u))&&(yield s?u:u.fullpath());let c=u;if(u.isSymbolicLink()){if(!(i&&(c=u.realpathSync())))continue;c.isUnknown()&&c.lstatSync();}c.shouldWalk(h,o)&&h.add(c);}}}stream(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=new V({objectMode:true});(!r||r(t))&&h.write(s?t:t.fullpath());let a=new Set,l=[t],u=0,c=()=>{let d=false;for(;!d;){let f=l.shift();if(!f){u===0&&h.end();return}u++,a.add(f);let m=(w,g,S=false)=>{if(w)return h.emit("error",w);if(i&&!S){let E=[];for(let y of g)y.isSymbolicLink()&&E.push(y.realpath().then(b=>b?.isUnknown()?b.lstat():b));if(E.length){Promise.all(E).then(()=>m(null,g,true));return}}for(let E of g)E&&(!r||r(E))&&(h.write(s?E:E.fullpath())||(d=true));u--;for(let E of g){let y=E.realpathCached()||E;y.shouldWalk(a,o)&&l.push(y);}d&&!h.flowing?h.once("drain",c):p||c();},p=true;f.readdirCB(m,true),p=false;}};return c(),h}streamSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=new V({objectMode:true}),a=new Set;(!r||r(t))&&h.write(s?t:t.fullpath());let l=[t],u=0,c=()=>{let d=false;for(;!d;){let f=l.shift();if(!f){u===0&&h.end();return}u++,a.add(f);let m=f.readdirSync();for(let p of m)(!r||r(p))&&(h.write(s?p:p.fullpath())||(d=true));u--;for(let p of m){let w=p;if(p.isSymbolicLink()){if(!(i&&(w=p.realpathSync())))continue;w.isUnknown()&&w.lstatSync();}w.shouldWalk(a,o)&&l.push(w);}}d&&!h.flowing&&h.once("drain",c);};return c(),h}chdir(t=this.cwd){let e=this.cwd;this.cwd=typeof t=="string"?this.cwd.resolve(t):t,this.cwd[Ye](e);}},it=class extends It{sep="\\";constructor(t=process.cwd(),e={}){let{nocase:s=true}=e;super(t,win32,"\\",{...e,nocase:s}),this.nocase=s;for(let i=this.cwd;i;i=i.parent)i.nocase=this.nocase;}parseRootPath(t){return win32.parse(t).root.toUpperCase()}newRoot(t){return new Pt(this.rootPath,U,void 0,this.roots,this.nocase,this.childrenCache(),{fs:t})}isAbsolute(t){return t.startsWith("/")||t.startsWith("\\")||/^[a-z]:(\/|\\)/i.test(t)}},rt=class extends It{sep="/";constructor(t=process.cwd(),e={}){let{nocase:s=false}=e;super(t,posix,"/",{...e,nocase:s}),this.nocase=s;}parseRootPath(t){return "/"}newRoot(t){return new jt(this.rootPath,U,void 0,this.roots,this.nocase,this.childrenCache(),{fs:t})}isAbsolute(t){return t.startsWith("/")}},St=class extends rt{constructor(t=process.cwd(),e={}){let{nocase:s=true}=e;super(t,{...e,nocase:s});}};process.platform==="win32"?Pt:jt;var Xe=process.platform==="win32"?it:process.platform==="darwin"?St:rt;var Di=n=>n.length>=1,Mi=n=>n.length>=1,nt=class n{#t;#s;#n;length;#r;#o;#S;#w;#c;#h;#u=true;constructor(t,e,s,i){if(!Di(t))throw new TypeError("empty pattern list");if(!Mi(e))throw new TypeError("empty glob list");if(e.length!==t.length)throw new TypeError("mismatched pattern list and glob list lengths");if(this.length=t.length,s<0||s>=this.length)throw new TypeError("index out of range");if(this.#t=t,this.#s=e,this.#n=s,this.#r=i,this.#n===0){if(this.isUNC()){let[r,o,h,a,...l]=this.#t,[u,c,d,f,...m]=this.#s;l[0]===""&&(l.shift(),m.shift());let p=[r,o,h,a,""].join("/"),w=[u,c,d,f,""].join("/");this.#t=[p,...l],this.#s=[w,...m],this.length=this.#t.length;}else if(this.isDrive()||this.isAbsolute()){let[r,...o]=this.#t,[h,...a]=this.#s;o[0]===""&&(o.shift(),a.shift());let l=r+"/",u=h+"/";this.#t=[l,...o],this.#s=[u,...a],this.length=this.#t.length;}}}pattern(){return this.#t[this.#n]}isString(){return typeof this.#t[this.#n]=="string"}isGlobstar(){return this.#t[this.#n]===A}isRegExp(){return this.#t[this.#n]instanceof RegExp}globString(){return this.#S=this.#S||(this.#n===0?this.isAbsolute()?this.#s[0]+this.#s.slice(1).join("/"):this.#s.join("/"):this.#s.slice(this.#n).join("/"))}hasMore(){return this.length>this.#n+1}rest(){return this.#o!==void 0?this.#o:this.hasMore()?(this.#o=new n(this.#t,this.#s,this.#n+1,this.#r),this.#o.#h=this.#h,this.#o.#c=this.#c,this.#o.#w=this.#w,this.#o):this.#o=null}isUNC(){let t=this.#t;return this.#c!==void 0?this.#c:this.#c=this.#r==="win32"&&this.#n===0&&t[0]===""&&t[1]===""&&typeof t[2]=="string"&&!!t[2]&&typeof t[3]=="string"&&!!t[3]}isDrive(){let t=this.#t;return this.#w!==void 0?this.#w:this.#w=this.#r==="win32"&&this.#n===0&&this.length>1&&typeof t[0]=="string"&&/^[a-z]:$/i.test(t[0])}isAbsolute(){let t=this.#t;return this.#h!==void 0?this.#h:this.#h=t[0]===""&&t.length>1||this.isDrive()||this.isUNC()}root(){let t=this.#t[0];return typeof t=="string"&&this.isAbsolute()&&this.#n===0?t:""}checkFollowGlobstar(){return !(this.#n===0||!this.isGlobstar()||!this.#u)}markFollowGlobstar(){return this.#n===0||!this.isGlobstar()||!this.#u?false:(this.#u=false,true)}};var Ni=typeof process=="object"&&process&&typeof process.platform=="string"?process.platform:"linux",ot=class{relative;relativeChildren;absolute;absoluteChildren;platform;mmopts;constructor(t,{nobrace:e,nocase:s,noext:i,noglobstar:r,platform:o=Ni}){this.relative=[],this.absolute=[],this.relativeChildren=[],this.absoluteChildren=[],this.platform=o,this.mmopts={dot:true,nobrace:e,nocase:s,noext:i,noglobstar:r,optimizationLevel:2,platform:o,nocomment:true,nonegate:true};for(let h of t)this.add(h);}add(t){let e=new D(t,this.mmopts);for(let s=0;s<e.set.length;s++){let i=e.set[s],r=e.globParts[s];if(!i||!r)throw new Error("invalid pattern object");for(;i[0]==="."&&r[0]===".";)i.shift(),r.shift();let o=new nt(i,r,0,this.platform),h=new D(o.globString(),this.mmopts),a=r[r.length-1]==="**",l=o.isAbsolute();l?this.absolute.push(h):this.relative.push(h),a&&(l?this.absoluteChildren.push(h):this.relativeChildren.push(h));}}ignored(t){let e=t.fullpath(),s=`${e}/`,i=t.relative()||".",r=`${i}/`;for(let o of this.relative)if(o.match(i)||o.match(r))return  true;for(let o of this.absolute)if(o.match(e)||o.match(s))return  true;return  false}childrenIgnored(t){let e=t.fullpath()+"/",s=(t.relative()||".")+"/";for(let i of this.relativeChildren)if(i.match(s))return  true;for(let i of this.absoluteChildren)if(i.match(e))return  true;return  false}};var oe=class n{store;constructor(t=new Map){this.store=t;}copy(){return new n(new Map(this.store))}hasWalked(t,e){return this.store.get(t.fullpath())?.has(e.globString())}storeWalked(t,e){let s=t.fullpath(),i=this.store.get(s);i?i.add(e.globString()):this.store.set(s,new Set([e.globString()]));}},he=class{store=new Map;add(t,e,s){let i=(e?2:0)|(s?1:0),r=this.store.get(t);this.store.set(t,r===void 0?i:i&r);}entries(){return [...this.store.entries()].map(([t,e])=>[t,!!(e&2),!!(e&1)])}},ae=class{store=new Map;add(t,e){if(!t.canReaddir())return;let s=this.store.get(t);s?s.find(i=>i.globString()===e.globString())||s.push(e):this.store.set(t,[e]);}get(t){let e=this.store.get(t);if(!e)throw new Error("attempting to walk unknown path");return e}entries(){return this.keys().map(t=>[t,this.store.get(t)])}keys(){return [...this.store.keys()].filter(t=>t.canReaddir())}},Et=class n{hasWalkedCache;matches=new he;subwalks=new ae;patterns;follow;dot;opts;constructor(t,e){this.opts=t,this.follow=!!t.follow,this.dot=!!t.dot,this.hasWalkedCache=e?e.copy():new oe;}processPatterns(t,e){this.patterns=e;let s=e.map(i=>[t,i]);for(let[i,r]of s){this.hasWalkedCache.storeWalked(i,r);let o=r.root(),h=r.isAbsolute()&&this.opts.absolute!==false;if(o){i=i.resolve(o==="/"&&this.opts.root!==void 0?this.opts.root:o);let c=r.rest();if(c)r=c;else {this.matches.add(i,true,false);continue}}if(i.isENOENT())continue;let a,l,u=false;for(;typeof(a=r.pattern())=="string"&&(l=r.rest());)i=i.resolve(a),r=l,u=true;if(a=r.pattern(),l=r.rest(),u){if(this.hasWalkedCache.hasWalked(i,r))continue;this.hasWalkedCache.storeWalked(i,r);}if(typeof a=="string"){let c=a===".."||a===""||a===".";this.matches.add(i.resolve(a),h,c);continue}else if(a===A){(!i.isSymbolicLink()||this.follow||r.checkFollowGlobstar())&&this.subwalks.add(i,r);let c=l?.pattern(),d=l?.rest();if(!l||(c===""||c===".")&&!d)this.matches.add(i,h,c===""||c===".");else if(c===".."){let f=i.parent||i;d?this.hasWalkedCache.hasWalked(f,d)||this.subwalks.add(f,d):this.matches.add(f,h,true);}}else a instanceof RegExp&&this.subwalks.add(i,r);}return this}subwalkTargets(){return this.subwalks.keys()}child(){return new n(this.opts,this.hasWalkedCache)}filterEntries(t,e){let s=this.subwalks.get(t),i=this.child();for(let r of e)for(let o of s){let h=o.isAbsolute(),a=o.pattern(),l=o.rest();a===A?i.testGlobstar(r,o,l,h):a instanceof RegExp?i.testRegExp(r,a,l,h):i.testString(r,a,l,h);}return i}testGlobstar(t,e,s,i){if((this.dot||!t.name.startsWith("."))&&(e.hasMore()||this.matches.add(t,i,false),t.canReaddir()&&(this.follow||!t.isSymbolicLink()?this.subwalks.add(t,e):t.isSymbolicLink()&&(s&&e.checkFollowGlobstar()?this.subwalks.add(t,s):e.markFollowGlobstar()&&this.subwalks.add(t,e)))),s){let r=s.pattern();if(typeof r=="string"&&r!==".."&&r!==""&&r!==".")this.testString(t,r,s.rest(),i);else if(r===".."){let o=t.parent||t;this.subwalks.add(o,s);}else r instanceof RegExp&&this.testRegExp(t,r,s.rest(),i);}}testRegExp(t,e,s,i){e.test(t.name)&&(s?this.subwalks.add(t,s):this.matches.add(t,i,false));}testString(t,e,s,i){t.isNamed(e)&&(s?this.subwalks.add(t,s):this.matches.add(t,i,false));}};var _i=(n,t)=>typeof n=="string"?new ot([n],t):Array.isArray(n)?new ot(n,t):n,zt=class{path;patterns;opts;seen=new Set;paused=false;aborted=false;#t=[];#s;#n;signal;maxDepth;includeChildMatches;constructor(t,e,s){if(this.patterns=t,this.path=e,this.opts=s,this.#n=!s.posix&&s.platform==="win32"?"\\":"/",this.includeChildMatches=s.includeChildMatches!==false,(s.ignore||!this.includeChildMatches)&&(this.#s=_i(s.ignore??[],s),!this.includeChildMatches&&typeof this.#s.add!="function")){let i="cannot ignore child matches, ignore lacks add() method.";throw new Error(i)}this.maxDepth=s.maxDepth||1/0,s.signal&&(this.signal=s.signal,this.signal.addEventListener("abort",()=>{this.#t.length=0;}));}#r(t){return this.seen.has(t)||!!this.#s?.ignored?.(t)}#o(t){return !!this.#s?.childrenIgnored?.(t)}pause(){this.paused=true;}resume(){if(this.signal?.aborted)return;this.paused=false;let t;for(;!this.paused&&(t=this.#t.shift());)t();}onResume(t){this.signal?.aborted||(this.paused?this.#t.push(t):t());}async matchCheck(t,e){if(e&&this.opts.nodir)return;let s;if(this.opts.realpath){if(s=t.realpathCached()||await t.realpath(),!s)return;t=s;}let r=t.isUnknown()||this.opts.stat?await t.lstat():t;if(this.opts.follow&&this.opts.nodir&&r?.isSymbolicLink()){let o=await r.realpath();o&&(o.isUnknown()||this.opts.stat)&&await o.lstat();}return this.matchCheckTest(r,e)}matchCheckTest(t,e){return t&&(this.maxDepth===1/0||t.depth()<=this.maxDepth)&&(!e||t.canReaddir())&&(!this.opts.nodir||!t.isDirectory())&&(!this.opts.nodir||!this.opts.follow||!t.isSymbolicLink()||!t.realpathCached()?.isDirectory())&&!this.#r(t)?t:void 0}matchCheckSync(t,e){if(e&&this.opts.nodir)return;let s;if(this.opts.realpath){if(s=t.realpathCached()||t.realpathSync(),!s)return;t=s;}let r=t.isUnknown()||this.opts.stat?t.lstatSync():t;if(this.opts.follow&&this.opts.nodir&&r?.isSymbolicLink()){let o=r.realpathSync();o&&(o?.isUnknown()||this.opts.stat)&&o.lstatSync();}return this.matchCheckTest(r,e)}matchFinish(t,e){if(this.#r(t))return;if(!this.includeChildMatches&&this.#s?.add){let r=`${t.relativePosix()}/**`;this.#s.add(r);}let s=this.opts.absolute===void 0?e:this.opts.absolute;this.seen.add(t);let i=this.opts.mark&&t.isDirectory()?this.#n:"";if(this.opts.withFileTypes)this.matchEmit(t);else if(s){let r=this.opts.posix?t.fullpathPosix():t.fullpath();this.matchEmit(r+i);}else {let r=this.opts.posix?t.relativePosix():t.relative(),o=this.opts.dotRelative&&!r.startsWith(".."+this.#n)?"."+this.#n:"";this.matchEmit(r?o+r+i:"."+i);}}async match(t,e,s){let i=await this.matchCheck(t,s);i&&this.matchFinish(i,e);}matchSync(t,e,s){let i=this.matchCheckSync(t,s);i&&this.matchFinish(i,e);}walkCB(t,e,s){this.signal?.aborted&&s(),this.walkCB2(t,e,new Et(this.opts),s);}walkCB2(t,e,s,i){if(this.#o(t))return i();if(this.signal?.aborted&&i(),this.paused){this.onResume(()=>this.walkCB2(t,e,s,i));return}s.processPatterns(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||(r++,this.match(h,a,l).then(()=>o()));for(let h of s.subwalkTargets()){if(this.maxDepth!==1/0&&h.depth()>=this.maxDepth)continue;r++;let a=h.readdirCached();h.calledReaddir()?this.walkCB3(h,a,s,o):h.readdirCB((l,u)=>this.walkCB3(h,u,s,o),true);}o();}walkCB3(t,e,s,i){s=s.filterEntries(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||(r++,this.match(h,a,l).then(()=>o()));for(let[h,a]of s.subwalks.entries())r++,this.walkCB2(h,a,s.child(),o);o();}walkCBSync(t,e,s){this.signal?.aborted&&s(),this.walkCB2Sync(t,e,new Et(this.opts),s);}walkCB2Sync(t,e,s,i){if(this.#o(t))return i();if(this.signal?.aborted&&i(),this.paused){this.onResume(()=>this.walkCB2Sync(t,e,s,i));return}s.processPatterns(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||this.matchSync(h,a,l);for(let h of s.subwalkTargets()){if(this.maxDepth!==1/0&&h.depth()>=this.maxDepth)continue;r++;let a=h.readdirSync();this.walkCB3Sync(h,a,s,o);}o();}walkCB3Sync(t,e,s,i){s=s.filterEntries(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||this.matchSync(h,a,l);for(let[h,a]of s.subwalks.entries())r++,this.walkCB2Sync(h,a,s.child(),o);o();}},xt=class extends zt{matches=new Set;constructor(t,e,s){super(t,e,s);}matchEmit(t){this.matches.add(t);}async walk(){if(this.signal?.aborted)throw this.signal.reason;return this.path.isUnknown()&&await this.path.lstat(),await new Promise((t,e)=>{this.walkCB(this.path,this.patterns,()=>{this.signal?.aborted?e(this.signal.reason):t(this.matches);});}),this.matches}walkSync(){if(this.signal?.aborted)throw this.signal.reason;return this.path.isUnknown()&&this.path.lstatSync(),this.walkCBSync(this.path,this.patterns,()=>{if(this.signal?.aborted)throw this.signal.reason}),this.matches}},vt=class extends zt{results;constructor(t,e,s){super(t,e,s),this.results=new V({signal:this.signal,objectMode:true}),this.results.on("drain",()=>this.resume()),this.results.on("resume",()=>this.resume());}matchEmit(t){this.results.write(t),this.results.flowing||this.pause();}stream(){let t=this.path;return t.isUnknown()?t.lstat().then(()=>{this.walkCB(t,this.patterns,()=>this.results.end());}):this.walkCB(t,this.patterns,()=>this.results.end()),this.results}streamSync(){return this.path.isUnknown()&&this.path.lstatSync(),this.walkCBSync(this.path,this.patterns,()=>this.results.end()),this.results}};var Wi=typeof process=="object"&&process&&typeof process.platform=="string"?process.platform:"linux",I=class{absolute;cwd;root;dot;dotRelative;follow;ignore;magicalBraces;mark;matchBase;maxDepth;nobrace;nocase;nodir;noext;noglobstar;pattern;platform;realpath;scurry;stat;signal;windowsPathsNoEscape;withFileTypes;includeChildMatches;opts;patterns;constructor(t,e){if(!e)throw new TypeError("glob options required");if(this.withFileTypes=!!e.withFileTypes,this.signal=e.signal,this.follow=!!e.follow,this.dot=!!e.dot,this.dotRelative=!!e.dotRelative,this.nodir=!!e.nodir,this.mark=!!e.mark,e.cwd?(e.cwd instanceof URL||e.cwd.startsWith("file://"))&&(e.cwd=fileURLToPath(e.cwd)):this.cwd="",this.cwd=e.cwd||"",this.root=e.root,this.magicalBraces=!!e.magicalBraces,this.nobrace=!!e.nobrace,this.noext=!!e.noext,this.realpath=!!e.realpath,this.absolute=e.absolute,this.includeChildMatches=e.includeChildMatches!==false,this.noglobstar=!!e.noglobstar,this.matchBase=!!e.matchBase,this.maxDepth=typeof e.maxDepth=="number"?e.maxDepth:1/0,this.stat=!!e.stat,this.ignore=e.ignore,this.withFileTypes&&this.absolute!==void 0)throw new Error("cannot set absolute and withFileTypes:true");if(typeof t=="string"&&(t=[t]),this.windowsPathsNoEscape=!!e.windowsPathsNoEscape||e.allowWindowsEscape===false,this.windowsPathsNoEscape&&(t=t.map(a=>a.replace(/\\/g,"/"))),this.matchBase){if(e.noglobstar)throw new TypeError("base matching requires globstar");t=t.map(a=>a.includes("/")?a:`./**/${a}`);}if(this.pattern=t,this.platform=e.platform||Wi,this.opts={...e,platform:this.platform},e.scurry){if(this.scurry=e.scurry,e.nocase!==void 0&&e.nocase!==e.scurry.nocase)throw new Error("nocase option contradicts provided scurry option")}else {let a=e.platform==="win32"?it:e.platform==="darwin"?St:e.platform?rt:Xe;this.scurry=new a(this.cwd,{nocase:e.nocase,fs:e.fs});}this.nocase=this.scurry.nocase;let s=this.platform==="darwin"||this.platform==="win32",i={...e,dot:this.dot,matchBase:this.matchBase,nobrace:this.nobrace,nocase:this.nocase,nocaseMagicOnly:s,nocomment:true,noext:this.noext,nonegate:true,optimizationLevel:2,platform:this.platform,windowsPathsNoEscape:this.windowsPathsNoEscape,debug:!!this.opts.debug},r=this.pattern.map(a=>new D(a,i)),[o,h]=r.reduce((a,l)=>(a[0].push(...l.set),a[1].push(...l.globParts),a),[[],[]]);this.patterns=o.map((a,l)=>{let u=h[l];if(!u)throw new Error("invalid pattern object");return new nt(a,u,0,this.platform)});}async walk(){return [...await new xt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).walk()]}walkSync(){return [...new xt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).walkSync()]}stream(){return new vt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).stream()}streamSync(){return new vt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).streamSync()}iterateSync(){return this.streamSync()[Symbol.iterator]()}[Symbol.iterator](){return this.iterateSync()}iterate(){return this.stream()[Symbol.asyncIterator]()}[Symbol.asyncIterator](){return this.iterate()}};var le=(n,t={})=>{Array.isArray(n)||(n=[n]);for(let e of n)if(new D(e,t).hasMagic())return  true;return  false};function Bt(n,t={}){return new I(n,t).streamSync()}function Qe(n,t={}){return new I(n,t).stream()}function ts(n,t={}){return new I(n,t).walkSync()}async function Je(n,t={}){return new I(n,t).walk()}function Ut(n,t={}){return new I(n,t).iterateSync()}function es(n,t={}){return new I(n,t).iterate()}var Pi=Bt,ji=Object.assign(Qe,{sync:Bt}),Ii=Ut,zi=Object.assign(es,{sync:Ut}),Bi=Object.assign(ts,{stream:Bt,iterate:Ut}),Ze=Object.assign(Je,{glob:Je,globSync:ts,sync:Bi,globStream:Qe,stream:ji,globStreamSync:Bt,streamSync:Pi,globIterate:es,iterate:zi,globIterateSync:Ut,iterateSync:Ii,Glob:I,hasMagic:le,escape:tt,unescape:W});Ze.glob=Ze;
+>>> no match, partial?`,t,d,e,f),d===a))}let p;if(typeof u=="string"?(p=c===u,this.debug("string match",u,c,p)):(p=u.test(c),this.debug("pattern match",u,c,p)),!p)return  false}if(o===a&&h===l)return  true;if(o===a)return s;if(h===l)return o===a-1&&t[o]==="";throw new Error("wtf?")}braceExpand(){return ke(this.pattern,this.options)}parse(t){at(t);let e=this.options;if(t==="**")return A;if(t==="")return "";let s,i=null;(s=t.match(js))?i=e.dot?zs:Is:(s=t.match(Rs))?i=(e.nocase?e.dot?Ms:Ds:e.dot?Fs:Os)(s[1]):(s=t.match(Bs))?i=(e.nocase?e.dot?$s:Us:e.dot?Gs:Hs)(s):(s=t.match(Ns))?i=e.dot?Ls:_s:(s=t.match(Ws))&&(i=Ps);let r=Q.fromGlob(t,this.options).toMMPattern();return i&&typeof r=="object"&&Reflect.defineProperty(r,"test",{value:i}),r}makeRe(){if(this.regexp||this.regexp===false)return this.regexp;let t=this.set;if(!t.length)return this.regexp=false,this.regexp;let e=this.options,s=e.noglobstar?Vs:e.dot?Ys:Xs,i=new Set(e.nocase?["i"]:[]),r=t.map(a=>{let l=a.map(c=>{if(c instanceof RegExp)for(let d of c.flags.split(""))i.add(d);return typeof c=="string"?ei(c):c===A?A:c._src});l.forEach((c,d)=>{let f=l[d+1],m=l[d-1];c!==A||m===A||(m===void 0?f!==void 0&&f!==A?l[d+1]="(?:\\/|"+s+"\\/)?"+f:l[d]=s:f===void 0?l[d-1]=m+"(?:\\/|\\/"+s+")?":f!==A&&(l[d-1]=m+"(?:\\/|\\/"+s+"\\/)"+f,l[d+1]=A));});let u=l.filter(c=>c!==A);if(this.partial&&u.length>=1){let c=[];for(let d=1;d<=u.length;d++)c.push(u.slice(0,d).join("/"));return "(?:"+c.join("|")+")"}return u.join("/")}).join("|"),[o,h]=t.length>1?["(?:",")"]:["",""];r="^"+o+r+h+"$",this.partial&&(r="^(?:\\/|"+o+r.slice(1,-1)+h+")$"),this.negate&&(r="^(?!"+r+").+$");try{this.regexp=new RegExp(r,[...i].join(""));}catch{this.regexp=false;}return this.regexp}slashSplit(t){return this.preserveMultipleSlashes?t.split("/"):this.isWindows&&/^\/\/[^\/]+/.test(t)?["",...t.split(/\/+/)]:t.split(/\/+/)}match(t,e=this.partial){if(this.debug("match",t,this.pattern),this.comment)return  false;if(this.empty)return t==="";if(t==="/"&&e)return  true;let s=this.options;this.isWindows&&(t=t.split("\\").join("/"));let i=this.slashSplit(t);this.debug(this.pattern,"split",i);let r=this.set;this.debug(this.pattern,"set",r);let o=i[i.length-1];if(!o)for(let h=i.length-2;!o&&h>=0;h--)o=i[h];for(let h=0;h<r.length;h++){let a=r[h],l=i;if(s.matchBase&&a.length===1&&(l=[o]),this.matchOne(l,a,e))return s.flipNegate?true:!this.negate}return s.flipNegate?false:this.negate}static defaults(t){return O.defaults(t).Minimatch}};O.AST=Q;O.Minimatch=D;O.escape=tt;O.unescape=W;var si=typeof performance=="object"&&performance&&typeof performance.now=="function"?performance:Date,Oe=new Set,Vt=typeof process=="object"&&process?process:{},Fe=(n,t,e,s)=>{typeof Vt.emitWarning=="function"?Vt.emitWarning(n,t,e,s):console.error(`[${e}] ${t}: ${n}`);},At=globalThis.AbortController,Re=globalThis.AbortSignal;if(typeof At>"u"){Re=class{onabort;_onabort=[];reason;aborted=false;addEventListener(e,s){this._onabort.push(s);}},At=class{constructor(){t();}signal=new Re;abort(e){if(!this.signal.aborted){this.signal.reason=e,this.signal.aborted=true;for(let s of this.signal._onabort)s(e);this.signal.onabort?.(e);}}};let n=Vt.env?.LRU_CACHE_IGNORE_AC_WARNING!=="1",t=()=>{n&&(n=false,Fe("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.","NO_ABORT_CONTROLLER","ENOTSUP",t));};}var ii=n=>!Oe.has(n);var q=n=>n&&n===Math.floor(n)&&n>0&&isFinite(n),De=n=>q(n)?n<=Math.pow(2,8)?Uint8Array:n<=Math.pow(2,16)?Uint16Array:n<=Math.pow(2,32)?Uint32Array:n<=Number.MAX_SAFE_INTEGER?Tt:null:null,Tt=class extends Array{constructor(n){super(n),this.fill(0);}},ri=class ct{heap;length;static#t=false;static create(t){let e=De(t);if(!e)return [];ct.#t=true;let s=new ct(t,e);return ct.#t=false,s}constructor(t,e){if(!ct.#t)throw new TypeError("instantiate Stack using Stack.create(n)");this.heap=new e(t),this.length=0;}push(t){this.heap[this.length++]=t;}pop(){return this.heap[--this.length]}},ft=class Me{#t;#s;#n;#r;#o;#S;#w;#c;get perf(){return this.#c}ttl;ttlResolution;ttlAutopurge;updateAgeOnGet;updateAgeOnHas;allowStale;noDisposeOnSet;noUpdateTTL;maxEntrySize;sizeCalculation;noDeleteOnFetchRejection;noDeleteOnStaleGet;allowStaleOnFetchAbort;allowStaleOnFetchRejection;ignoreFetchAbort;#h;#u;#f;#a;#i;#d;#E;#b;#p;#R;#m;#C;#T;#g;#y;#x;#A;#e;#_;static unsafeExposeInternals(t){return {starts:t.#T,ttls:t.#g,autopurgeTimers:t.#y,sizes:t.#C,keyMap:t.#f,keyList:t.#a,valList:t.#i,next:t.#d,prev:t.#E,get head(){return t.#b},get tail(){return t.#p},free:t.#R,isBackgroundFetch:e=>t.#l(e),backgroundFetch:(e,s,i,r)=>t.#U(e,s,i,r),moveToTail:e=>t.#W(e),indexes:e=>t.#F(e),rindexes:e=>t.#D(e),isStale:e=>t.#v(e)}}get max(){return this.#t}get maxSize(){return this.#s}get calculatedSize(){return this.#u}get size(){return this.#h}get fetchMethod(){return this.#S}get memoMethod(){return this.#w}get dispose(){return this.#n}get onInsert(){return this.#r}get disposeAfter(){return this.#o}constructor(t){let{max:e=0,ttl:s,ttlResolution:i=1,ttlAutopurge:r,updateAgeOnGet:o,updateAgeOnHas:h,allowStale:a,dispose:l,onInsert:u,disposeAfter:c,noDisposeOnSet:d,noUpdateTTL:f,maxSize:m=0,maxEntrySize:p=0,sizeCalculation:w,fetchMethod:g,memoMethod:S,noDeleteOnFetchRejection:E,noDeleteOnStaleGet:y,allowStaleOnFetchRejection:b,allowStaleOnFetchAbort:z,ignoreFetchAbort:$,perf:J}=t;if(J!==void 0&&typeof J?.now!="function")throw new TypeError("perf option must have a now() method if specified");if(this.#c=J??si,e!==0&&!q(e))throw new TypeError("max option must be a nonnegative integer");let Z=e?De(e):Array;if(!Z)throw new Error("invalid max value: "+e);if(this.#t=e,this.#s=m,this.maxEntrySize=p||this.#s,this.sizeCalculation=w,this.sizeCalculation){if(!this.#s&&!this.maxEntrySize)throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");if(typeof this.sizeCalculation!="function")throw new TypeError("sizeCalculation set to non-function")}if(S!==void 0&&typeof S!="function")throw new TypeError("memoMethod must be a function if defined");if(this.#w=S,g!==void 0&&typeof g!="function")throw new TypeError("fetchMethod must be a function if specified");if(this.#S=g,this.#A=!!g,this.#f=new Map,this.#a=new Array(e).fill(void 0),this.#i=new Array(e).fill(void 0),this.#d=new Z(e),this.#E=new Z(e),this.#b=0,this.#p=0,this.#R=ri.create(e),this.#h=0,this.#u=0,typeof l=="function"&&(this.#n=l),typeof u=="function"&&(this.#r=u),typeof c=="function"?(this.#o=c,this.#m=[]):(this.#o=void 0,this.#m=void 0),this.#x=!!this.#n,this.#_=!!this.#r,this.#e=!!this.#o,this.noDisposeOnSet=!!d,this.noUpdateTTL=!!f,this.noDeleteOnFetchRejection=!!E,this.allowStaleOnFetchRejection=!!b,this.allowStaleOnFetchAbort=!!z,this.ignoreFetchAbort=!!$,this.maxEntrySize!==0){if(this.#s!==0&&!q(this.#s))throw new TypeError("maxSize must be a positive integer if specified");if(!q(this.maxEntrySize))throw new TypeError("maxEntrySize must be a positive integer if specified");this.#G();}if(this.allowStale=!!a,this.noDeleteOnStaleGet=!!y,this.updateAgeOnGet=!!o,this.updateAgeOnHas=!!h,this.ttlResolution=q(i)||i===0?i:1,this.ttlAutopurge=!!r,this.ttl=s||0,this.ttl){if(!q(this.ttl))throw new TypeError("ttl must be a positive integer if specified");this.#M();}if(this.#t===0&&this.ttl===0&&this.#s===0)throw new TypeError("At least one of max, maxSize, or ttl is required");if(!this.ttlAutopurge&&!this.#t&&!this.#s){let $t="LRU_CACHE_UNBOUNDED";ii($t)&&(Oe.add($t),Fe("TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.","UnboundedCacheWarning",$t,Me));}}getRemainingTTL(t){return this.#f.has(t)?1/0:0}#M(){let t=new Tt(this.#t),e=new Tt(this.#t);this.#g=t,this.#T=e;let s=this.ttlAutopurge?new Array(this.#t):void 0;this.#y=s,this.#j=(o,h,a=this.#c.now())=>{if(e[o]=h!==0?a:0,t[o]=h,s?.[o]&&(clearTimeout(s[o]),s[o]=void 0),h!==0&&s){let l=setTimeout(()=>{this.#v(o)&&this.#O(this.#a[o],"expire");},h+1);l.unref&&l.unref(),s[o]=l;}},this.#k=o=>{e[o]=t[o]!==0?this.#c.now():0;},this.#N=(o,h)=>{if(t[h]){let a=t[h],l=e[h];if(!a||!l)return;o.ttl=a,o.start=l,o.now=i||r();let u=o.now-l;o.remainingTTL=a-u;}};let i=0,r=()=>{let o=this.#c.now();if(this.ttlResolution>0){i=o;let h=setTimeout(()=>i=0,this.ttlResolution);h.unref&&h.unref();}return o};this.getRemainingTTL=o=>{let h=this.#f.get(o);if(h===void 0)return 0;let a=t[h],l=e[h];if(!a||!l)return 1/0;let u=(i||r())-l;return a-u},this.#v=o=>{let h=e[o],a=t[o];return !!a&&!!h&&(i||r())-h>a};}#k=()=>{};#N=()=>{};#j=()=>{};#v=()=>false;#G(){let t=new Tt(this.#t);this.#u=0,this.#C=t,this.#P=e=>{this.#u-=t[e],t[e]=0;},this.#I=(e,s,i,r)=>{if(this.#l(s))return 0;if(!q(i))if(r){if(typeof r!="function")throw new TypeError("sizeCalculation must be a function");if(i=r(s,e),!q(i))throw new TypeError("sizeCalculation return invalid (expect positive integer)")}else throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");return i},this.#L=(e,s,i)=>{if(t[e]=s,this.#s){let r=this.#s-t[e];for(;this.#u>r;)this.#B(true);}this.#u+=t[e],i&&(i.entrySize=s,i.totalCalculatedSize=this.#u);};}#P=t=>{};#L=(t,e,s)=>{};#I=(t,e,s,i)=>{if(s||i)throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");return 0};*#F({allowStale:t=this.allowStale}={}){if(this.#h)for(let e=this.#p;!(!this.#z(e)||((t||!this.#v(e))&&(yield e),e===this.#b));)e=this.#E[e];}*#D({allowStale:t=this.allowStale}={}){if(this.#h)for(let e=this.#b;!(!this.#z(e)||((t||!this.#v(e))&&(yield e),e===this.#p));)e=this.#d[e];}#z(t){return t!==void 0&&this.#f.get(this.#a[t])===t}*entries(){for(let t of this.#F())this.#i[t]!==void 0&&this.#a[t]!==void 0&&!this.#l(this.#i[t])&&(yield [this.#a[t],this.#i[t]]);}*rentries(){for(let t of this.#D())this.#i[t]!==void 0&&this.#a[t]!==void 0&&!this.#l(this.#i[t])&&(yield [this.#a[t],this.#i[t]]);}*keys(){for(let t of this.#F()){let e=this.#a[t];e!==void 0&&!this.#l(this.#i[t])&&(yield e);}}*rkeys(){for(let t of this.#D()){let e=this.#a[t];e!==void 0&&!this.#l(this.#i[t])&&(yield e);}}*values(){for(let t of this.#F())this.#i[t]!==void 0&&!this.#l(this.#i[t])&&(yield this.#i[t]);}*rvalues(){for(let t of this.#D())this.#i[t]!==void 0&&!this.#l(this.#i[t])&&(yield this.#i[t]);}[Symbol.iterator](){return this.entries()}[Symbol.toStringTag]="LRUCache";find(t,e={}){for(let s of this.#F()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;if(r!==void 0&&t(r,this.#a[s],this))return this.get(this.#a[s],e)}}forEach(t,e=this){for(let s of this.#F()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;r!==void 0&&t.call(e,r,this.#a[s],this);}}rforEach(t,e=this){for(let s of this.#D()){let i=this.#i[s],r=this.#l(i)?i.__staleWhileFetching:i;r!==void 0&&t.call(e,r,this.#a[s],this);}}purgeStale(){let t=false;for(let e of this.#D({allowStale:true}))this.#v(e)&&(this.#O(this.#a[e],"expire"),t=true);return t}info(t){let e=this.#f.get(t);if(e===void 0)return;let s=this.#i[e],i=this.#l(s)?s.__staleWhileFetching:s;if(i===void 0)return;let r={value:i};if(this.#g&&this.#T){let o=this.#g[e],h=this.#T[e];if(o&&h){let a=o-(this.#c.now()-h);r.ttl=a,r.start=Date.now();}}return this.#C&&(r.size=this.#C[e]),r}dump(){let t=[];for(let e of this.#F({allowStale:true})){let s=this.#a[e],i=this.#i[e],r=this.#l(i)?i.__staleWhileFetching:i;if(r===void 0||s===void 0)continue;let o={value:r};if(this.#g&&this.#T){o.ttl=this.#g[e];let h=this.#c.now()-this.#T[e];o.start=Math.floor(Date.now()-h);}this.#C&&(o.size=this.#C[e]),t.unshift([s,o]);}return t}load(t){this.clear();for(let[e,s]of t){if(s.start){let i=Date.now()-s.start;s.start=this.#c.now()-i;}this.set(e,s.value,s);}}set(t,e,s={}){if(e===void 0)return this.delete(t),this;let{ttl:i=this.ttl,start:r,noDisposeOnSet:o=this.noDisposeOnSet,sizeCalculation:h=this.sizeCalculation,status:a}=s,{noUpdateTTL:l=this.noUpdateTTL}=s,u=this.#I(t,e,s.size||0,h);if(this.maxEntrySize&&u>this.maxEntrySize)return a&&(a.set="miss",a.maxEntrySizeExceeded=true),this.#O(t,"set"),this;let c=this.#h===0?void 0:this.#f.get(t);if(c===void 0)c=this.#h===0?this.#p:this.#R.length!==0?this.#R.pop():this.#h===this.#t?this.#B(false):this.#h,this.#a[c]=t,this.#i[c]=e,this.#f.set(t,c),this.#d[this.#p]=c,this.#E[c]=this.#p,this.#p=c,this.#h++,this.#L(c,u,a),a&&(a.set="add"),l=false,this.#_&&this.#r?.(e,t,"add");else {this.#W(c);let d=this.#i[c];if(e!==d){if(this.#A&&this.#l(d)){d.__abortController.abort(new Error("replaced"));let{__staleWhileFetching:f}=d;f!==void 0&&!o&&(this.#x&&this.#n?.(f,t,"set"),this.#e&&this.#m?.push([f,t,"set"]));}else o||(this.#x&&this.#n?.(d,t,"set"),this.#e&&this.#m?.push([d,t,"set"]));if(this.#P(c),this.#L(c,u,a),this.#i[c]=e,a){a.set="replace";let f=d&&this.#l(d)?d.__staleWhileFetching:d;f!==void 0&&(a.oldValue=f);}}else a&&(a.set="update");this.#_&&this.onInsert?.(e,t,e===d?"update":"replace");}if(i!==0&&!this.#g&&this.#M(),this.#g&&(l||this.#j(c,i,r),a&&this.#N(a,c)),!o&&this.#e&&this.#m){let d=this.#m,f;for(;f=d?.shift();)this.#o?.(...f);}return this}pop(){try{for(;this.#h;){let t=this.#i[this.#b];if(this.#B(!0),this.#l(t)){if(t.__staleWhileFetching)return t.__staleWhileFetching}else if(t!==void 0)return t}}finally{if(this.#e&&this.#m){let t=this.#m,e;for(;e=t?.shift();)this.#o?.(...e);}}}#B(t){let e=this.#b,s=this.#a[e],i=this.#i[e];return this.#A&&this.#l(i)?i.__abortController.abort(new Error("evicted")):(this.#x||this.#e)&&(this.#x&&this.#n?.(i,s,"evict"),this.#e&&this.#m?.push([i,s,"evict"])),this.#P(e),this.#y?.[e]&&(clearTimeout(this.#y[e]),this.#y[e]=void 0),t&&(this.#a[e]=void 0,this.#i[e]=void 0,this.#R.push(e)),this.#h===1?(this.#b=this.#p=0,this.#R.length=0):this.#b=this.#d[e],this.#f.delete(s),this.#h--,e}has(t,e={}){let{updateAgeOnHas:s=this.updateAgeOnHas,status:i}=e,r=this.#f.get(t);if(r!==void 0){let o=this.#i[r];if(this.#l(o)&&o.__staleWhileFetching===void 0)return  false;if(this.#v(r))i&&(i.has="stale",this.#N(i,r));else return s&&this.#k(r),i&&(i.has="hit",this.#N(i,r)),true}else i&&(i.has="miss");return  false}peek(t,e={}){let{allowStale:s=this.allowStale}=e,i=this.#f.get(t);if(i===void 0||!s&&this.#v(i))return;let r=this.#i[i];return this.#l(r)?r.__staleWhileFetching:r}#U(t,e,s,i){let r=e===void 0?void 0:this.#i[e];if(this.#l(r))return r;let o=new At,{signal:h}=s;h?.addEventListener("abort",()=>o.abort(h.reason),{signal:o.signal});let a={signal:o.signal,options:s,context:i},l=(p,w=false)=>{let{aborted:g}=o.signal,S=s.ignoreFetchAbort&&p!==void 0,E=s.ignoreFetchAbort||!!(s.allowStaleOnFetchAbort&&p!==void 0);if(s.status&&(g&&!w?(s.status.fetchAborted=true,s.status.fetchError=o.signal.reason,S&&(s.status.fetchAbortIgnored=true)):s.status.fetchResolved=true),g&&!S&&!w)return c(o.signal.reason,E);let y=f,b=this.#i[e];return (b===f||S&&w&&b===void 0)&&(p===void 0?y.__staleWhileFetching!==void 0?this.#i[e]=y.__staleWhileFetching:this.#O(t,"fetch"):(s.status&&(s.status.fetchUpdated=true),this.set(t,p,a.options))),p},u=p=>(s.status&&(s.status.fetchRejected=true,s.status.fetchError=p),c(p,false)),c=(p,w)=>{let{aborted:g}=o.signal,S=g&&s.allowStaleOnFetchAbort,E=S||s.allowStaleOnFetchRejection,y=E||s.noDeleteOnFetchRejection,b=f;if(this.#i[e]===f&&(!y||!w&&b.__staleWhileFetching===void 0?this.#O(t,"fetch"):S||(this.#i[e]=b.__staleWhileFetching)),E)return s.status&&b.__staleWhileFetching!==void 0&&(s.status.returnedStale=true),b.__staleWhileFetching;if(b.__returned===b)throw p},d=(p,w)=>{let g=this.#S?.(t,r,a);g&&g instanceof Promise&&g.then(S=>p(S===void 0?void 0:S),w),o.signal.addEventListener("abort",()=>{(!s.ignoreFetchAbort||s.allowStaleOnFetchAbort)&&(p(void 0),s.allowStaleOnFetchAbort&&(p=S=>l(S,true)));});};s.status&&(s.status.fetchDispatched=true);let f=new Promise(d).then(l,u),m=Object.assign(f,{__abortController:o,__staleWhileFetching:r,__returned:void 0});return e===void 0?(this.set(t,m,{...a.options,status:void 0}),e=this.#f.get(t)):this.#i[e]=m,m}#l(t){if(!this.#A)return  false;let e=t;return !!e&&e instanceof Promise&&e.hasOwnProperty("__staleWhileFetching")&&e.__abortController instanceof At}async fetch(t,e={}){let{allowStale:s=this.allowStale,updateAgeOnGet:i=this.updateAgeOnGet,noDeleteOnStaleGet:r=this.noDeleteOnStaleGet,ttl:o=this.ttl,noDisposeOnSet:h=this.noDisposeOnSet,size:a=0,sizeCalculation:l=this.sizeCalculation,noUpdateTTL:u=this.noUpdateTTL,noDeleteOnFetchRejection:c=this.noDeleteOnFetchRejection,allowStaleOnFetchRejection:d=this.allowStaleOnFetchRejection,ignoreFetchAbort:f=this.ignoreFetchAbort,allowStaleOnFetchAbort:m=this.allowStaleOnFetchAbort,context:p,forceRefresh:w=false,status:g,signal:S}=e;if(!this.#A)return g&&(g.fetch="get"),this.get(t,{allowStale:s,updateAgeOnGet:i,noDeleteOnStaleGet:r,status:g});let E={allowStale:s,updateAgeOnGet:i,noDeleteOnStaleGet:r,ttl:o,noDisposeOnSet:h,size:a,sizeCalculation:l,noUpdateTTL:u,noDeleteOnFetchRejection:c,allowStaleOnFetchRejection:d,allowStaleOnFetchAbort:m,ignoreFetchAbort:f,status:g,signal:S},y=this.#f.get(t);if(y===void 0){g&&(g.fetch="miss");let b=this.#U(t,y,E,p);return b.__returned=b}else {let b=this.#i[y];if(this.#l(b)){let Z=s&&b.__staleWhileFetching!==void 0;return g&&(g.fetch="inflight",Z&&(g.returnedStale=true)),Z?b.__staleWhileFetching:b.__returned=b}let z=this.#v(y);if(!w&&!z)return g&&(g.fetch="hit"),this.#W(y),i&&this.#k(y),g&&this.#N(g,y),b;let $=this.#U(t,y,E,p),J=$.__staleWhileFetching!==void 0&&s;return g&&(g.fetch=z?"stale":"refresh",J&&z&&(g.returnedStale=true)),J?$.__staleWhileFetching:$.__returned=$}}async forceFetch(t,e={}){let s=await this.fetch(t,e);if(s===void 0)throw new Error("fetch() returned undefined");return s}memo(t,e={}){let s=this.#w;if(!s)throw new Error("no memoMethod provided to constructor");let{context:i,forceRefresh:r,...o}=e,h=this.get(t,o);if(!r&&h!==void 0)return h;let a=s(t,h,{options:o,context:i});return this.set(t,a,o),a}get(t,e={}){let{allowStale:s=this.allowStale,updateAgeOnGet:i=this.updateAgeOnGet,noDeleteOnStaleGet:r=this.noDeleteOnStaleGet,status:o}=e,h=this.#f.get(t);if(h!==void 0){let a=this.#i[h],l=this.#l(a);return o&&this.#N(o,h),this.#v(h)?(o&&(o.get="stale"),l?(o&&s&&a.__staleWhileFetching!==void 0&&(o.returnedStale=true),s?a.__staleWhileFetching:void 0):(r||this.#O(t,"expire"),o&&s&&(o.returnedStale=true),s?a:void 0)):(o&&(o.get="hit"),l?a.__staleWhileFetching:(this.#W(h),i&&this.#k(h),a))}else o&&(o.get="miss");}#$(t,e){this.#E[e]=t,this.#d[t]=e;}#W(t){t!==this.#p&&(t===this.#b?this.#b=this.#d[t]:this.#$(this.#E[t],this.#d[t]),this.#$(this.#p,t),this.#p=t);}delete(t){return this.#O(t,"delete")}#O(t,e){let s=false;if(this.#h!==0){let i=this.#f.get(t);if(i!==void 0)if(this.#y?.[i]&&(clearTimeout(this.#y?.[i]),this.#y[i]=void 0),s=true,this.#h===1)this.#H(e);else {this.#P(i);let r=this.#i[i];if(this.#l(r)?r.__abortController.abort(new Error("deleted")):(this.#x||this.#e)&&(this.#x&&this.#n?.(r,t,e),this.#e&&this.#m?.push([r,t,e])),this.#f.delete(t),this.#a[i]=void 0,this.#i[i]=void 0,i===this.#p)this.#p=this.#E[i];else if(i===this.#b)this.#b=this.#d[i];else {let o=this.#E[i];this.#d[o]=this.#d[i];let h=this.#d[i];this.#E[h]=this.#E[i];}this.#h--,this.#R.push(i);}}if(this.#e&&this.#m?.length){let i=this.#m,r;for(;r=i?.shift();)this.#o?.(...r);}return s}clear(){return this.#H("delete")}#H(t){for(let e of this.#D({allowStale:true})){let s=this.#i[e];if(this.#l(s))s.__abortController.abort(new Error("deleted"));else {let i=this.#a[e];this.#x&&this.#n?.(s,i,t),this.#e&&this.#m?.push([s,i,t]);}}if(this.#f.clear(),this.#i.fill(void 0),this.#a.fill(void 0),this.#g&&this.#T){this.#g.fill(0),this.#T.fill(0);for(let e of this.#y??[])e!==void 0&&clearTimeout(e);this.#y?.fill(void 0);}if(this.#C&&this.#C.fill(0),this.#b=0,this.#p=0,this.#R.length=0,this.#u=0,this.#h=0,this.#e&&this.#m){let e=this.#m,s;for(;s=e?.shift();)this.#o?.(...s);}}};var Ne=typeof process=="object"&&process?process:{stdout:null,stderr:null},oi=n=>!!n&&typeof n=="object"&&(n instanceof V||n instanceof require$$0$8||hi(n)||ai(n)),hi=n=>!!n&&typeof n=="object"&&n instanceof EventEmitter&&typeof n.pipe=="function"&&n.pipe!==require$$0$8.Writable.prototype.pipe,ai=n=>!!n&&typeof n=="object"&&n instanceof EventEmitter&&typeof n.write=="function"&&typeof n.end=="function",G=Symbol("EOF"),H=Symbol("maybeEmitEnd"),K=Symbol("emittedEnd"),kt=Symbol("emittingEnd"),ut=Symbol("emittedError"),Rt=Symbol("closed"),_e=Symbol("read"),Ot=Symbol("flush"),Le=Symbol("flushChunk"),P=Symbol("encoding"),et=Symbol("decoder"),v=Symbol("flowing"),dt=Symbol("paused"),st=Symbol("resume"),C=Symbol("buffer"),F=Symbol("pipes"),T=Symbol("bufferLength"),Yt=Symbol("bufferPush"),Ft=Symbol("bufferShift"),k=Symbol("objectMode"),x=Symbol("destroyed"),Xt=Symbol("error"),Jt=Symbol("emitData"),We=Symbol("emitEnd"),Zt=Symbol("emitEnd2"),B=Symbol("async"),Qt=Symbol("abort"),Dt=Symbol("aborted"),pt=Symbol("signal"),Y=Symbol("dataListeners"),M=Symbol("discarded"),mt=n=>Promise.resolve().then(n),li=n=>n(),ci=n=>n==="end"||n==="finish"||n==="prefinish",fi=n=>n instanceof ArrayBuffer||!!n&&typeof n=="object"&&n.constructor&&n.constructor.name==="ArrayBuffer"&&n.byteLength>=0,ui=n=>!Buffer.isBuffer(n)&&ArrayBuffer.isView(n),Mt=class{src;dest;opts;ondrain;constructor(t,e,s){this.src=t,this.dest=e,this.opts=s,this.ondrain=()=>t[st](),this.dest.on("drain",this.ondrain);}unpipe(){this.dest.removeListener("drain",this.ondrain);}proxyErrors(t){}end(){this.unpipe(),this.opts.end&&this.dest.end();}},te=class extends Mt{unpipe(){this.src.removeListener("error",this.proxyErrors),super.unpipe();}constructor(t,e,s){super(t,e,s),this.proxyErrors=i=>this.dest.emit("error",i),t.on("error",this.proxyErrors);}},di=n=>!!n.objectMode,pi=n=>!n.objectMode&&!!n.encoding&&n.encoding!=="buffer",V=class extends EventEmitter{[v]=false;[dt]=false;[F]=[];[C]=[];[k];[P];[B];[et];[G]=false;[K]=false;[kt]=false;[Rt]=false;[ut]=null;[T]=0;[x]=false;[pt];[Dt]=false;[Y]=0;[M]=false;writable=true;readable=true;constructor(...t){let e=t[0]||{};if(super(),e.objectMode&&typeof e.encoding=="string")throw new TypeError("Encoding and objectMode may not be used together");di(e)?(this[k]=true,this[P]=null):pi(e)?(this[P]=e.encoding,this[k]=false):(this[k]=false,this[P]=null),this[B]=!!e.async,this[et]=this[P]?new StringDecoder$1(this[P]):null,e&&e.debugExposeBuffer===true&&Object.defineProperty(this,"buffer",{get:()=>this[C]}),e&&e.debugExposePipes===true&&Object.defineProperty(this,"pipes",{get:()=>this[F]});let{signal:s}=e;s&&(this[pt]=s,s.aborted?this[Qt]():s.addEventListener("abort",()=>this[Qt]()));}get bufferLength(){return this[T]}get encoding(){return this[P]}set encoding(t){throw new Error("Encoding must be set at instantiation time")}setEncoding(t){throw new Error("Encoding must be set at instantiation time")}get objectMode(){return this[k]}set objectMode(t){throw new Error("objectMode must be set at instantiation time")}get async(){return this[B]}set async(t){this[B]=this[B]||!!t;}[Qt](){this[Dt]=true,this.emit("abort",this[pt]?.reason),this.destroy(this[pt]?.reason);}get aborted(){return this[Dt]}set aborted(t){}write(t,e,s){if(this[Dt])return  false;if(this[G])throw new Error("write after end");if(this[x])return this.emit("error",Object.assign(new Error("Cannot call write after a stream was destroyed"),{code:"ERR_STREAM_DESTROYED"})),true;typeof e=="function"&&(s=e,e="utf8"),e||(e="utf8");let i=this[B]?mt:li;if(!this[k]&&!Buffer.isBuffer(t)){if(ui(t))t=Buffer.from(t.buffer,t.byteOffset,t.byteLength);else if(fi(t))t=Buffer.from(t);else if(typeof t!="string")throw new Error("Non-contiguous data written to non-objectMode stream")}return this[k]?(this[v]&&this[T]!==0&&this[Ot](true),this[v]?this.emit("data",t):this[Yt](t),this[T]!==0&&this.emit("readable"),s&&i(s),this[v]):t.length?(typeof t=="string"&&!(e===this[P]&&!this[et]?.lastNeed)&&(t=Buffer.from(t,e)),Buffer.isBuffer(t)&&this[P]&&(t=this[et].write(t)),this[v]&&this[T]!==0&&this[Ot](true),this[v]?this.emit("data",t):this[Yt](t),this[T]!==0&&this.emit("readable"),s&&i(s),this[v]):(this[T]!==0&&this.emit("readable"),s&&i(s),this[v])}read(t){if(this[x])return null;if(this[M]=false,this[T]===0||t===0||t&&t>this[T])return this[H](),null;this[k]&&(t=null),this[C].length>1&&!this[k]&&(this[C]=[this[P]?this[C].join(""):Buffer.concat(this[C],this[T])]);let e=this[_e](t||null,this[C][0]);return this[H](),e}[_e](t,e){if(this[k])this[Ft]();else {let s=e;t===s.length||t===null?this[Ft]():typeof s=="string"?(this[C][0]=s.slice(t),e=s.slice(0,t),this[T]-=t):(this[C][0]=s.subarray(t),e=s.subarray(0,t),this[T]-=t);}return this.emit("data",e),!this[C].length&&!this[G]&&this.emit("drain"),e}end(t,e,s){return typeof t=="function"&&(s=t,t=void 0),typeof e=="function"&&(s=e,e="utf8"),t!==void 0&&this.write(t,e),s&&this.once("end",s),this[G]=true,this.writable=false,(this[v]||!this[dt])&&this[H](),this}[st](){this[x]||(!this[Y]&&!this[F].length&&(this[M]=true),this[dt]=false,this[v]=true,this.emit("resume"),this[C].length?this[Ot]():this[G]?this[H]():this.emit("drain"));}resume(){return this[st]()}pause(){this[v]=false,this[dt]=true,this[M]=false;}get destroyed(){return this[x]}get flowing(){return this[v]}get paused(){return this[dt]}[Yt](t){this[k]?this[T]+=1:this[T]+=t.length,this[C].push(t);}[Ft](){return this[k]?this[T]-=1:this[T]-=this[C][0].length,this[C].shift()}[Ot](t=false){do;while(this[Le](this[Ft]())&&this[C].length);!t&&!this[C].length&&!this[G]&&this.emit("drain");}[Le](t){return this.emit("data",t),this[v]}pipe(t,e){if(this[x])return t;this[M]=false;let s=this[K];return e=e||{},t===Ne.stdout||t===Ne.stderr?e.end=false:e.end=e.end!==false,e.proxyErrors=!!e.proxyErrors,s?e.end&&t.end():(this[F].push(e.proxyErrors?new te(this,t,e):new Mt(this,t,e)),this[B]?mt(()=>this[st]()):this[st]()),t}unpipe(t){let e=this[F].find(s=>s.dest===t);e&&(this[F].length===1?(this[v]&&this[Y]===0&&(this[v]=false),this[F]=[]):this[F].splice(this[F].indexOf(e),1),e.unpipe());}addListener(t,e){return this.on(t,e)}on(t,e){let s=super.on(t,e);if(t==="data")this[M]=false,this[Y]++,!this[F].length&&!this[v]&&this[st]();else if(t==="readable"&&this[T]!==0)super.emit("readable");else if(ci(t)&&this[K])super.emit(t),this.removeAllListeners(t);else if(t==="error"&&this[ut]){let i=e;this[B]?mt(()=>i.call(this,this[ut])):i.call(this,this[ut]);}return s}removeListener(t,e){return this.off(t,e)}off(t,e){let s=super.off(t,e);return t==="data"&&(this[Y]=this.listeners("data").length,this[Y]===0&&!this[M]&&!this[F].length&&(this[v]=false)),s}removeAllListeners(t){let e=super.removeAllListeners(t);return (t==="data"||t===void 0)&&(this[Y]=0,!this[M]&&!this[F].length&&(this[v]=false)),e}get emittedEnd(){return this[K]}[H](){!this[kt]&&!this[K]&&!this[x]&&this[C].length===0&&this[G]&&(this[kt]=true,this.emit("end"),this.emit("prefinish"),this.emit("finish"),this[Rt]&&this.emit("close"),this[kt]=false);}emit(t,...e){let s=e[0];if(t!=="error"&&t!=="close"&&t!==x&&this[x])return  false;if(t==="data")return !this[k]&&!s?false:this[B]?(mt(()=>this[Jt](s)),true):this[Jt](s);if(t==="end")return this[We]();if(t==="close"){if(this[Rt]=true,!this[K]&&!this[x])return  false;let r=super.emit("close");return this.removeAllListeners("close"),r}else if(t==="error"){this[ut]=s,super.emit(Xt,s);let r=!this[pt]||this.listeners("error").length?super.emit("error",s):false;return this[H](),r}else if(t==="resume"){let r=super.emit("resume");return this[H](),r}else if(t==="finish"||t==="prefinish"){let r=super.emit(t);return this.removeAllListeners(t),r}let i=super.emit(t,...e);return this[H](),i}[Jt](t){for(let s of this[F])s.dest.write(t)===false&&this.pause();let e=this[M]?false:super.emit("data",t);return this[H](),e}[We](){return this[K]?false:(this[K]=true,this.readable=false,this[B]?(mt(()=>this[Zt]()),true):this[Zt]())}[Zt](){if(this[et]){let e=this[et].end();if(e){for(let s of this[F])s.dest.write(e);this[M]||super.emit("data",e);}}for(let e of this[F])e.end();let t=super.emit("end");return this.removeAllListeners("end"),t}async collect(){let t=Object.assign([],{dataLength:0});this[k]||(t.dataLength=0);let e=this.promise();return this.on("data",s=>{t.push(s),this[k]||(t.dataLength+=s.length);}),await e,t}async concat(){if(this[k])throw new Error("cannot concat in objectMode");let t=await this.collect();return this[P]?t.join(""):Buffer.concat(t,t.dataLength)}async promise(){return new Promise((t,e)=>{this.on(x,()=>e(new Error("stream destroyed"))),this.on("error",s=>e(s)),this.on("end",()=>t());})}[Symbol.asyncIterator](){this[M]=false;let t=false,e=async()=>(this.pause(),t=true,{value:void 0,done:true});return {next:()=>{if(t)return e();let i=this.read();if(i!==null)return Promise.resolve({done:false,value:i});if(this[G])return e();let r,o,h=c=>{this.off("data",a),this.off("end",l),this.off(x,u),e(),o(c);},a=c=>{this.off("error",h),this.off("end",l),this.off(x,u),this.pause(),r({value:c,done:!!this[G]});},l=()=>{this.off("error",h),this.off("data",a),this.off(x,u),e(),r({done:true,value:void 0});},u=()=>h(new Error("stream destroyed"));return new Promise((c,d)=>{o=d,r=c,this.once(x,u),this.once("error",h),this.once("end",l),this.once("data",a);})},throw:e,return:e,[Symbol.asyncIterator](){return this},[Symbol.asyncDispose]:async()=>{}}}[Symbol.iterator](){this[M]=false;let t=false,e=()=>(this.pause(),this.off(Xt,e),this.off(x,e),this.off("end",e),t=true,{done:true,value:void 0}),s=()=>{if(t)return e();let i=this.read();return i===null?e():{done:false,value:i}};return this.once("end",e),this.once(Xt,e),this.once(x,e),{next:s,throw:e,return:e,[Symbol.iterator](){return this},[Symbol.dispose]:()=>{}}}destroy(t){if(this[x])return t?this.emit("error",t):this.emit(x),this;this[x]=true,this[M]=true,this[C].length=0,this[T]=0;let e=this;return typeof e.close=="function"&&!this[Rt]&&e.close(),t?this.emit("error",t):this.emit(x),this}static get isStream(){return oi}};var vi=realpathSync.native,wt={lstatSync:lstatSync,readdir:readdir$2,readdirSync:readdirSync,readlinkSync:readlinkSync,realpathSync:vi,promises:{lstat:lstat$1,readdir:readdir$1,readlink:readlink,realpath:realpath}},Ue=n=>!n||n===wt||n===fs$2?wt:{...wt,...n,promises:{...wt.promises,...n.promises||{}}},$e=/^\\\\\?\\([a-z]:)\\?$/i,Ri=n=>n.replace(/\//g,"\\").replace($e,"$1\\"),Oi=/[\\\/]/,L=0,Ge=1,He=2,U=4,qe=6,Ke=8,X=10,Ve=12,_$1=15,gt=~_$1,se=16,je=32,yt=64,j=128,Nt=256,Lt=512,Ie=yt|j|Lt,Fi=1023,ie=n=>n.isFile()?Ke:n.isDirectory()?U:n.isSymbolicLink()?X:n.isCharacterDevice()?He:n.isBlockDevice()?qe:n.isSocket()?Ve:n.isFIFO()?Ge:L,ze=new ft({max:2**12}),bt=n=>{let t=ze.get(n);if(t)return t;let e=n.normalize("NFKD");return ze.set(n,e),e},Be=new ft({max:2**12}),_t=n=>{let t=Be.get(n);if(t)return t;let e=bt(n.toLowerCase());return Be.set(n,e),e},Wt=class extends ft{constructor(){super({max:256});}},ne=class extends ft{constructor(t=16*1024){super({maxSize:t,sizeCalculation:e=>e.length+1});}},Ye=Symbol("PathScurry setAsCwd"),R=class{name;root;roots;parent;nocase;isCWD=false;#t;#s;get dev(){return this.#s}#n;get mode(){return this.#n}#r;get nlink(){return this.#r}#o;get uid(){return this.#o}#S;get gid(){return this.#S}#w;get rdev(){return this.#w}#c;get blksize(){return this.#c}#h;get ino(){return this.#h}#u;get size(){return this.#u}#f;get blocks(){return this.#f}#a;get atimeMs(){return this.#a}#i;get mtimeMs(){return this.#i}#d;get ctimeMs(){return this.#d}#E;get birthtimeMs(){return this.#E}#b;get atime(){return this.#b}#p;get mtime(){return this.#p}#R;get ctime(){return this.#R}#m;get birthtime(){return this.#m}#C;#T;#g;#y;#x;#A;#e;#_;#M;#k;get parentPath(){return (this.parent||this).fullpath()}get path(){return this.parentPath}constructor(t,e=L,s,i,r,o,h){this.name=t,this.#C=r?_t(t):bt(t),this.#e=e&Fi,this.nocase=r,this.roots=i,this.root=s||this,this.#_=o,this.#g=h.fullpath,this.#x=h.relative,this.#A=h.relativePosix,this.parent=h.parent,this.parent?this.#t=this.parent.#t:this.#t=Ue(h.fs);}depth(){return this.#T!==void 0?this.#T:this.parent?this.#T=this.parent.depth()+1:this.#T=0}childrenCache(){return this.#_}resolve(t){if(!t)return this;let e=this.getRootString(t),i=t.substring(e.length).split(this.splitSep);return e?this.getRoot(e).#N(i):this.#N(i)}#N(t){let e=this;for(let s of t)e=e.child(s);return e}children(){let t=this.#_.get(this);if(t)return t;let e=Object.assign([],{provisional:0});return this.#_.set(this,e),this.#e&=~se,e}child(t,e){if(t===""||t===".")return this;if(t==="..")return this.parent||this;let s=this.children(),i=this.nocase?_t(t):bt(t);for(let a of s)if(a.#C===i)return a;let r=this.parent?this.sep:"",o=this.#g?this.#g+r+t:void 0,h=this.newChild(t,L,{...e,parent:this,fullpath:o});return this.canReaddir()||(h.#e|=j),s.push(h),h}relative(){if(this.isCWD)return "";if(this.#x!==void 0)return this.#x;let t=this.name,e=this.parent;if(!e)return this.#x=this.name;let s=e.relative();return s+(!s||!e.parent?"":this.sep)+t}relativePosix(){if(this.sep==="/")return this.relative();if(this.isCWD)return "";if(this.#A!==void 0)return this.#A;let t=this.name,e=this.parent;if(!e)return this.#A=this.fullpathPosix();let s=e.relativePosix();return s+(!s||!e.parent?"":"/")+t}fullpath(){if(this.#g!==void 0)return this.#g;let t=this.name,e=this.parent;if(!e)return this.#g=this.name;let i=e.fullpath()+(e.parent?this.sep:"")+t;return this.#g=i}fullpathPosix(){if(this.#y!==void 0)return this.#y;if(this.sep==="/")return this.#y=this.fullpath();if(!this.parent){let i=this.fullpath().replace(/\\/g,"/");return /^[a-z]:\//i.test(i)?this.#y=`//?/${i}`:this.#y=i}let t=this.parent,e=t.fullpathPosix(),s=e+(!e||!t.parent?"":"/")+this.name;return this.#y=s}isUnknown(){return (this.#e&_$1)===L}isType(t){return this[`is${t}`]()}getType(){return this.isUnknown()?"Unknown":this.isDirectory()?"Directory":this.isFile()?"File":this.isSymbolicLink()?"SymbolicLink":this.isFIFO()?"FIFO":this.isCharacterDevice()?"CharacterDevice":this.isBlockDevice()?"BlockDevice":this.isSocket()?"Socket":"Unknown"}isFile(){return (this.#e&_$1)===Ke}isDirectory(){return (this.#e&_$1)===U}isCharacterDevice(){return (this.#e&_$1)===He}isBlockDevice(){return (this.#e&_$1)===qe}isFIFO(){return (this.#e&_$1)===Ge}isSocket(){return (this.#e&_$1)===Ve}isSymbolicLink(){return (this.#e&X)===X}lstatCached(){return this.#e&je?this:void 0}readlinkCached(){return this.#M}realpathCached(){return this.#k}readdirCached(){let t=this.children();return t.slice(0,t.provisional)}canReadlink(){if(this.#M)return  true;if(!this.parent)return  false;let t=this.#e&_$1;return !(t!==L&&t!==X||this.#e&Nt||this.#e&j)}calledReaddir(){return !!(this.#e&se)}isENOENT(){return !!(this.#e&j)}isNamed(t){return this.nocase?this.#C===_t(t):this.#C===bt(t)}async readlink(){let t=this.#M;if(t)return t;if(this.canReadlink()&&this.parent)try{let e=await this.#t.promises.readlink(this.fullpath()),s=(await this.parent.realpath())?.resolve(e);if(s)return this.#M=s}catch(e){this.#D(e.code);return}}readlinkSync(){let t=this.#M;if(t)return t;if(this.canReadlink()&&this.parent)try{let e=this.#t.readlinkSync(this.fullpath()),s=this.parent.realpathSync()?.resolve(e);if(s)return this.#M=s}catch(e){this.#D(e.code);return}}#j(t){this.#e|=se;for(let e=t.provisional;e<t.length;e++){let s=t[e];s&&s.#v();}}#v(){this.#e&j||(this.#e=(this.#e|j)&gt,this.#G());}#G(){let t=this.children();t.provisional=0;for(let e of t)e.#v();}#P(){this.#e|=Lt,this.#L();}#L(){if(this.#e&yt)return;let t=this.#e;(t&_$1)===U&&(t&=gt),this.#e=t|yt,this.#G();}#I(t=""){t==="ENOTDIR"||t==="EPERM"?this.#L():t==="ENOENT"?this.#v():this.children().provisional=0;}#F(t=""){t==="ENOTDIR"?this.parent.#L():t==="ENOENT"&&this.#v();}#D(t=""){let e=this.#e;e|=Nt,t==="ENOENT"&&(e|=j),(t==="EINVAL"||t==="UNKNOWN")&&(e&=gt),this.#e=e,t==="ENOTDIR"&&this.parent&&this.parent.#L();}#z(t,e){return this.#U(t,e)||this.#B(t,e)}#B(t,e){let s=ie(t),i=this.newChild(t.name,s,{parent:this}),r=i.#e&_$1;return r!==U&&r!==X&&r!==L&&(i.#e|=yt),e.unshift(i),e.provisional++,i}#U(t,e){for(let s=e.provisional;s<e.length;s++){let i=e[s];if((this.nocase?_t(t.name):bt(t.name))===i.#C)return this.#l(t,i,s,e)}}#l(t,e,s,i){let r=e.name;return e.#e=e.#e&gt|ie(t),r!==t.name&&(e.name=t.name),s!==i.provisional&&(s===i.length-1?i.pop():i.splice(s,1),i.unshift(e)),i.provisional++,e}async lstat(){if((this.#e&j)===0)try{return this.#$(await this.#t.promises.lstat(this.fullpath())),this}catch(t){this.#F(t.code);}}lstatSync(){if((this.#e&j)===0)try{return this.#$(this.#t.lstatSync(this.fullpath())),this}catch(t){this.#F(t.code);}}#$(t){let{atime:e,atimeMs:s,birthtime:i,birthtimeMs:r,blksize:o,blocks:h,ctime:a,ctimeMs:l,dev:u,gid:c,ino:d,mode:f,mtime:m,mtimeMs:p,nlink:w,rdev:g,size:S,uid:E}=t;this.#b=e,this.#a=s,this.#m=i,this.#E=r,this.#c=o,this.#f=h,this.#R=a,this.#d=l,this.#s=u,this.#S=c,this.#h=d,this.#n=f,this.#p=m,this.#i=p,this.#r=w,this.#w=g,this.#u=S,this.#o=E;let y=ie(t);this.#e=this.#e&gt|y|je,y!==L&&y!==U&&y!==X&&(this.#e|=yt);}#W=[];#O=false;#H(t){this.#O=false;let e=this.#W.slice();this.#W.length=0,e.forEach(s=>s(null,t));}readdirCB(t,e=false){if(!this.canReaddir()){e?t(null,[]):queueMicrotask(()=>t(null,[]));return}let s=this.children();if(this.calledReaddir()){let r=s.slice(0,s.provisional);e?t(null,r):queueMicrotask(()=>t(null,r));return}if(this.#W.push(t),this.#O)return;this.#O=true;let i=this.fullpath();this.#t.readdir(i,{withFileTypes:true},(r,o)=>{if(r)this.#I(r.code),s.provisional=0;else {for(let h of o)this.#z(h,s);this.#j(s);}this.#H(s.slice(0,s.provisional));});}#q;async readdir(){if(!this.canReaddir())return [];let t=this.children();if(this.calledReaddir())return t.slice(0,t.provisional);let e=this.fullpath();if(this.#q)await this.#q;else {let s=()=>{};this.#q=new Promise(i=>s=i);try{for(let i of await this.#t.promises.readdir(e,{withFileTypes:!0}))this.#z(i,t);this.#j(t);}catch(i){this.#I(i.code),t.provisional=0;}this.#q=void 0,s();}return t.slice(0,t.provisional)}readdirSync(){if(!this.canReaddir())return [];let t=this.children();if(this.calledReaddir())return t.slice(0,t.provisional);let e=this.fullpath();try{for(let s of this.#t.readdirSync(e,{withFileTypes:!0}))this.#z(s,t);this.#j(t);}catch(s){this.#I(s.code),t.provisional=0;}return t.slice(0,t.provisional)}canReaddir(){if(this.#e&Ie)return  false;let t=_$1&this.#e;return t===L||t===U||t===X}shouldWalk(t,e){return (this.#e&U)===U&&!(this.#e&Ie)&&!t.has(this)&&(!e||e(this))}async realpath(){if(this.#k)return this.#k;if(!((Lt|Nt|j)&this.#e))try{let t=await this.#t.promises.realpath(this.fullpath());return this.#k=this.resolve(t)}catch{this.#P();}}realpathSync(){if(this.#k)return this.#k;if(!((Lt|Nt|j)&this.#e))try{let t=this.#t.realpathSync(this.fullpath());return this.#k=this.resolve(t)}catch{this.#P();}}[Ye](t){if(t===this)return;t.isCWD=false,this.isCWD=true;let e=new Set([]),s=[],i=this;for(;i&&i.parent;)e.add(i),i.#x=s.join(this.sep),i.#A=s.join("/"),i=i.parent,s.push("..");for(i=t;i&&i.parent&&!e.has(i);)i.#x=void 0,i.#A=void 0,i=i.parent;}},Pt=class n extends R{sep="\\";splitSep=Oi;constructor(t,e=L,s,i,r,o,h){super(t,e,s,i,r,o,h);}newChild(t,e=L,s={}){return new n(t,e,this.root,this.roots,this.nocase,this.childrenCache(),s)}getRootString(t){return win32.parse(t).root}getRoot(t){if(t=Ri(t.toUpperCase()),t===this.root.name)return this.root;for(let[e,s]of Object.entries(this.roots))if(this.sameRoot(t,e))return this.roots[t]=s;return this.roots[t]=new it(t,this).root}sameRoot(t,e=this.root.name){return t=t.toUpperCase().replace(/\//g,"\\").replace($e,"$1\\"),t===e}},jt=class n extends R{splitSep="/";sep="/";constructor(t,e=L,s,i,r,o,h){super(t,e,s,i,r,o,h);}getRootString(t){return t.startsWith("/")?"/":""}getRoot(t){return this.root}newChild(t,e=L,s={}){return new n(t,e,this.root,this.roots,this.nocase,this.childrenCache(),s)}},It=class{root;rootPath;roots;cwd;#t;#s;#n;nocase;#r;constructor(t=process.cwd(),e,s,{nocase:i,childrenCacheSize:r=16*1024,fs:o=wt}={}){this.#r=Ue(o),(t instanceof URL||t.startsWith("file://"))&&(t=fileURLToPath(t));let h=e.resolve(t);this.roots=Object.create(null),this.rootPath=this.parseRootPath(h),this.#t=new Wt,this.#s=new Wt,this.#n=new ne(r);let a=h.substring(this.rootPath.length).split(s);if(a.length===1&&!a[0]&&a.pop(),i===void 0)throw new TypeError("must provide nocase setting to PathScurryBase ctor");this.nocase=i,this.root=this.newRoot(this.#r),this.roots[this.rootPath]=this.root;let l=this.root,u=a.length-1,c=e.sep,d=this.rootPath,f=false;for(let m of a){let p=u--;l=l.child(m,{relative:new Array(p).fill("..").join(c),relativePosix:new Array(p).fill("..").join("/"),fullpath:d+=(f?"":c)+m}),f=true;}this.cwd=l;}depth(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.depth()}childrenCache(){return this.#n}resolve(...t){let e="";for(let r=t.length-1;r>=0;r--){let o=t[r];if(!(!o||o===".")&&(e=e?`${o}/${e}`:o,this.isAbsolute(o)))break}let s=this.#t.get(e);if(s!==void 0)return s;let i=this.cwd.resolve(e).fullpath();return this.#t.set(e,i),i}resolvePosix(...t){let e="";for(let r=t.length-1;r>=0;r--){let o=t[r];if(!(!o||o===".")&&(e=e?`${o}/${e}`:o,this.isAbsolute(o)))break}let s=this.#s.get(e);if(s!==void 0)return s;let i=this.cwd.resolve(e).fullpathPosix();return this.#s.set(e,i),i}relative(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.relative()}relativePosix(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.relativePosix()}basename(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.name}dirname(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),(t.parent||t).fullpath()}async readdir(t=this.cwd,e={withFileTypes:true}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s}=e;if(t.canReaddir()){let i=await t.readdir();return s?i:i.map(r=>r.name)}else return []}readdirSync(t=this.cwd,e={withFileTypes:true}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true}=e;return t.canReaddir()?s?t.readdirSync():t.readdirSync().map(i=>i.name):[]}async lstat(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.lstat()}lstatSync(t=this.cwd){return typeof t=="string"&&(t=this.cwd.resolve(t)),t.lstatSync()}async readlink(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=await t.readlink();return e?s:s?.fullpath()}readlinkSync(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=t.readlinkSync();return e?s:s?.fullpath()}async realpath(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=await t.realpath();return e?s:s?.fullpath()}realpathSync(t=this.cwd,{withFileTypes:e}={withFileTypes:false}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t.withFileTypes,t=this.cwd);let s=t.realpathSync();return e?s:s?.fullpath()}async walk(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=[];(!r||r(t))&&h.push(s?t:t.fullpath());let a=new Set,l=(c,d)=>{a.add(c),c.readdirCB((f,m)=>{if(f)return d(f);let p=m.length;if(!p)return d();let w=()=>{--p===0&&d();};for(let g of m)(!r||r(g))&&h.push(s?g:g.fullpath()),i&&g.isSymbolicLink()?g.realpath().then(S=>S?.isUnknown()?S.lstat():S).then(S=>S?.shouldWalk(a,o)?l(S,w):w()):g.shouldWalk(a,o)?l(g,w):w();},true);},u=t;return new Promise((c,d)=>{l(u,f=>{if(f)return d(f);c(h);});})}walkSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=[];(!r||r(t))&&h.push(s?t:t.fullpath());let a=new Set([t]);for(let l of a){let u=l.readdirSync();for(let c of u){(!r||r(c))&&h.push(s?c:c.fullpath());let d=c;if(c.isSymbolicLink()){if(!(i&&(d=c.realpathSync())))continue;d.isUnknown()&&d.lstatSync();}d.shouldWalk(a,o)&&a.add(d);}}return h}[Symbol.asyncIterator](){return this.iterate()}iterate(t=this.cwd,e={}){return typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd),this.stream(t,e)[Symbol.asyncIterator]()}[Symbol.iterator](){return this.iterateSync()}*iterateSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e;(!r||r(t))&&(yield s?t:t.fullpath());let h=new Set([t]);for(let a of h){let l=a.readdirSync();for(let u of l){(!r||r(u))&&(yield s?u:u.fullpath());let c=u;if(u.isSymbolicLink()){if(!(i&&(c=u.realpathSync())))continue;c.isUnknown()&&c.lstatSync();}c.shouldWalk(h,o)&&h.add(c);}}}stream(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=new V({objectMode:true});(!r||r(t))&&h.write(s?t:t.fullpath());let a=new Set,l=[t],u=0,c=()=>{let d=false;for(;!d;){let f=l.shift();if(!f){u===0&&h.end();return}u++,a.add(f);let m=(w,g,S=false)=>{if(w)return h.emit("error",w);if(i&&!S){let E=[];for(let y of g)y.isSymbolicLink()&&E.push(y.realpath().then(b=>b?.isUnknown()?b.lstat():b));if(E.length){Promise.all(E).then(()=>m(null,g,true));return}}for(let E of g)E&&(!r||r(E))&&(h.write(s?E:E.fullpath())||(d=true));u--;for(let E of g){let y=E.realpathCached()||E;y.shouldWalk(a,o)&&l.push(y);}d&&!h.flowing?h.once("drain",c):p||c();},p=true;f.readdirCB(m,true),p=false;}};return c(),h}streamSync(t=this.cwd,e={}){typeof t=="string"?t=this.cwd.resolve(t):t instanceof R||(e=t,t=this.cwd);let{withFileTypes:s=true,follow:i=false,filter:r,walkFilter:o}=e,h=new V({objectMode:true}),a=new Set;(!r||r(t))&&h.write(s?t:t.fullpath());let l=[t],u=0,c=()=>{let d=false;for(;!d;){let f=l.shift();if(!f){u===0&&h.end();return}u++,a.add(f);let m=f.readdirSync();for(let p of m)(!r||r(p))&&(h.write(s?p:p.fullpath())||(d=true));u--;for(let p of m){let w=p;if(p.isSymbolicLink()){if(!(i&&(w=p.realpathSync())))continue;w.isUnknown()&&w.lstatSync();}w.shouldWalk(a,o)&&l.push(w);}}d&&!h.flowing&&h.once("drain",c);};return c(),h}chdir(t=this.cwd){let e=this.cwd;this.cwd=typeof t=="string"?this.cwd.resolve(t):t,this.cwd[Ye](e);}},it=class extends It{sep="\\";constructor(t=process.cwd(),e={}){let{nocase:s=true}=e;super(t,win32,"\\",{...e,nocase:s}),this.nocase=s;for(let i=this.cwd;i;i=i.parent)i.nocase=this.nocase;}parseRootPath(t){return win32.parse(t).root.toUpperCase()}newRoot(t){return new Pt(this.rootPath,U,void 0,this.roots,this.nocase,this.childrenCache(),{fs:t})}isAbsolute(t){return t.startsWith("/")||t.startsWith("\\")||/^[a-z]:(\/|\\)/i.test(t)}},rt=class extends It{sep="/";constructor(t=process.cwd(),e={}){let{nocase:s=false}=e;super(t,posix,"/",{...e,nocase:s}),this.nocase=s;}parseRootPath(t){return "/"}newRoot(t){return new jt(this.rootPath,U,void 0,this.roots,this.nocase,this.childrenCache(),{fs:t})}isAbsolute(t){return t.startsWith("/")}},St=class extends rt{constructor(t=process.cwd(),e={}){let{nocase:s=true}=e;super(t,{...e,nocase:s});}};process.platform==="win32"?Pt:jt;var Xe=process.platform==="win32"?it:process.platform==="darwin"?St:rt;var Di=n=>n.length>=1,Mi=n=>n.length>=1,Ni=Symbol.for("nodejs.util.inspect.custom"),nt=class n{#t;#s;#n;length;#r;#o;#S;#w;#c;#h;#u=true;constructor(t,e,s,i){if(!Di(t))throw new TypeError("empty pattern list");if(!Mi(e))throw new TypeError("empty glob list");if(e.length!==t.length)throw new TypeError("mismatched pattern list and glob list lengths");if(this.length=t.length,s<0||s>=this.length)throw new TypeError("index out of range");if(this.#t=t,this.#s=e,this.#n=s,this.#r=i,this.#n===0){if(this.isUNC()){let[r,o,h,a,...l]=this.#t,[u,c,d,f,...m]=this.#s;l[0]===""&&(l.shift(),m.shift());let p=[r,o,h,a,""].join("/"),w=[u,c,d,f,""].join("/");this.#t=[p,...l],this.#s=[w,...m],this.length=this.#t.length;}else if(this.isDrive()||this.isAbsolute()){let[r,...o]=this.#t,[h,...a]=this.#s;o[0]===""&&(o.shift(),a.shift());let l=r+"/",u=h+"/";this.#t=[l,...o],this.#s=[u,...a],this.length=this.#t.length;}}}[Ni](){return "Pattern <"+this.#s.slice(this.#n).join("/")+">"}pattern(){return this.#t[this.#n]}isString(){return typeof this.#t[this.#n]=="string"}isGlobstar(){return this.#t[this.#n]===A}isRegExp(){return this.#t[this.#n]instanceof RegExp}globString(){return this.#S=this.#S||(this.#n===0?this.isAbsolute()?this.#s[0]+this.#s.slice(1).join("/"):this.#s.join("/"):this.#s.slice(this.#n).join("/"))}hasMore(){return this.length>this.#n+1}rest(){return this.#o!==void 0?this.#o:this.hasMore()?(this.#o=new n(this.#t,this.#s,this.#n+1,this.#r),this.#o.#h=this.#h,this.#o.#c=this.#c,this.#o.#w=this.#w,this.#o):this.#o=null}isUNC(){let t=this.#t;return this.#c!==void 0?this.#c:this.#c=this.#r==="win32"&&this.#n===0&&t[0]===""&&t[1]===""&&typeof t[2]=="string"&&!!t[2]&&typeof t[3]=="string"&&!!t[3]}isDrive(){let t=this.#t;return this.#w!==void 0?this.#w:this.#w=this.#r==="win32"&&this.#n===0&&this.length>1&&typeof t[0]=="string"&&/^[a-z]:$/i.test(t[0])}isAbsolute(){let t=this.#t;return this.#h!==void 0?this.#h:this.#h=t[0]===""&&t.length>1||this.isDrive()||this.isUNC()}root(){let t=this.#t[0];return typeof t=="string"&&this.isAbsolute()&&this.#n===0?t:""}checkFollowGlobstar(){return !(this.#n===0||!this.isGlobstar()||!this.#u)}markFollowGlobstar(){return this.#n===0||!this.isGlobstar()||!this.#u?false:(this.#u=false,true)}};var _i=typeof process=="object"&&process&&typeof process.platform=="string"?process.platform:"linux",ot=class{relative;relativeChildren;absolute;absoluteChildren;platform;mmopts;constructor(t,{nobrace:e,nocase:s,noext:i,noglobstar:r,platform:o=_i}){this.relative=[],this.absolute=[],this.relativeChildren=[],this.absoluteChildren=[],this.platform=o,this.mmopts={dot:true,nobrace:e,nocase:s,noext:i,noglobstar:r,optimizationLevel:2,platform:o,nocomment:true,nonegate:true};for(let h of t)this.add(h);}add(t){let e=new D(t,this.mmopts);for(let s=0;s<e.set.length;s++){let i=e.set[s],r=e.globParts[s];if(!i||!r)throw new Error("invalid pattern object");for(;i[0]==="."&&r[0]===".";)i.shift(),r.shift();let o=new nt(i,r,0,this.platform),h=new D(o.globString(),this.mmopts),a=r[r.length-1]==="**",l=o.isAbsolute();l?this.absolute.push(h):this.relative.push(h),a&&(l?this.absoluteChildren.push(h):this.relativeChildren.push(h));}}ignored(t){let e=t.fullpath(),s=`${e}/`,i=t.relative()||".",r=`${i}/`;for(let o of this.relative)if(o.match(i)||o.match(r))return  true;for(let o of this.absolute)if(o.match(e)||o.match(s))return  true;return  false}childrenIgnored(t){let e=t.fullpath()+"/",s=(t.relative()||".")+"/";for(let i of this.relativeChildren)if(i.match(s))return  true;for(let i of this.absoluteChildren)if(i.match(e))return  true;return  false}};var oe=class n{store;constructor(t=new Map){this.store=t;}copy(){return new n(new Map(this.store))}hasWalked(t,e){return this.store.get(t.fullpath())?.has(e.globString())}storeWalked(t,e){let s=t.fullpath(),i=this.store.get(s);i?i.add(e.globString()):this.store.set(s,new Set([e.globString()]));}},he=class{store=new Map;add(t,e,s){let i=(e?2:0)|(s?1:0),r=this.store.get(t);this.store.set(t,r===void 0?i:i&r);}entries(){return [...this.store.entries()].map(([t,e])=>[t,!!(e&2),!!(e&1)])}},ae=class{store=new Map;add(t,e){if(!t.canReaddir())return;let s=this.store.get(t);s?s.find(i=>i.globString()===e.globString())||s.push(e):this.store.set(t,[e]);}get(t){let e=this.store.get(t);if(!e)throw new Error("attempting to walk unknown path");return e}entries(){return this.keys().map(t=>[t,this.store.get(t)])}keys(){return [...this.store.keys()].filter(t=>t.canReaddir())}},Et=class n{hasWalkedCache;matches=new he;subwalks=new ae;patterns;follow;dot;opts;constructor(t,e){this.opts=t,this.follow=!!t.follow,this.dot=!!t.dot,this.hasWalkedCache=e?e.copy():new oe;}processPatterns(t,e){this.patterns=e;let s=e.map(i=>[t,i]);for(let[i,r]of s){this.hasWalkedCache.storeWalked(i,r);let o=r.root(),h=r.isAbsolute()&&this.opts.absolute!==false;if(o){i=i.resolve(o==="/"&&this.opts.root!==void 0?this.opts.root:o);let c=r.rest();if(c)r=c;else {this.matches.add(i,true,false);continue}}if(i.isENOENT())continue;let a,l,u=false;for(;typeof(a=r.pattern())=="string"&&(l=r.rest());)i=i.resolve(a),r=l,u=true;if(a=r.pattern(),l=r.rest(),u){if(this.hasWalkedCache.hasWalked(i,r))continue;this.hasWalkedCache.storeWalked(i,r);}if(typeof a=="string"){let c=a===".."||a===""||a===".";this.matches.add(i.resolve(a),h,c);continue}else if(a===A){(!i.isSymbolicLink()||this.follow||r.checkFollowGlobstar())&&this.subwalks.add(i,r);let c=l?.pattern(),d=l?.rest();if(!l||(c===""||c===".")&&!d)this.matches.add(i,h,c===""||c===".");else if(c===".."){let f=i.parent||i;d?this.hasWalkedCache.hasWalked(f,d)||this.subwalks.add(f,d):this.matches.add(f,h,true);}}else a instanceof RegExp&&this.subwalks.add(i,r);}return this}subwalkTargets(){return this.subwalks.keys()}child(){return new n(this.opts,this.hasWalkedCache)}filterEntries(t,e){let s=this.subwalks.get(t),i=this.child();for(let r of e)for(let o of s){let h=o.isAbsolute(),a=o.pattern(),l=o.rest();a===A?i.testGlobstar(r,o,l,h):a instanceof RegExp?i.testRegExp(r,a,l,h):i.testString(r,a,l,h);}return i}testGlobstar(t,e,s,i){if((this.dot||!t.name.startsWith("."))&&(e.hasMore()||this.matches.add(t,i,false),t.canReaddir()&&(this.follow||!t.isSymbolicLink()?this.subwalks.add(t,e):t.isSymbolicLink()&&(s&&e.checkFollowGlobstar()?this.subwalks.add(t,s):e.markFollowGlobstar()&&this.subwalks.add(t,e)))),s){let r=s.pattern();if(typeof r=="string"&&r!==".."&&r!==""&&r!==".")this.testString(t,r,s.rest(),i);else if(r===".."){let o=t.parent||t;this.subwalks.add(o,s);}else r instanceof RegExp&&this.testRegExp(t,r,s.rest(),i);}}testRegExp(t,e,s,i){e.test(t.name)&&(s?this.subwalks.add(t,s):this.matches.add(t,i,false));}testString(t,e,s,i){t.isNamed(e)&&(s?this.subwalks.add(t,s):this.matches.add(t,i,false));}};var Li=(n,t)=>typeof n=="string"?new ot([n],t):Array.isArray(n)?new ot(n,t):n,zt=class{path;patterns;opts;seen=new Set;paused=false;aborted=false;#t=[];#s;#n;signal;maxDepth;includeChildMatches;constructor(t,e,s){if(this.patterns=t,this.path=e,this.opts=s,this.#n=!s.posix&&s.platform==="win32"?"\\":"/",this.includeChildMatches=s.includeChildMatches!==false,(s.ignore||!this.includeChildMatches)&&(this.#s=Li(s.ignore??[],s),!this.includeChildMatches&&typeof this.#s.add!="function")){let i="cannot ignore child matches, ignore lacks add() method.";throw new Error(i)}this.maxDepth=s.maxDepth||1/0,s.signal&&(this.signal=s.signal,this.signal.addEventListener("abort",()=>{this.#t.length=0;}));}#r(t){return this.seen.has(t)||!!this.#s?.ignored?.(t)}#o(t){return !!this.#s?.childrenIgnored?.(t)}pause(){this.paused=true;}resume(){if(this.signal?.aborted)return;this.paused=false;let t;for(;!this.paused&&(t=this.#t.shift());)t();}onResume(t){this.signal?.aborted||(this.paused?this.#t.push(t):t());}async matchCheck(t,e){if(e&&this.opts.nodir)return;let s;if(this.opts.realpath){if(s=t.realpathCached()||await t.realpath(),!s)return;t=s;}let r=t.isUnknown()||this.opts.stat?await t.lstat():t;if(this.opts.follow&&this.opts.nodir&&r?.isSymbolicLink()){let o=await r.realpath();o&&(o.isUnknown()||this.opts.stat)&&await o.lstat();}return this.matchCheckTest(r,e)}matchCheckTest(t,e){return t&&(this.maxDepth===1/0||t.depth()<=this.maxDepth)&&(!e||t.canReaddir())&&(!this.opts.nodir||!t.isDirectory())&&(!this.opts.nodir||!this.opts.follow||!t.isSymbolicLink()||!t.realpathCached()?.isDirectory())&&!this.#r(t)?t:void 0}matchCheckSync(t,e){if(e&&this.opts.nodir)return;let s;if(this.opts.realpath){if(s=t.realpathCached()||t.realpathSync(),!s)return;t=s;}let r=t.isUnknown()||this.opts.stat?t.lstatSync():t;if(this.opts.follow&&this.opts.nodir&&r?.isSymbolicLink()){let o=r.realpathSync();o&&(o?.isUnknown()||this.opts.stat)&&o.lstatSync();}return this.matchCheckTest(r,e)}matchFinish(t,e){if(this.#r(t))return;if(!this.includeChildMatches&&this.#s?.add){let r=`${t.relativePosix()}/**`;this.#s.add(r);}let s=this.opts.absolute===void 0?e:this.opts.absolute;this.seen.add(t);let i=this.opts.mark&&t.isDirectory()?this.#n:"";if(this.opts.withFileTypes)this.matchEmit(t);else if(s){let r=this.opts.posix?t.fullpathPosix():t.fullpath();this.matchEmit(r+i);}else {let r=this.opts.posix?t.relativePosix():t.relative(),o=this.opts.dotRelative&&!r.startsWith(".."+this.#n)?"."+this.#n:"";this.matchEmit(r?o+r+i:"."+i);}}async match(t,e,s){let i=await this.matchCheck(t,s);i&&this.matchFinish(i,e);}matchSync(t,e,s){let i=this.matchCheckSync(t,s);i&&this.matchFinish(i,e);}walkCB(t,e,s){this.signal?.aborted&&s(),this.walkCB2(t,e,new Et(this.opts),s);}walkCB2(t,e,s,i){if(this.#o(t))return i();if(this.signal?.aborted&&i(),this.paused){this.onResume(()=>this.walkCB2(t,e,s,i));return}s.processPatterns(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||(r++,this.match(h,a,l).then(()=>o()));for(let h of s.subwalkTargets()){if(this.maxDepth!==1/0&&h.depth()>=this.maxDepth)continue;r++;let a=h.readdirCached();h.calledReaddir()?this.walkCB3(h,a,s,o):h.readdirCB((l,u)=>this.walkCB3(h,u,s,o),true);}o();}walkCB3(t,e,s,i){s=s.filterEntries(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||(r++,this.match(h,a,l).then(()=>o()));for(let[h,a]of s.subwalks.entries())r++,this.walkCB2(h,a,s.child(),o);o();}walkCBSync(t,e,s){this.signal?.aborted&&s(),this.walkCB2Sync(t,e,new Et(this.opts),s);}walkCB2Sync(t,e,s,i){if(this.#o(t))return i();if(this.signal?.aborted&&i(),this.paused){this.onResume(()=>this.walkCB2Sync(t,e,s,i));return}s.processPatterns(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||this.matchSync(h,a,l);for(let h of s.subwalkTargets()){if(this.maxDepth!==1/0&&h.depth()>=this.maxDepth)continue;r++;let a=h.readdirSync();this.walkCB3Sync(h,a,s,o);}o();}walkCB3Sync(t,e,s,i){s=s.filterEntries(t,e);let r=1,o=()=>{--r===0&&i();};for(let[h,a,l]of s.matches.entries())this.#r(h)||this.matchSync(h,a,l);for(let[h,a]of s.subwalks.entries())r++,this.walkCB2Sync(h,a,s.child(),o);o();}},xt=class extends zt{matches=new Set;constructor(t,e,s){super(t,e,s);}matchEmit(t){this.matches.add(t);}async walk(){if(this.signal?.aborted)throw this.signal.reason;return this.path.isUnknown()&&await this.path.lstat(),await new Promise((t,e)=>{this.walkCB(this.path,this.patterns,()=>{this.signal?.aborted?e(this.signal.reason):t(this.matches);});}),this.matches}walkSync(){if(this.signal?.aborted)throw this.signal.reason;return this.path.isUnknown()&&this.path.lstatSync(),this.walkCBSync(this.path,this.patterns,()=>{if(this.signal?.aborted)throw this.signal.reason}),this.matches}},vt=class extends zt{results;constructor(t,e,s){super(t,e,s),this.results=new V({signal:this.signal,objectMode:true}),this.results.on("drain",()=>this.resume()),this.results.on("resume",()=>this.resume());}matchEmit(t){this.results.write(t),this.results.flowing||this.pause();}stream(){let t=this.path;return t.isUnknown()?t.lstat().then(()=>{this.walkCB(t,this.patterns,()=>this.results.end());}):this.walkCB(t,this.patterns,()=>this.results.end()),this.results}streamSync(){return this.path.isUnknown()&&this.path.lstatSync(),this.walkCBSync(this.path,this.patterns,()=>this.results.end()),this.results}};var Pi=typeof process=="object"&&process&&typeof process.platform=="string"?process.platform:"linux",I=class{absolute;cwd;root;dot;dotRelative;follow;ignore;magicalBraces;mark;matchBase;maxDepth;nobrace;nocase;nodir;noext;noglobstar;pattern;platform;realpath;scurry;stat;signal;windowsPathsNoEscape;withFileTypes;includeChildMatches;opts;patterns;constructor(t,e){if(!e)throw new TypeError("glob options required");if(this.withFileTypes=!!e.withFileTypes,this.signal=e.signal,this.follow=!!e.follow,this.dot=!!e.dot,this.dotRelative=!!e.dotRelative,this.nodir=!!e.nodir,this.mark=!!e.mark,e.cwd?(e.cwd instanceof URL||e.cwd.startsWith("file://"))&&(e.cwd=fileURLToPath(e.cwd)):this.cwd="",this.cwd=e.cwd||"",this.root=e.root,this.magicalBraces=!!e.magicalBraces,this.nobrace=!!e.nobrace,this.noext=!!e.noext,this.realpath=!!e.realpath,this.absolute=e.absolute,this.includeChildMatches=e.includeChildMatches!==false,this.noglobstar=!!e.noglobstar,this.matchBase=!!e.matchBase,this.maxDepth=typeof e.maxDepth=="number"?e.maxDepth:1/0,this.stat=!!e.stat,this.ignore=e.ignore,this.withFileTypes&&this.absolute!==void 0)throw new Error("cannot set absolute and withFileTypes:true");if(typeof t=="string"&&(t=[t]),this.windowsPathsNoEscape=!!e.windowsPathsNoEscape||e.allowWindowsEscape===false,this.windowsPathsNoEscape&&(t=t.map(a=>a.replace(/\\/g,"/"))),this.matchBase){if(e.noglobstar)throw new TypeError("base matching requires globstar");t=t.map(a=>a.includes("/")?a:`./**/${a}`);}if(this.pattern=t,this.platform=e.platform||Pi,this.opts={...e,platform:this.platform},e.scurry){if(this.scurry=e.scurry,e.nocase!==void 0&&e.nocase!==e.scurry.nocase)throw new Error("nocase option contradicts provided scurry option")}else {let a=e.platform==="win32"?it:e.platform==="darwin"?St:e.platform?rt:Xe;this.scurry=new a(this.cwd,{nocase:e.nocase,fs:e.fs});}this.nocase=this.scurry.nocase;let s=this.platform==="darwin"||this.platform==="win32",i={braceExpandMax:1e4,...e,dot:this.dot,matchBase:this.matchBase,nobrace:this.nobrace,nocase:this.nocase,nocaseMagicOnly:s,nocomment:true,noext:this.noext,nonegate:true,optimizationLevel:2,platform:this.platform,windowsPathsNoEscape:this.windowsPathsNoEscape,debug:!!this.opts.debug},r=this.pattern.map(a=>new D(a,i)),[o,h]=r.reduce((a,l)=>(a[0].push(...l.set),a[1].push(...l.globParts),a),[[],[]]);this.patterns=o.map((a,l)=>{let u=h[l];if(!u)throw new Error("invalid pattern object");return new nt(a,u,0,this.platform)});}async walk(){return [...await new xt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).walk()]}walkSync(){return [...new xt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).walkSync()]}stream(){return new vt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).stream()}streamSync(){return new vt(this.patterns,this.scurry.cwd,{...this.opts,maxDepth:this.maxDepth!==1/0?this.maxDepth+this.scurry.cwd.depth():1/0,platform:this.platform,nocase:this.nocase,includeChildMatches:this.includeChildMatches}).streamSync()}iterateSync(){return this.streamSync()[Symbol.iterator]()}[Symbol.iterator](){return this.iterateSync()}iterate(){return this.stream()[Symbol.asyncIterator]()}[Symbol.asyncIterator](){return this.iterate()}};var le=(n,t={})=>{Array.isArray(n)||(n=[n]);for(let e of n)if(new D(e,t).hasMagic())return  true;return  false};function Bt(n,t={}){return new I(n,t).streamSync()}function Qe(n,t={}){return new I(n,t).stream()}function ts(n,t={}){return new I(n,t).walkSync()}async function Je(n,t={}){return new I(n,t).walk()}function Ut(n,t={}){return new I(n,t).iterateSync()}function es(n,t={}){return new I(n,t).iterate()}var ji=Bt,Ii=Object.assign(Qe,{sync:Bt}),zi=Ut,Bi=Object.assign(es,{sync:Ut}),Ui=Object.assign(ts,{stream:Bt,iterate:Ut}),Ze=Object.assign(Je,{glob:Je,globSync:ts,sync:Ui,globStream:Qe,stream:Ii,globStreamSync:Bt,streamSync:ji,globIterate:es,iterate:Bi,globIterateSync:Ut,iterateSync:zi,Glob:I,hasMagic:le,escape:tt,unescape:W});Ze.glob=Ze;
 
 // Regex pattern to extract module names from Gradle-style output
 const GRADLE_PROJECT_REGEX = /Project '([^']+)'/g;
@@ -37596,236 +39138,6 @@ class ServiceType {
 // @generated from protobuf file "results/api/v1/artifact.proto" (package "github.actions.results.api.v1", syntax proto3)
 // tslint:disable
 // @generated message type with reflection information, may provide speed optimized methods
-class MigrateArtifactRequest$Type extends MessageType {
-    constructor() {
-        super("github.actions.results.api.v1.MigrateArtifactRequest", [
-            { no: 1, name: "workflow_run_backend_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "expires_at", kind: "message", T: () => Timestamp }
-        ]);
-    }
-    create(value) {
-        const message = { workflowRunBackendId: "", name: "" };
-        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-        if (value !== undefined)
-            reflectionMergePartial(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader, length, options, target) {
-        let message = target !== null && target !== void 0 ? target : this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* string workflow_run_backend_id */ 1:
-                    message.workflowRunBackendId = reader.string();
-                    break;
-                case /* string name */ 2:
-                    message.name = reader.string();
-                    break;
-                case /* google.protobuf.Timestamp expires_at */ 3:
-                    message.expiresAt = Timestamp.internalBinaryRead(reader, reader.uint32(), options, message.expiresAt);
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    internalBinaryWrite(message, writer, options) {
-        /* string workflow_run_backend_id = 1; */
-        if (message.workflowRunBackendId !== "")
-            writer.tag(1, WireType.LengthDelimited).string(message.workflowRunBackendId);
-        /* string name = 2; */
-        if (message.name !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.name);
-        /* google.protobuf.Timestamp expires_at = 3; */
-        if (message.expiresAt)
-            Timestamp.internalBinaryWrite(message.expiresAt, writer.tag(3, WireType.LengthDelimited).fork(), options).join();
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message github.actions.results.api.v1.MigrateArtifactRequest
- */
-const MigrateArtifactRequest = new MigrateArtifactRequest$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class MigrateArtifactResponse$Type extends MessageType {
-    constructor() {
-        super("github.actions.results.api.v1.MigrateArtifactResponse", [
-            { no: 1, name: "ok", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 2, name: "signed_upload_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-        ]);
-    }
-    create(value) {
-        const message = { ok: false, signedUploadUrl: "" };
-        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-        if (value !== undefined)
-            reflectionMergePartial(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader, length, options, target) {
-        let message = target !== null && target !== void 0 ? target : this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* bool ok */ 1:
-                    message.ok = reader.bool();
-                    break;
-                case /* string signed_upload_url */ 2:
-                    message.signedUploadUrl = reader.string();
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    internalBinaryWrite(message, writer, options) {
-        /* bool ok = 1; */
-        if (message.ok !== false)
-            writer.tag(1, WireType.Varint).bool(message.ok);
-        /* string signed_upload_url = 2; */
-        if (message.signedUploadUrl !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.signedUploadUrl);
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message github.actions.results.api.v1.MigrateArtifactResponse
- */
-const MigrateArtifactResponse = new MigrateArtifactResponse$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class FinalizeMigratedArtifactRequest$Type extends MessageType {
-    constructor() {
-        super("github.actions.results.api.v1.FinalizeMigratedArtifactRequest", [
-            { no: 1, name: "workflow_run_backend_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "size", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
-        ]);
-    }
-    create(value) {
-        const message = { workflowRunBackendId: "", name: "", size: "0" };
-        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-        if (value !== undefined)
-            reflectionMergePartial(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader, length, options, target) {
-        let message = target !== null && target !== void 0 ? target : this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* string workflow_run_backend_id */ 1:
-                    message.workflowRunBackendId = reader.string();
-                    break;
-                case /* string name */ 2:
-                    message.name = reader.string();
-                    break;
-                case /* int64 size */ 3:
-                    message.size = reader.int64().toString();
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    internalBinaryWrite(message, writer, options) {
-        /* string workflow_run_backend_id = 1; */
-        if (message.workflowRunBackendId !== "")
-            writer.tag(1, WireType.LengthDelimited).string(message.workflowRunBackendId);
-        /* string name = 2; */
-        if (message.name !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.name);
-        /* int64 size = 3; */
-        if (message.size !== "0")
-            writer.tag(3, WireType.Varint).int64(message.size);
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message github.actions.results.api.v1.FinalizeMigratedArtifactRequest
- */
-const FinalizeMigratedArtifactRequest = new FinalizeMigratedArtifactRequest$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class FinalizeMigratedArtifactResponse$Type extends MessageType {
-    constructor() {
-        super("github.actions.results.api.v1.FinalizeMigratedArtifactResponse", [
-            { no: 1, name: "ok", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 2, name: "artifact_id", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
-        ]);
-    }
-    create(value) {
-        const message = { ok: false, artifactId: "0" };
-        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-        if (value !== undefined)
-            reflectionMergePartial(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader, length, options, target) {
-        let message = target !== null && target !== void 0 ? target : this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* bool ok */ 1:
-                    message.ok = reader.bool();
-                    break;
-                case /* int64 artifact_id */ 2:
-                    message.artifactId = reader.int64().toString();
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    internalBinaryWrite(message, writer, options) {
-        /* bool ok = 1; */
-        if (message.ok !== false)
-            writer.tag(1, WireType.Varint).bool(message.ok);
-        /* int64 artifact_id = 2; */
-        if (message.artifactId !== "0")
-            writer.tag(2, WireType.Varint).int64(message.artifactId);
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message github.actions.results.api.v1.FinalizeMigratedArtifactResponse
- */
-const FinalizeMigratedArtifactResponse = new FinalizeMigratedArtifactResponse$Type();
-// @generated message type with reflection information, may provide speed optimized methods
 class CreateArtifactRequest$Type extends MessageType {
     constructor() {
         super("github.actions.results.api.v1.CreateArtifactRequest", [
@@ -37833,7 +39145,8 @@ class CreateArtifactRequest$Type extends MessageType {
             { no: 2, name: "workflow_job_run_backend_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "expires_at", kind: "message", T: () => Timestamp },
-            { no: 5, name: "version", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 5, name: "version", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "mime_type", kind: "message", T: () => StringValue }
         ]);
     }
     create(value) {
@@ -37863,6 +39176,9 @@ class CreateArtifactRequest$Type extends MessageType {
                 case /* int32 version */ 5:
                     message.version = reader.int32();
                     break;
+                case /* google.protobuf.StringValue mime_type */ 6:
+                    message.mimeType = StringValue.internalBinaryRead(reader, reader.uint32(), options, message.mimeType);
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -37890,6 +39206,9 @@ class CreateArtifactRequest$Type extends MessageType {
         /* int32 version = 5; */
         if (message.version !== 0)
             writer.tag(5, WireType.Varint).int32(message.version);
+        /* google.protobuf.StringValue mime_type = 6; */
+        if (message.mimeType)
+            StringValue.internalBinaryWrite(message.mimeType, writer.tag(6, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -38155,7 +39474,7 @@ const ListArtifactsRequest = new ListArtifactsRequest$Type();
 class ListArtifactsResponse$Type extends MessageType {
     constructor() {
         super("github.actions.results.api.v1.ListArtifactsResponse", [
-            { no: 1, name: "artifacts", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ListArtifactsResponse_MonolithArtifact }
+            { no: 1, name: "artifacts", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ListArtifactsResponse_MonolithArtifact }
         ]);
     }
     create(value) {
@@ -38518,9 +39837,7 @@ new ServiceType("github.actions.results.api.v1.ArtifactService", [
     { name: "FinalizeArtifact", options: {}, I: FinalizeArtifactRequest, O: FinalizeArtifactResponse },
     { name: "ListArtifacts", options: {}, I: ListArtifactsRequest, O: ListArtifactsResponse },
     { name: "GetSignedArtifactURL", options: {}, I: GetSignedArtifactURLRequest, O: GetSignedArtifactURLResponse },
-    { name: "DeleteArtifact", options: {}, I: DeleteArtifactRequest, O: DeleteArtifactResponse },
-    { name: "MigrateArtifact", options: {}, I: MigrateArtifactRequest, O: MigrateArtifactResponse },
-    { name: "FinalizeMigratedArtifact", options: {}, I: FinalizeMigratedArtifactRequest, O: FinalizeMigratedArtifactResponse }
+    { name: "DeleteArtifact", options: {}, I: DeleteArtifactRequest, O: DeleteArtifactResponse }
 ]);
 
 class ArtifactServiceClientJSON {
@@ -38668,7 +39985,7 @@ The following characters are not allowed in files that are uploaded due to limit
     }
 }
 
-var version$1 = "6.1.0";
+var version$1 = "6.2.1";
 var require$$0$1 = {
 	version: version$1};
 
@@ -38747,7 +40064,7 @@ NetworkError.isNetworkErrorCode = (code) => {
 };
 class UsageError extends Error {
     constructor() {
-        const message = `Artifact storage quota has been hit. Unable to upload any new artifacts. Usage is recalculated every 6-12 hours.\nMore info on storage limits: https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#calculating-minute-and-storage-spending`;
+        const message = `Artifact storage quota has been hit. Unable to upload any new artifacts.\nMore info on storage limits: https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#calculating-minute-and-storage-spending`;
         super(message);
         this.name = 'UsageError';
     }
@@ -38930,7 +40247,7 @@ function maskSecretUrls(body) {
     }
 }
 
-var __awaiter$9 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$a = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -38962,14 +40279,14 @@ class ArtifactHttpClient {
     // This function satisfies the Rpc interface. It is compatible with the JSON
     // JSON generated client.
     request(service, method, contentType, data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
+        return __awaiter$a(this, void 0, void 0, function* () {
             const url = new URL(`/twirp/${service}/${method}`, this.baseUrl).href;
             debug(`[Request] ${method} ${url}`);
             const headers = {
                 'Content-Type': contentType
             };
             try {
-                const { body } = yield this.retryableRequest(() => __awaiter$9(this, void 0, void 0, function* () { return this.httpClient.post(url, JSON.stringify(data), headers); }));
+                const { body } = yield this.retryableRequest(() => __awaiter$a(this, void 0, void 0, function* () { return this.httpClient.post(url, JSON.stringify(data), headers); }));
                 return body;
             }
             catch (error) {
@@ -38978,7 +40295,7 @@ class ArtifactHttpClient {
         });
     }
     retryableRequest(operation) {
-        return __awaiter$9(this, void 0, void 0, function* () {
+        return __awaiter$a(this, void 0, void 0, function* () {
             let attempt = 0;
             let errorMessage = '';
             let rawBody = '';
@@ -39050,7 +40367,7 @@ class ArtifactHttpClient {
         return retryableStatusCodes.includes(statusCode);
     }
     sleep(milliseconds) {
-        return __awaiter$9(this, void 0, void 0, function* () {
+        return __awaiter$a(this, void 0, void 0, function* () {
             return new Promise(resolve => setTimeout(resolve, milliseconds));
         });
     }
@@ -70941,7 +72258,7 @@ class PageBlobClient extends BlobClient {
     }
 }
 
-var __awaiter$8 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$9 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -70950,12 +72267,12 @@ var __awaiter$8 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-function uploadZipToBlobStorage(authenticatedUploadURL, zipUploadStream) {
-    return __awaiter$8(this, void 0, void 0, function* () {
+function uploadToBlobStorage(authenticatedUploadURL, uploadStream, contentType) {
+    return __awaiter$9(this, void 0, void 0, function* () {
         let uploadByteCount = 0;
         let lastProgressTime = Date.now();
         const abortController = new AbortController();
-        const chunkTimer = (interval) => __awaiter$8(this, void 0, void 0, function* () {
+        const chunkTimer = (interval) => __awaiter$9(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 const timer = setInterval(() => {
                     if (Date.now() - lastProgressTime > interval) {
@@ -70972,26 +72289,26 @@ function uploadZipToBlobStorage(authenticatedUploadURL, zipUploadStream) {
         const bufferSize = getUploadChunkSize();
         const blobClient = new BlobClient(authenticatedUploadURL);
         const blockBlobClient = blobClient.getBlockBlobClient();
-        debug(`Uploading artifact zip to blob storage with maxConcurrency: ${maxConcurrency}, bufferSize: ${bufferSize}`);
+        debug(`Uploading artifact to blob storage with maxConcurrency: ${maxConcurrency}, bufferSize: ${bufferSize}, contentType: ${contentType}`);
         const uploadCallback = (progress) => {
             info(`Uploaded bytes ${progress.loadedBytes}`);
             uploadByteCount = progress.loadedBytes;
             lastProgressTime = Date.now();
         };
         const options = {
-            blobHTTPHeaders: { blobContentType: 'zip' },
+            blobHTTPHeaders: { blobContentType: contentType },
             onProgress: uploadCallback,
             abortSignal: abortController.signal
         };
         let sha256Hash = undefined;
-        const uploadStream = new require$$0$3.PassThrough();
+        const blobUploadStream = new require$$0$3.PassThrough();
         const hashStream = crypto.createHash('sha256');
-        zipUploadStream.pipe(uploadStream); // This stream is used for the upload
-        zipUploadStream.pipe(hashStream).setEncoding('hex'); // This stream is used to compute a hash of the zip content that gets used. Integrity check
+        uploadStream.pipe(blobUploadStream); // This stream is used for the upload
+        uploadStream.pipe(hashStream).setEncoding('hex'); // This stream is used to compute a hash of the content for integrity check
         info('Beginning upload of artifact content to blob storage');
         try {
             yield Promise.race([
-                blockBlobClient.uploadStream(uploadStream, bufferSize, maxConcurrency, options),
+                blockBlobClient.uploadStream(blobUploadStream, bufferSize, maxConcurrency, options),
                 chunkTimer(getUploadChunkTimeout())
             ]);
         }
@@ -71007,7 +72324,7 @@ function uploadZipToBlobStorage(authenticatedUploadURL, zipUploadStream) {
         info('Finished uploading artifact content to blob storage!');
         hashStream.end();
         sha256Hash = hashStream.read();
-        info(`SHA256 digest of uploaded artifact zip is ${sha256Hash}`);
+        info(`SHA256 digest of uploaded artifact is ${sha256Hash}`);
         if (uploadByteCount === 0) {
             warning(`No data was uploaded to blob storage. Reported upload byte count is 0.`);
         }
@@ -108787,7 +110104,7 @@ function requireArchiver () {
 var archiverExports = requireArchiver();
 var archiver = /*@__PURE__*/getDefaultExportFromCjs(archiverExports);
 
-var __awaiter$7 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$8 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -108796,10 +110113,9 @@ var __awaiter$7 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const DEFAULT_COMPRESSION_LEVEL = 6;
 // Custom stream transformer so we can set the highWaterMark property
 // See https://github.com/nodejs/node/issues/8855
-class ZipUploadStream extends require$$0$3.Transform {
+class WaterMarkedUploadStream extends require$$0$3.Transform {
     constructor(bufferSize) {
         super({
             highWaterMark: bufferSize
@@ -108810,6 +110126,41 @@ class ZipUploadStream extends require$$0$3.Transform {
         cb(null, chunk);
     }
 }
+function createRawFileUploadStream(filePath) {
+    return __awaiter$8(this, void 0, void 0, function* () {
+        debug(`Creating raw file upload stream for: ${filePath}`);
+        const bufferSize = getUploadChunkSize();
+        const uploadStream = new WaterMarkedUploadStream(bufferSize);
+        // Check if symlink and resolve the source path
+        let sourcePath = filePath;
+        const stats = yield fs$1.promises.lstat(filePath);
+        if (stats.isSymbolicLink()) {
+            sourcePath = yield realpath$1(filePath);
+        }
+        // Create a read stream from the file and pipe it to the upload stream
+        const fileStream = fs$1.createReadStream(sourcePath, {
+            highWaterMark: bufferSize
+        });
+        fileStream.on('error', error => {
+            error$1('An error has occurred while reading the file for upload');
+            error$1(String(error));
+            uploadStream.destroy(new Error('An error has occurred during file read for the artifact'));
+        });
+        fileStream.pipe(uploadStream);
+        return uploadStream;
+    });
+}
+
+var __awaiter$7 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const DEFAULT_COMPRESSION_LEVEL = 6;
 function createZipUploadStream(uploadSpecification_1) {
     return __awaiter$7(this, arguments, void 0, function* (uploadSpecification, compressionLevel = DEFAULT_COMPRESSION_LEVEL) {
         debug(`Creating Artifact archive with compressionLevel: ${compressionLevel}`);
@@ -108840,7 +110191,7 @@ function createZipUploadStream(uploadSpecification_1) {
             }
         }
         const bufferSize = getUploadChunkSize();
-        const zipUploadStream = new ZipUploadStream(bufferSize);
+        const zipUploadStream = new WaterMarkedUploadStream(bufferSize);
         debug(`Zip write high watermark value ${zipUploadStream.writableHighWaterMark}`);
         debug(`Zip read high watermark value ${zipUploadStream.readableHighWaterMark}`);
         zip.pipe(zipUploadStream);
@@ -108872,6 +110223,76 @@ const zipEndCallback = () => {
     debug('Zip stream for upload has ended.');
 };
 
+/**
+ * Maps file extensions to MIME types
+ */
+const mimeTypes = {
+    // Text
+    '.txt': 'text/plain',
+    '.html': 'text/html',
+    '.htm': 'text/html',
+    '.css': 'text/css',
+    '.csv': 'text/csv',
+    '.xml': 'text/xml',
+    '.md': 'text/markdown',
+    // JavaScript/JSON
+    '.js': 'application/javascript',
+    '.mjs': 'application/javascript',
+    '.json': 'application/json',
+    // Images
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.bmp': 'image/bmp',
+    '.tiff': 'image/tiff',
+    '.tif': 'image/tiff',
+    // Audio
+    '.mp3': 'audio/mpeg',
+    '.wav': 'audio/wav',
+    '.ogg': 'audio/ogg',
+    '.flac': 'audio/flac',
+    // Video
+    '.mp4': 'video/mp4',
+    '.webm': 'video/webm',
+    '.avi': 'video/x-msvideo',
+    '.mov': 'video/quicktime',
+    // Documents
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.xls': 'application/vnd.ms-excel',
+    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.ppt': 'application/vnd.ms-powerpoint',
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    // Archives
+    '.zip': 'application/zip',
+    '.tar': 'application/x-tar',
+    '.gz': 'application/gzip',
+    '.rar': 'application/vnd.rar',
+    '.7z': 'application/x-7z-compressed',
+    // Code/Data
+    '.wasm': 'application/wasm',
+    '.yaml': 'application/x-yaml',
+    '.yml': 'application/x-yaml',
+    // Fonts
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf',
+    '.otf': 'font/otf',
+    '.eot': 'application/vnd.ms-fontobject'
+};
+/**
+ * Gets the MIME type for a file based on its extension
+ */
+function getMimeType(filePath) {
+    const ext = path$1.extname(filePath).toLowerCase();
+    return mimeTypes[ext] || 'application/octet-stream';
+}
+
 var __awaiter$6 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -108883,12 +110304,30 @@ var __awaiter$6 = (undefined && undefined.__awaiter) || function (thisArg, _argu
 };
 function uploadArtifact(name, files, rootDirectory, options) {
     return __awaiter$6(this, void 0, void 0, function* () {
+        let artifactFileName = `${name}.zip`;
+        if (options === null || options === void 0 ? void 0 : options.skipArchive) {
+            if (files.length === 0) {
+                throw new FilesNotFoundError([]);
+            }
+            if (files.length > 1) {
+                throw new Error('skipArchive option is only supported when uploading a single file');
+            }
+            if (!fs$1.existsSync(files[0])) {
+                throw new FilesNotFoundError(files);
+            }
+            artifactFileName = path$1.basename(files[0]);
+            name = artifactFileName;
+        }
         validateArtifactName(name);
         validateRootDirectory(rootDirectory);
-        const zipSpecification = getUploadZipSpecification(files, rootDirectory);
-        if (zipSpecification.length === 0) {
-            throw new FilesNotFoundError(zipSpecification.flatMap(s => (s.sourcePath ? [s.sourcePath] : [])));
+        let zipSpecification = [];
+        if (!(options === null || options === void 0 ? void 0 : options.skipArchive)) {
+            zipSpecification = getUploadZipSpecification(files, rootDirectory);
+            if (zipSpecification.length === 0) {
+                throw new FilesNotFoundError(zipSpecification.flatMap(s => (s.sourcePath ? [s.sourcePath] : [])));
+            }
         }
+        const contentType = getMimeType(artifactFileName);
         // get the IDs needed for the artifact creation
         const backendIds = getBackendIdsFromToken();
         // create the artifact client
@@ -108898,7 +110337,8 @@ function uploadArtifact(name, files, rootDirectory, options) {
             workflowRunBackendId: backendIds.workflowRunBackendId,
             workflowJobRunBackendId: backendIds.workflowJobRunBackendId,
             name,
-            version: 4
+            mimeType: StringValue.create({ value: contentType }),
+            version: 7
         };
         // if there is a retention period, add it to the request
         const expiresAt = getExpiration(options === null || options === void 0 ? void 0 : options.retentionDays);
@@ -108909,9 +110349,17 @@ function uploadArtifact(name, files, rootDirectory, options) {
         if (!createArtifactResp.ok) {
             throw new InvalidResponseError('CreateArtifact: response from backend was not ok');
         }
-        const zipUploadStream = yield createZipUploadStream(zipSpecification, options === null || options === void 0 ? void 0 : options.compressionLevel);
-        // Upload zip to blob storage
-        const uploadResult = yield uploadZipToBlobStorage(createArtifactResp.signedUploadUrl, zipUploadStream);
+        let stream;
+        if (options === null || options === void 0 ? void 0 : options.skipArchive) {
+            // Upload raw file without archiving
+            stream = yield createRawFileUploadStream(files[0]);
+        }
+        else {
+            // Create and upload zip archive
+            stream = yield createZipUploadStream(zipSpecification, options === null || options === void 0 ? void 0 : options.compressionLevel);
+        }
+        info(`Uploading artifact: ${artifactFileName}`);
+        const uploadResult = yield uploadToBlobStorage(createArtifactResp.signedUploadUrl, stream, contentType);
         // finalize the artifact
         const finalizeArtifactReq = {
             workflowRunBackendId: backendIds.workflowRunBackendId,
@@ -108930,7 +110378,7 @@ function uploadArtifact(name, files, rootDirectory, options) {
             throw new InvalidResponseError('FinalizeArtifact: response from backend was not ok');
         }
         const artifactId = BigInt(finalizeArtifactResp.artifactId);
-        info(`Artifact ${name}.zip successfully finalized. Artifact ID ${artifactId}`);
+        info(`Artifact ${name} successfully finalized. Artifact ID ${artifactId}`);
         return {
             size: uploadResult.uploadSize,
             digest: uploadResult.sha256Hash,
@@ -116103,13 +117551,17 @@ function streamExtractExternal(url_1, directory_1) {
             mimeType === 'application/zip-compressed' ||
             urlEndsWithZip;
         // Extract filename from Content-Disposition header
+        // Prefer filename* (RFC 5987) which supports UTF-8 encoded filenames,
+        // fall back to filename which may contain ASCII-only replacements
         const contentDisposition = response.message.headers['content-disposition'] || '';
         let fileName = 'artifact';
-        const filenameMatch = contentDisposition.match(/filename\*?=['"]?(?:UTF-\d['"]*)?([^;\r\n"']*)['"]?/i);
-        if (filenameMatch && filenameMatch[1]) {
+        const filenameStar = contentDisposition.match(/filename\*\s*=\s*UTF-8''([^;\r\n]*)/i);
+        const filenamePlain = contentDisposition.match(/(?<!\*)filename\s*=\s*['"]?([^;\r\n"']*)['"]?/i);
+        const rawName = (filenameStar === null || filenameStar === void 0 ? void 0 : filenameStar[1]) || (filenamePlain === null || filenamePlain === void 0 ? void 0 : filenamePlain[1]);
+        if (rawName) {
             // Sanitize fileName to prevent path traversal attacks
             // Use path.basename to extract only the filename component
-            fileName = path$1.basename(decodeURIComponent(filenameMatch[1].trim()));
+            fileName = path$1.basename(decodeURIComponent(rawName.trim()));
         }
         debug(`Content-Type: ${contentType}, mimeType: ${mimeType}, urlEndsWithZip: ${urlEndsWithZip}, isZip: ${isZip}, skipDecompress: ${skipDecompress}`);
         debug(`Content-Disposition: ${contentDisposition}, fileName: ${fileName}`);
