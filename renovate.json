@@ -4,10 +4,6 @@
   "prConcurrentLimit": 1,
   "packageRules": [
     {
-      "matchDatasources": ["npm"],
-      "minimumReleaseAge": "7 days"
-    },
-    {
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm non-major dependencies",
