@@ -35153,8 +35153,6 @@ const XML_PARSER_OPTIONS = {
     // Security: disable external entities to prevent XXE attacks
     allowBooleanAttributes: false,
     processEntities: false,
-    // Set size limit to prevent XML bomb attacks (10MB)
-    maxSize: 10 * 1024 * 1024,
 };
 /**
  * Parse Kover XML coverage file
