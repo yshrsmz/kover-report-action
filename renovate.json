@@ -1,13 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests",
-    ":pinDependencies",
-    ":pinDevDependencies"
-  ],
+  "extends": ["config:best-practices", ":pinDependencies"],
   "prConcurrentLimit": 1,
   "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "7 days"
+    },
     {
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
