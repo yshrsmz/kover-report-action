@@ -1,11 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests",
-    ":pinDependencies",
-    ":pinDevDependencies"
-  ],
+  "extends": ["config:best-practices", ":pinDependencies"],
   "prConcurrentLimit": 1,
   "packageRules": [
     {
