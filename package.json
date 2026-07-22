@@ -47,7 +47,7 @@
     "@vitest/ui": "4.1.10",
     "lefthook": "2.1.9",
     "rollup": "4.62.2",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "4.1.10"
   },
   "packageManager": "pnpm@11.10.0"
