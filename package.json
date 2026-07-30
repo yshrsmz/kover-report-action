@@ -33,7 +33,7 @@
     "@actions/exec": "3.0.0",
     "@actions/github": "9.1.1",
     "@actions/tool-cache": "4.0.0",
-    "fast-xml-parser": "5.10.0",
+    "fast-xml-parser": "5.10.1",
     "glob": "13.0.6"
   },
   "devDependencies": {
