@@ -33177,7 +33177,11 @@ function resolveEnotation(str, trimmedStr, options) {
  */
 function trimZeros(numStr) {
     if (numStr && numStr.indexOf(".") !== -1) {//float
-        numStr = numStr.replace(/0+$/, ""); //remove ending zeros
+        //remove ending zeros without the O(n^2) backtracking that /0+$/ hits
+        //when the string doesn't end in 0 but has a long internal zero-run
+        let end = numStr.length;
+        while (end > 0 && numStr.charCodeAt(end - 1) === 48 /* '0' */) end--;
+        numStr = numStr.slice(0, end);
         if (numStr === ".") numStr = "0";
         else if (numStr[0] === ".") numStr = "0" + numStr;
         else if (numStr[numStr.length - 1] === ".") numStr = numStr.substring(0, numStr.length - 1);
@@ -36341,19 +36345,26 @@ class XMLParser {
     }
 }
 
+// String(val)/val.toString() drop the sign of -0 (e.g. String(-0) === '0'), silently
+// corrupting a round-tripped negative-zero value. XML has no separate int/float syntax,
+// so this is the single place every raw value gets turned into text.
+function valToStr(val) {
+  return typeof val === 'number' && Object.is(val, -0) ? '-0' : String(val)
+}
+
 function safeComment(val) {
-  return String(val)
+  return valToStr(val)
     .replace(/--/g, '- -')   // -- is illegal anywhere in comment content
     .replace(/--/g, '- -')   // handle the scenario when 2 consiucative dashes appears 
     .replace(/-$/, '- ');    // trailing - would form -- with the closing -->
 }
 
 function safeCdata(val) {
-  return String(val).replace(/\]\]>/g, ']]]]><![CDATA[>')
+  return valToStr(val).replace(/\]\]>/g, ']]]]><![CDATA[>')
 }
 
 function escapeAttribute(val) {
-  return String(val).replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+  return valToStr(val).replace(/"/g, '&quot;').replace(/'/g, '&apos;')
 }
 
 const EOL = "\n";
@@ -36442,7 +36453,7 @@ function arrToStr(arr, options, indentation, matcher, stopNodeExpressions, qName
     if (!Array.isArray(arr)) {
         // Non-array values (e.g. string tag values) should be treated as text content
         if (arr !== undefined && arr !== null) {
-            let text = arr.toString();
+            let text = valToStr(arr);
             text = replaceEntitiesValue(text, options);
             return text;
         }
@@ -36481,6 +36492,7 @@ function arrToStr(arr, options, indentation, matcher, stopNodeExpressions, qName
                 tagText = options.tagValueProcessor(tagName, tagText);
                 tagText = replaceEntitiesValue(tagText, options);
             }
+            tagText = valToStr(tagText);
             if (isPreviousElementTag) {
                 xmlStr += indentation;
             }
@@ -36589,7 +36601,7 @@ function getRawContent$1(arr, options) {
     if (!Array.isArray(arr)) {
         // Non-array values return as-is
         if (arr !== undefined && arr !== null) {
-            return arr.toString();
+            return valToStr(arr);
         }
         return "";
     }
@@ -36601,7 +36613,7 @@ function getRawContent$1(arr, options) {
 
         if (tagName === options.textNodeName) {
             // Raw text content - NO processing, NO entity replacement
-            content += item[tagName];
+            content += valToStr(item[tagName]);
         } else if (tagName === options.cdataPropName) {
             // CDATA content
             content += item[tagName][0][options.textNodeName];
@@ -36934,11 +36946,11 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
       if (attr && !this.ignoreAttributesFn(attr, jPath)) {
         // Resolve the attribute name through sanitizeName
         const resolvedAttr = resolveTagName(attr, true, this.options, matcher, qNameValidator);
-        attrStr += this.buildAttrPairStr(resolvedAttr, '' + jObj[key], isCurrentStopNode);
+        attrStr += this.buildAttrPairStr(resolvedAttr, valToStr(jObj[key]), isCurrentStopNode);
       } else if (!attr) {
         //tag value
         if (key === this.options.textNodeName) {
-          let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
+          let newval = this.options.tagValueProcessor(key, valToStr(jObj[key]));
           val += this.replaceEntitiesValue(newval);
         } else {
           // Check if this is a stopNode before building
@@ -36948,7 +36960,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
           if (isStopNode) {
             // Build as raw content without encoding
-            const textValue = '' + jObj[key];
+            const textValue = valToStr(jObj[key]);
             if (textValue === '') {
               val += this.indentate(level) + '<' + resolvedKey + this.closeTag(resolvedKey) + this.tagEndChar;
             } else {
@@ -36988,6 +37000,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
           if (this.options.oneListGroup) {
             let textValue = this.options.tagValueProcessor(resolvedKey, item);
             textValue = this.replaceEntitiesValue(textValue);
+            textValue = valToStr(textValue);
             listTagVal += textValue;
           } else {
             // Check if this is a stopNode before building
@@ -36997,7 +37010,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
             if (isStopNode) {
               // Build as raw content without encoding
-              const textValue = '' + item;
+              const textValue = valToStr(item);
               if (textValue === '') {
                 listTagVal += this.indentate(level) + '<' + resolvedKey + this.closeTag(resolvedKey) + this.tagEndChar;
               } else {
@@ -37021,7 +37034,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
         for (let j = 0; j < L; j++) {
           // Resolve attribute names inside attributesGroupName
           const resolvedAttr = resolveTagName(Ks[j], true, this.options, matcher, qNameValidator);
-          attrStr += this.buildAttrPairStr(resolvedAttr, '' + jObj[key][Ks[j]], isCurrentStopNode);
+          attrStr += this.buildAttrPairStr(resolvedAttr, valToStr(jObj[key][Ks[j]]), isCurrentStopNode);
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], resolvedKey, level, matcher, qNameValidator);
@@ -37033,7 +37046,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
 Builder.prototype.buildAttrPairStr = function (attrName, val, isStopNode) {
   if (!isStopNode) {
-    val = this.options.attributeValueProcessor(attrName, '' + val);
+    val = this.options.attributeValueProcessor(attrName, valToStr(val));
     val = this.replaceEntitiesValue(val);
   }
   if (this.options.suppressBooleanAttributes && val === "true") {
@@ -37282,6 +37295,10 @@ Builder.prototype.buildTextValNode = function (val, key, attrStr, level, matcher
     // Normal processing: apply tagValueProcessor and entity replacement
     let textValue = this.options.tagValueProcessor(key, val);
     textValue = this.replaceEntitiesValue(textValue);
+    // tagValueProcessor may return the raw value unchanged (default is identity), and
+    // replaceEntitiesValue no-ops on non-strings, so a plain number can still reach here;
+    // stringify it now, sign-preserving, before it's implicitly ToString'd below.
+    textValue = valToStr(textValue);
 
     if (textValue === '') {
       return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
@@ -119088,16 +119105,17 @@ function requireDist () {
 	 * Parse a `Content-Type` header.
 	 */
 	function parse(header, options) {
+	    const stopChar = options?.comma === true ? COMMA : 65536; // Sentinel for "no stop char".
 	    const len = header.length;
-	    let index = skipOWS(header, 0, len);
+	    let index = skipOWS(header, options?.start ?? 0, len);
 	    const valueStart = index;
-	    index = skipValue(header, index, len);
+	    index = skipValue(header, index, len, stopChar);
 	    const valueEnd = trailingOWS(header, valueStart, index);
 	    const type = header.slice(valueStart, valueEnd).toLowerCase();
-	    const parameters = options?.parameters === false
-	        ? new NullObject()
-	        : parseParameters(header, index, len);
-	    return { type, parameters };
+	    if (options?.parameters === false) {
+	        return { type, index, parameters: new NullObject() };
+	    }
+	    return parseParameters(header, type, index, len, stopChar);
 	}
 	const SP = 32; // " "
 	const HTAB = 9; // "\t"
@@ -119105,16 +119123,21 @@ function requireDist () {
 	const EQ = 61; // "="
 	const DQUOTE = 34; // '"'
 	const BSLASH = 92; // "\\"
+	const COMMA = 44; // ","
 	/**
 	 * Parses the parameters of a `Content-Type` header starting at the given index.
 	 */
-	function parseParameters(header, index, len) {
+	function parseParameters(header, type, index, len, stopChar) {
 	    const parameters = new NullObject();
 	    parameter: while (index < len) {
+	        if (header.charCodeAt(index) === stopChar)
+	            break;
 	        index = skipOWS(header, index + 1 /* Skip over ; */, len);
 	        const keyStart = index;
 	        while (index < len) {
 	            const code = header.charCodeAt(index);
+	            if (code === stopChar)
+	                break parameter;
 	            if (code === SEMI)
 	                continue parameter;
 	            if (code === EQ) {
@@ -119127,7 +119150,7 @@ function requireDist () {
 	                    while (index < len) {
 	                        const code = header.charCodeAt(index++);
 	                        if (code === DQUOTE) {
-	                            index = skipValue(header, index, len);
+	                            index = skipValue(header, index, len, stopChar);
 	                            if (parameters[key] === undefined)
 	                                parameters[key] = value;
 	                            break;
@@ -119141,7 +119164,7 @@ function requireDist () {
 	                    continue parameter;
 	                }
 	                const valueStart = index;
-	                index = skipValue(header, index, len);
+	                index = skipValue(header, index, len, stopChar);
 	                if (parameters[key] === undefined) {
 	                    const valueEnd = trailingOWS(header, valueStart, index);
 	                    parameters[key] = header.slice(valueStart, valueEnd);
@@ -119151,15 +119174,15 @@ function requireDist () {
 	            index++;
 	        }
 	    }
-	    return parameters;
+	    return { type, index, parameters };
 	}
 	/**
-	 * Skip over characters until a semicolon.
+	 * Skip over characters until a semicolon or other exit character.
 	 */
-	function skipValue(str, index, len) {
+	function skipValue(str, index, len, stopChar) {
 	    while (index < len) {
-	        const char = str.charCodeAt(index);
-	        if (char === SEMI)
+	        const code = str.charCodeAt(index);
+	        if (code === SEMI || code === stopChar)
 	            break;
 	        index++;
 	    }
