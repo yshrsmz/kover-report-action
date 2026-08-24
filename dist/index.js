@@ -24119,11 +24119,11 @@ function requireUtil$6 () {
 	return util$6;
 }
 
-var parse$2;
+var parse$3;
 var hasRequiredParse$1;
 
 function requireParse$1 () {
-	if (hasRequiredParse$1) return parse$2;
+	if (hasRequiredParse$1) return parse$3;
 	hasRequiredParse$1 = 1;
 
 	const { maxNameValuePairSize, maxAttributeValueSize } = requireConstants$4();
@@ -24430,11 +24430,11 @@ function requireParse$1 () {
 	  return parseUnparsedAttributes(unparsedAttributes, cookieAttributeList)
 	}
 
-	parse$2 = {
+	parse$3 = {
 	  parseSetCookie,
 	  parseUnparsedAttributes
 	};
-	return parse$2;
+	return parse$3;
 }
 
 var cookies;
@@ -34522,7 +34522,8 @@ const XML_PATTERNS = [
   {
     id: 'xml-namespace-confusion',
     description: 'xmlns: attribute injection — can redefine namespaces to confuse parsers',
-    pattern: /\bxmlns\s*(?::\w{1,40})?\s*=/i,
+    // pattern: /\bxmlns\s*(?::\w{1,40})?\s*=/i,
+    pattern: /\bxmlns(?::\w{1,40})?\s*=/i,
   },
   {
     id: 'xml-comment-injection',
@@ -45431,7 +45432,7 @@ function tlsPolicy$1(tlsSettings) {
     };
 }
 
-var dist$4 = {};
+var dist$3 = {};
 
 var src = {exports: {}};
 
@@ -46642,7 +46643,7 @@ function requireSrc () {
 	return src.exports;
 }
 
-var dist$3 = {};
+var dist$2 = {};
 
 var helpers = {};
 
@@ -46719,13 +46720,13 @@ function requireHelpers () {
 	return helpers;
 }
 
-var hasRequiredDist$4;
+var hasRequiredDist$3;
 
-function requireDist$4 () {
-	if (hasRequiredDist$4) return dist$3;
-	hasRequiredDist$4 = 1;
+function requireDist$3 () {
+	if (hasRequiredDist$3) return dist$2;
+	hasRequiredDist$3 = 1;
 	(function (exports) {
-		var __createBinding = (dist$3 && dist$3.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		var __createBinding = (dist$2 && dist$2.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 		    if (k2 === undefined) k2 = k;
 		    var desc = Object.getOwnPropertyDescriptor(m, k);
 		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -46736,19 +46737,19 @@ function requireDist$4 () {
 		    if (k2 === undefined) k2 = k;
 		    o[k2] = m[k];
 		}));
-		var __setModuleDefault = (dist$3 && dist$3.__setModuleDefault) || (Object.create ? (function(o, v) {
+		var __setModuleDefault = (dist$2 && dist$2.__setModuleDefault) || (Object.create ? (function(o, v) {
 		    Object.defineProperty(o, "default", { enumerable: true, value: v });
 		}) : function(o, v) {
 		    o["default"] = v;
 		});
-		var __importStar = (dist$3 && dist$3.__importStar) || function (mod) {
+		var __importStar = (dist$2 && dist$2.__importStar) || function (mod) {
 		    if (mod && mod.__esModule) return mod;
 		    var result = {};
 		    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
 		    __setModuleDefault(result, mod);
 		    return result;
 		};
-		var __exportStar = (dist$3 && dist$3.__exportStar) || function(m, exports) {
+		var __exportStar = (dist$2 && dist$2.__exportStar) || function(m, exports) {
 		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 		};
 		Object.defineProperty(exports, "__esModule", { value: true });
@@ -46902,8 +46903,8 @@ function requireDist$4 () {
 		}
 		exports.Agent = Agent;
 		
-	} (dist$3));
-	return dist$3;
+	} (dist$2));
+	return dist$2;
 }
 
 var parseProxyResponse = {};
@@ -47016,12 +47017,12 @@ function requireParseProxyResponse () {
 	return parseProxyResponse;
 }
 
-var hasRequiredDist$3;
+var hasRequiredDist$2;
 
-function requireDist$3 () {
-	if (hasRequiredDist$3) return dist$4;
-	hasRequiredDist$3 = 1;
-	var __createBinding = (dist$4 && dist$4.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+function requireDist$2 () {
+	if (hasRequiredDist$2) return dist$3;
+	hasRequiredDist$2 = 1;
+	var __createBinding = (dist$3 && dist$3.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 	    if (k2 === undefined) k2 = k;
 	    var desc = Object.getOwnPropertyDescriptor(m, k);
 	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -47032,28 +47033,28 @@ function requireDist$3 () {
 	    if (k2 === undefined) k2 = k;
 	    o[k2] = m[k];
 	}));
-	var __setModuleDefault = (dist$4 && dist$4.__setModuleDefault) || (Object.create ? (function(o, v) {
+	var __setModuleDefault = (dist$3 && dist$3.__setModuleDefault) || (Object.create ? (function(o, v) {
 	    Object.defineProperty(o, "default", { enumerable: true, value: v });
 	}) : function(o, v) {
 	    o["default"] = v;
 	});
-	var __importStar = (dist$4 && dist$4.__importStar) || function (mod) {
+	var __importStar = (dist$3 && dist$3.__importStar) || function (mod) {
 	    if (mod && mod.__esModule) return mod;
 	    var result = {};
 	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
 	    __setModuleDefault(result, mod);
 	    return result;
 	};
-	var __importDefault = (dist$4 && dist$4.__importDefault) || function (mod) {
+	var __importDefault = (dist$3 && dist$3.__importDefault) || function (mod) {
 	    return (mod && mod.__esModule) ? mod : { "default": mod };
 	};
-	Object.defineProperty(dist$4, "__esModule", { value: true });
-	dist$4.HttpsProxyAgent = void 0;
+	Object.defineProperty(dist$3, "__esModule", { value: true });
+	dist$3.HttpsProxyAgent = void 0;
 	const net = __importStar(require$$0$b);
 	const tls = __importStar(require$$1$1);
 	const assert_1 = __importDefault(require$$5$4);
 	const debug_1 = __importDefault(requireSrc());
-	const agent_base_1 = requireDist$4();
+	const agent_base_1 = requireDist$3();
 	const url_1 = require$$5$5;
 	const parse_proxy_response_1 = requireParseProxyResponse();
 	const debug = (0, debug_1.default)('https-proxy-agent');
@@ -47185,7 +47186,7 @@ function requireDist$3 () {
 	    }
 	}
 	HttpsProxyAgent.protocols = ['http', 'https'];
-	dist$4.HttpsProxyAgent = HttpsProxyAgent;
+	dist$3.HttpsProxyAgent = HttpsProxyAgent;
 	function resume(socket) {
 	    socket.resume();
 	}
@@ -47200,19 +47201,19 @@ function requireDist$3 () {
 	    return ret;
 	}
 	
-	return dist$4;
+	return dist$3;
 }
 
-var distExports$2 = requireDist$3();
+var distExports$1 = requireDist$2();
 
-var dist$2 = {};
+var dist$1 = {};
 
-var hasRequiredDist$2;
+var hasRequiredDist$1;
 
-function requireDist$2 () {
-	if (hasRequiredDist$2) return dist$2;
-	hasRequiredDist$2 = 1;
-	var __createBinding = (dist$2 && dist$2.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+function requireDist$1 () {
+	if (hasRequiredDist$1) return dist$1;
+	hasRequiredDist$1 = 1;
+	var __createBinding = (dist$1 && dist$1.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 	    if (k2 === undefined) k2 = k;
 	    var desc = Object.getOwnPropertyDescriptor(m, k);
 	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -47223,28 +47224,28 @@ function requireDist$2 () {
 	    if (k2 === undefined) k2 = k;
 	    o[k2] = m[k];
 	}));
-	var __setModuleDefault = (dist$2 && dist$2.__setModuleDefault) || (Object.create ? (function(o, v) {
+	var __setModuleDefault = (dist$1 && dist$1.__setModuleDefault) || (Object.create ? (function(o, v) {
 	    Object.defineProperty(o, "default", { enumerable: true, value: v });
 	}) : function(o, v) {
 	    o["default"] = v;
 	});
-	var __importStar = (dist$2 && dist$2.__importStar) || function (mod) {
+	var __importStar = (dist$1 && dist$1.__importStar) || function (mod) {
 	    if (mod && mod.__esModule) return mod;
 	    var result = {};
 	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
 	    __setModuleDefault(result, mod);
 	    return result;
 	};
-	var __importDefault = (dist$2 && dist$2.__importDefault) || function (mod) {
+	var __importDefault = (dist$1 && dist$1.__importDefault) || function (mod) {
 	    return (mod && mod.__esModule) ? mod : { "default": mod };
 	};
-	Object.defineProperty(dist$2, "__esModule", { value: true });
-	dist$2.HttpProxyAgent = void 0;
+	Object.defineProperty(dist$1, "__esModule", { value: true });
+	dist$1.HttpProxyAgent = void 0;
 	const net = __importStar(require$$0$b);
 	const tls = __importStar(require$$1$1);
 	const debug_1 = __importDefault(requireSrc());
 	const events_1 = require$$1__default;
-	const agent_base_1 = requireDist$4();
+	const agent_base_1 = requireDist$3();
 	const url_1 = require$$5$5;
 	const debug = (0, debug_1.default)('http-proxy-agent');
 	/**
@@ -47347,7 +47348,7 @@ function requireDist$2 () {
 	    }
 	}
 	HttpProxyAgent.protocols = ['http', 'https'];
-	dist$2.HttpProxyAgent = HttpProxyAgent;
+	dist$1.HttpProxyAgent = HttpProxyAgent;
 	function omit(obj, ...keys) {
 	    const ret = {};
 	    let key;
@@ -47359,10 +47360,10 @@ function requireDist$2 () {
 	    return ret;
 	}
 	
-	return dist$2;
+	return dist$1;
 }
 
-var distExports$1 = requireDist$2();
+var distExports = requireDist$1();
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -47508,13 +47509,13 @@ function setProxyAgentOnRequest(request, cachedAgents, proxyUrl) {
     }
     if (isInsecure) {
         if (!cachedAgents.httpProxyAgent) {
-            cachedAgents.httpProxyAgent = new distExports$1.HttpProxyAgent(proxyUrl);
+            cachedAgents.httpProxyAgent = new distExports.HttpProxyAgent(proxyUrl);
         }
         request.agent = cachedAgents.httpProxyAgent;
     }
     else {
         if (!cachedAgents.httpsProxyAgent) {
-            cachedAgents.httpsProxyAgent = new distExports$2.HttpsProxyAgent(proxyUrl);
+            cachedAgents.httpsProxyAgent = new distExports$1.HttpsProxyAgent(proxyUrl);
         }
         request.agent = cachedAgents.httpsProxyAgent;
     }
@@ -50511,7 +50512,7 @@ function shouldDeserializeResponse(parsedResponse) {
     return result;
 }
 async function deserializeResponseBody(jsonContentTypes, xmlContentTypes, response, options, parseXML) {
-    const parsedResponse = await parse$1(jsonContentTypes, xmlContentTypes, response, options, parseXML);
+    const parsedResponse = await parse$2(jsonContentTypes, xmlContentTypes, response, options, parseXML);
     if (!shouldDeserializeResponse(parsedResponse)) {
         return parsedResponse;
     }
@@ -50636,7 +50637,7 @@ function handleErrorResponse(parsedResponse, operationSpec, responseSpec, option
     }
     return { error, shouldReturnResponse: false };
 }
-async function parse$1(jsonContentTypes, xmlContentTypes, operationResponse, opts, parseXML) {
+async function parse$2(jsonContentTypes, xmlContentTypes, operationResponse, opts, parseXML) {
     if (!operationResponse.request.streamResponseStatusCodes?.has(operationResponse.status) &&
         operationResponse.bodyAsText) {
         const text = operationResponse.bodyAsText;
@@ -116795,12 +116796,12 @@ function requireTar () {
 	return tar;
 }
 
-var dist$1;
-var hasRequiredDist$1;
+var dist;
+var hasRequiredDist;
 
-function requireDist$1 () {
-	if (hasRequiredDist$1) return dist$1;
-	hasRequiredDist$1 = 1;
+function requireDist () {
+	if (hasRequiredDist) return dist;
+	hasRequiredDist = 1;
 
 	function getDefaultExportFromCjs (x) {
 		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
@@ -117105,8 +117106,8 @@ function requireDist$1 () {
 
 	const index = /*@__PURE__*/getDefaultExportFromCjs(bufferCrc32);
 
-	dist$1 = index;
-	return dist$1;
+	dist = index;
+	return dist;
 }
 
 /**
@@ -117126,7 +117127,7 @@ function requireJson () {
 	var inherits = require$$0$3.inherits;
 	var Transform = requireOurs().Transform;
 
-	var crc32 = requireDist$1();
+	var crc32 = requireDist();
 	var util = requireArchiverUtils();
 
 	/**
@@ -118961,7 +118962,7 @@ function expand(template, context) {
 }
 
 // pkg/dist-src/parse.js
-function parse(options) {
+function parse$1(options) {
   let method = options.method.toUpperCase();
   let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
   let headers = Object.assign({}, options.headers);
@@ -119027,7 +119028,7 @@ function parse(options) {
 
 // pkg/dist-src/endpoint-with-defaults.js
 function endpointWithDefaults(defaults, route, options) {
-  return parse(merge(defaults, route, options));
+  return parse$1(merge(defaults, route, options));
 }
 
 // pkg/dist-src/with-defaults.js
@@ -119038,199 +119039,137 @@ function withDefaults$2(oldDefaults, newDefaults) {
     DEFAULTS: DEFAULTS2,
     defaults: withDefaults$2.bind(null, DEFAULTS2),
     merge: merge.bind(null, DEFAULTS2),
-    parse
+    parse: parse$1
   });
 }
 
 // pkg/dist-src/index.js
 var endpoint = withDefaults$2(null, DEFAULTS);
 
-var dist = {};
-
-var hasRequiredDist;
-
-function requireDist () {
-	if (hasRequiredDist) return dist;
-	hasRequiredDist = 1;
-	/*!
-	 * content-type
-	 * Copyright(c) 2015 Douglas Christopher Wilson
-	 * MIT Licensed
-	 */
-	Object.defineProperty(dist, "__esModule", { value: true });
-	dist.format = format;
-	dist.parse = parse;
-	const TEXT_REGEXP = /^[\u0009\u0020-\u007e\u0080-\u00ff]*$/;
-	const TOKEN_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
-	/**
-	 * RegExp to match chars that must be quoted-pair in RFC 9110 sec 5.6.4
-	 */
-	const QUOTE_REGEXP = /[\\"]/g;
-	/**
-	 * RegExp to match type in RFC 9110 sec 8.3.1
-	 *
-	 * media-type = type "/" subtype
-	 * type       = token
-	 * subtype    = token
-	 */
-	const TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
-	/**
-	 * Null object perf optimization. Faster than `Object.create(null)` and `{ __proto__: null }`.
-	 */
-	const NullObject = /* @__PURE__ */ (() => {
-	    const C = function () { };
-	    C.prototype = Object.create(null);
-	    return C;
-	})();
-	/**
-	 * Format an object into a `Content-Type` header.
-	 */
-	function format(obj) {
-	    const { type, parameters } = obj;
-	    if (!type || !TYPE_REGEXP.test(type)) {
-	        throw new TypeError(`Invalid type: ${type}`);
-	    }
-	    let result = type;
-	    if (parameters) {
-	        for (const param of Object.keys(parameters)) {
-	            if (!TOKEN_REGEXP.test(param)) {
-	                throw new TypeError(`Invalid parameter name: ${param}`);
-	            }
-	            result += `; ${param}=${qstring(parameters[param])}`;
-	        }
-	    }
-	    return result;
-	}
-	/**
-	 * Parse a `Content-Type` header.
-	 */
-	function parse(header, options) {
-	    const stopChar = options?.comma === true ? COMMA : 65536; // Sentinel for "no stop char".
-	    const len = header.length;
-	    let index = skipOWS(header, options?.start ?? 0, len);
-	    const valueStart = index;
-	    index = skipValue(header, index, len, stopChar);
-	    const valueEnd = trailingOWS(header, valueStart, index);
-	    const type = header.slice(valueStart, valueEnd).toLowerCase();
-	    if (options?.parameters === false) {
-	        return { type, index, parameters: new NullObject() };
-	    }
-	    return parseParameters(header, type, index, len, stopChar);
-	}
-	const SP = 32; // " "
-	const HTAB = 9; // "\t"
-	const SEMI = 59; // ";"
-	const EQ = 61; // "="
-	const DQUOTE = 34; // '"'
-	const BSLASH = 92; // "\\"
-	const COMMA = 44; // ","
-	/**
-	 * Parses the parameters of a `Content-Type` header starting at the given index.
-	 */
-	function parseParameters(header, type, index, len, stopChar) {
-	    const parameters = new NullObject();
-	    parameter: while (index < len) {
-	        if (header.charCodeAt(index) === stopChar)
-	            break;
-	        index = skipOWS(header, index + 1 /* Skip over ; */, len);
-	        const keyStart = index;
-	        while (index < len) {
-	            const code = header.charCodeAt(index);
-	            if (code === stopChar)
-	                break parameter;
-	            if (code === SEMI)
-	                continue parameter;
-	            if (code === EQ) {
-	                const keyEnd = trailingOWS(header, keyStart, index);
-	                const key = header.slice(keyStart, keyEnd).toLowerCase();
-	                index = skipOWS(header, index + 1, len);
-	                if (index < len && header.charCodeAt(index) === DQUOTE) {
-	                    index++;
-	                    let value = "";
-	                    while (index < len) {
-	                        const code = header.charCodeAt(index++);
-	                        if (code === DQUOTE) {
-	                            index = skipValue(header, index, len, stopChar);
-	                            if (parameters[key] === undefined)
-	                                parameters[key] = value;
-	                            break;
-	                        }
-	                        if (code === BSLASH && index < len) {
-	                            value += header[index++];
-	                            continue;
-	                        }
-	                        value += String.fromCharCode(code);
-	                    }
-	                    continue parameter;
-	                }
-	                const valueStart = index;
-	                index = skipValue(header, index, len, stopChar);
-	                if (parameters[key] === undefined) {
-	                    const valueEnd = trailingOWS(header, valueStart, index);
-	                    parameters[key] = header.slice(valueStart, valueEnd);
-	                }
-	                continue parameter;
-	            }
-	            index++;
-	        }
-	    }
-	    return { type, index, parameters };
-	}
-	/**
-	 * Skip over characters until a semicolon or other exit character.
-	 */
-	function skipValue(str, index, len, stopChar) {
-	    while (index < len) {
-	        const code = str.charCodeAt(index);
-	        if (code === SEMI || code === stopChar)
-	            break;
-	        index++;
-	    }
-	    return index;
-	}
-	/**
-	 * Skip optional whitespace (OWS) in an HTTP header value.
-	 *
-	 * OWS is defined in RFC 9110 sec 5.6.3 as SP (" ") or HTAB ("\t").
-	 */
-	function skipOWS(header, index, len) {
-	    while (index < len) {
-	        const char = header.charCodeAt(index);
-	        if (char !== SP && char !== HTAB)
-	            break;
-	        index++;
-	    }
-	    return index;
-	}
-	/**
-	 * Trim optional whitespace (OWS) from the end of a substring.
-	 *
-	 * OWS is defined in RFC 9110 sec 5.6.3 as SP (" ") or HTAB ("\t").
-	 */
-	function trailingOWS(header, start, end) {
-	    while (end > start) {
-	        const char = header.charCodeAt(end - 1);
-	        if (char !== SP && char !== HTAB)
-	            break;
-	        end--;
-	    }
-	    return end;
-	}
-	/**
-	 * Serialize a parameter value.
-	 */
-	function qstring(str) {
-	    if (TOKEN_REGEXP.test(str))
-	        return str;
-	    if (TEXT_REGEXP.test(str))
-	        return `"${str.replace(QUOTE_REGEXP, "\\$&")}"`;
-	    throw new TypeError(`Invalid parameter value: ${str}`);
-	}
-	
-	return dist;
+/*!
+ * content-type
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+/**
+ * Null object perf optimization. Faster than `Object.create(null)` and `{ __proto__: null }`.
+ */
+const NullObject = /* @__PURE__ */ (() => {
+    const C = function () { };
+    C.prototype = Object.create(null);
+    return C;
+})();
+/**
+ * Parse a `Content-Type` header.
+ */
+function parse(header, options) {
+    const stopChar = 65_536; // Sentinel for "no stop char".
+    const len = header.length;
+    let index = skipOWS(header, 0, len);
+    const valueStart = index;
+    index = skipValue(header, index, len, stopChar);
+    const valueEnd = trailingOWS(header, valueStart, index);
+    const type = header.slice(valueStart, valueEnd).toLowerCase();
+    return parseParameters(header, type, index, len, stopChar);
 }
-
-var distExports = requireDist();
+const SP = 32; // " "
+const HTAB = 9; // "\t"
+const SEMI = 59; // ";"
+const EQ = 61; // "="
+const DQUOTE = 34; // '"'
+const BSLASH = 92; // "\\"
+/**
+ * Parses the parameters of a `Content-Type` header starting at the given index.
+ */
+function parseParameters(header, type, index, len, stopChar) {
+    const parameters = new NullObject();
+    parameter: while (index < len) {
+        if (header.charCodeAt(index) === stopChar)
+            break;
+        index = skipOWS(header, index + 1 /* Skip over ; */, len);
+        const keyStart = index;
+        while (index < len) {
+            const code = header.charCodeAt(index);
+            if (code === stopChar)
+                break parameter;
+            if (code === SEMI)
+                continue parameter;
+            if (code === EQ) {
+                const keyEnd = trailingOWS(header, keyStart, index);
+                const key = header.slice(keyStart, keyEnd).toLowerCase();
+                index = skipOWS(header, index + 1, len);
+                if (index < len && header.charCodeAt(index) === DQUOTE) {
+                    index++;
+                    let value = "";
+                    while (index < len) {
+                        const code = header.charCodeAt(index++);
+                        if (code === DQUOTE) {
+                            index = skipValue(header, index, len, stopChar);
+                            if (parameters[key] === undefined)
+                                parameters[key] = value;
+                            break;
+                        }
+                        if (code === BSLASH && index < len) {
+                            value += header[index++];
+                            continue;
+                        }
+                        value += String.fromCharCode(code);
+                    }
+                    continue parameter;
+                }
+                const valueStart = index;
+                index = skipValue(header, index, len, stopChar);
+                if (parameters[key] === undefined) {
+                    const valueEnd = trailingOWS(header, valueStart, index);
+                    parameters[key] = header.slice(valueStart, valueEnd);
+                }
+                continue parameter;
+            }
+            index++;
+        }
+    }
+    return { type, index, parameters };
+}
+/**
+ * Skip over characters until a semicolon or other exit character.
+ */
+function skipValue(str, index, len, stopChar) {
+    while (index < len) {
+        const code = str.charCodeAt(index);
+        if (code === SEMI || code === stopChar)
+            break;
+        index++;
+    }
+    return index;
+}
+/**
+ * Skip optional whitespace (OWS) in an HTTP header value.
+ *
+ * OWS is defined in RFC 9110 sec 5.6.3 as SP (" ") or HTAB ("\t").
+ */
+function skipOWS(header, index, len) {
+    while (index < len) {
+        const char = header.charCodeAt(index);
+        if (char !== SP && char !== HTAB)
+            break;
+        index++;
+    }
+    return index;
+}
+/**
+ * Trim optional whitespace (OWS) from the end of a substring.
+ *
+ * OWS is defined in RFC 9110 sec 5.6.3 as SP (" ") or HTAB ("\t").
+ */
+function trailingOWS(header, start, end) {
+    while (end > start) {
+        const char = header.charCodeAt(end - 1);
+        if (char !== SP && char !== HTAB)
+            break;
+        end--;
+    }
+    return end;
+}
 
 const intRegex = /^-?\d+$/;
 const noiseValue = /^-?\d+n+$/; // Noise - strings that match the custom format before being converted to it
@@ -119660,7 +119599,7 @@ const JSONParseV2 = (text, reviver) => {
 const MAX_INT = Number.MAX_SAFE_INTEGER.toString();
 const MAX_DIGITS = MAX_INT.length;
 const stringsOrLargeNumbers =
-  /"(?:\\.|[^"])*"|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/g;
+  /"(?:[^"\\]|\\.)*"|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/g;
 const noiseValueWithQuotes = /^"-?\d+n+"$/; // Noise - strings that match the custom format before being converted to it
 
 /**
@@ -119839,7 +119778,7 @@ class RequestError extends Error {
 // pkg/dist-src/index.js
 
 // pkg/dist-src/version.js
-var VERSION$6 = "10.0.13";
+var VERSION$6 = "10.0.15";
 
 // pkg/dist-src/defaults.js
 var defaults_default = {
@@ -119961,7 +119900,7 @@ async function getResponseData(response) {
   if (!contentType) {
     return response.text().catch(noop$1);
   }
-  const mimetype = distExports.parse(contentType);
+  const mimetype = parse(contentType);
   if (isJSONResponse(mimetype)) {
     let text = "";
     try {
