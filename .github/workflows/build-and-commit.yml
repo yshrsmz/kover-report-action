@@ -9,7 +9,14 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: build-and-commit-${{ github.event.pull_request.number }}
+  # The `labeled` trigger fires for ANY label, not just `build-and-commit`.
+  # Such runs are skipped by the job-level `if`, but if they land in the same
+  # concurrency group, `cancel-in-progress` kills the real in-flight run.
+  # Route unrelated-label runs to a group made unique by run_id to isolate them.
+  group: >-
+    ${{ github.event.label.name == 'build-and-commit'
+    && format('build-and-commit-{0}', github.event.pull_request.number)
+    || format('build-and-commit-noop-{0}', github.run_id) }}
   cancel-in-progress: true
 
 jobs:
