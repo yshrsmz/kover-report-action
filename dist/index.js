@@ -119829,7 +119829,7 @@ class RequestError extends Error {
 // pkg/dist-src/index.js
 
 // pkg/dist-src/version.js
-var VERSION$6 = "10.0.15";
+var VERSION$6 = "10.0.16";
 
 // pkg/dist-src/defaults.js
 var defaults_default = {
@@ -120194,7 +120194,7 @@ var createTokenAuth = function createTokenAuth2(token) {
   });
 };
 
-const VERSION$4 = "7.0.7";
+const VERSION$4 = "7.0.8";
 
 const noop = () => {
 };
