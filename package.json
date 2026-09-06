@@ -37,7 +37,7 @@
     "glob": "13.0.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.9",
+    "@biomejs/biome": "2.5.10",
     "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
@@ -46,7 +46,7 @@
     "@vitest/coverage-v8": "4.1.11",
     "@vitest/ui": "4.1.11",
     "lefthook": "2.1.10",
-    "rollup": "4.62.4",
+    "rollup": "4.62.5",
     "typescript": "6.0.3",
     "vitest": "4.1.11"
   },
