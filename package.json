@@ -46,7 +46,7 @@
     "@vitest/coverage-v8": "5.0.0",
     "@vitest/ui": "5.0.0",
     "lefthook": "2.1.12",
-    "rollup": "4.63.1",
+    "rollup": "4.63.2",
     "typescript": "6.0.3",
     "vitest": "5.0.0"
   },
