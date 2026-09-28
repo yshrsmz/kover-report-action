@@ -9,7 +9,7 @@ import * as http from 'http';
 import http__default from 'http';
 import * as https from 'https';
 import https__default from 'https';
-import require$$0$b from 'net';
+import require$$0$c from 'net';
 import require$$1$1 from 'tls';
 import * as require$$1 from 'events';
 import require$$1__default, { EventEmitter as EventEmitter$1 } from 'events';
@@ -36,23 +36,23 @@ import require$$1$5 from 'node:dns';
 import require$$5$3, { StringDecoder } from 'string_decoder';
 import * as child from 'child_process';
 import { setTimeout as setTimeout$1 } from 'timers';
-import require$$1$7, { resolve, normalize, win32, posix, isAbsolute, relative, sep as sep$2, join } from 'node:path';
+import require$$1$6, { resolve, normalize, win32, posix, isAbsolute, relative, sep as sep$2, join } from 'node:path';
 import require$$5$6, { readFile, realpath, readlink, readdir as readdir$1, lstat as lstat$1, mkdir as mkdir$1, writeFile as writeFile$1 } from 'node:fs/promises';
 import * as fs$2 from 'node:fs';
 import fs__default, { existsSync as existsSync$1 } from 'node:fs';
 import require$$2$1, { StringDecoder as StringDecoder$1 } from 'node:string_decoder';
 import * as require$$0$2 from 'stream';
 import require$$0__default, { Readable } from 'stream';
-import require$$0$d, { Buffer as Buffer$1 } from 'buffer';
+import require$$0$e, { Buffer as Buffer$1 } from 'buffer';
 import os$2, { EOL as EOL$2 } from 'node:os';
 import process$2 from 'node:process';
 import https$1 from 'node:https';
 import { createHmac } from 'node:crypto';
-import require$$1$6 from 'tty';
+import require$$0$b from 'tty';
 import require$$5$5 from 'url';
 import fs$3, { realpath as realpath$1 } from 'fs/promises';
-import require$$0$c from 'constants';
-import require$$0$e from 'zlib';
+import require$$0$d from 'constants';
+import require$$0$f from 'zlib';
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -2619,11 +2619,77 @@ function requireRequest$1 () {
 	    }
 	  }
 
-	  onUpgrade (statusCode, headers, socket) {
+	  /**
+	   * @param {number|null} statusCode
+	   * @param {Buffer[]|null} headers
+	   * @param {import('node:stream').Duplex} socket
+	   * @param {string} [statusText]
+	   */
+	  onUpgrade (statusCode, headers, socket, statusText = '') {
+	    this.onFinally();
+
 	    assert(!this.aborted);
 	    assert(!this.completed);
 
-	    return this[kHandler].onUpgrade(statusCode, headers, socket)
+	    if (statusCode !== null) {
+	      this.#publishUpgradeHeaders(statusCode, headers, statusText);
+	    }
+
+	    const result = this[kHandler].onUpgrade(statusCode, headers, socket);
+
+	    if (!this.aborted) {
+	      this.completed = true;
+	      if (statusCode !== null) {
+	        this.#publishUpgradeTrailers();
+	      }
+	    }
+
+	    return result
+	  }
+
+	  /**
+	   * @param {number} statusCode
+	   * @param {import('node:http2').IncomingHttpHeaders} headers
+	   * @param {(headers: import('node:http2').IncomingHttpHeaders) => Buffer[]} parseHeaders
+	   * @param {string} [statusText]
+	   */
+	  onUpgradeResponse (statusCode, headers, parseHeaders, statusText = '') {
+	    assert(!this.aborted);
+	    assert(this.completed);
+
+	    if (channels.headers.hasSubscribers) {
+	      this.#publishUpgradeHeaders(statusCode, parseHeaders(headers), statusText);
+	    }
+	    this.#publishUpgradeTrailers();
+	  }
+
+	  /**
+	   * @param {Error} error
+	   */
+	  onUpgradeError (error) {
+	    assert(!this.aborted);
+	    assert(this.completed);
+
+	    if (channels.error.hasSubscribers) {
+	      channels.error.publish({ request: this, error });
+	    }
+	  }
+
+	  /**
+	   * @param {number} statusCode
+	   * @param {Buffer[]} headers
+	   * @param {string} statusText
+	   */
+	  #publishUpgradeHeaders (statusCode, headers, statusText) {
+	    if (channels.headers.hasSubscribers) {
+	      channels.headers.publish({ request: this, response: { statusCode, headers, statusText } });
+	    }
+	  }
+
+	  #publishUpgradeTrailers () {
+	    if (channels.trailers.hasSubscribers) {
+	      channels.trailers.publish({ request: this, trailers: [] });
+	    }
 	  }
 
 	  onComplete (trailers) {
@@ -9206,7 +9272,7 @@ function requireClientH1 () {
 	  }
 
 	  onUpgrade (head) {
-	    const { upgrade, client, socket, headers, statusCode } = this;
+	    const { upgrade, client, socket, headers, statusCode, statusText } = this;
 
 	    assert(upgrade);
 	    assert(client[kSocket] === socket);
@@ -9241,9 +9307,10 @@ function requireClientH1 () {
 	    client.emit('disconnect', client[kUrl], [client], new InformationalError('upgrade'));
 
 	    try {
-	      request.onUpgrade(statusCode, headers, socket);
-	    } catch (err) {
-	      util.destroy(socket, err);
+	      request.onUpgrade(statusCode, headers, socket, statusText);
+	    } catch (error) {
+	      util.errorRequest(client, request, error);
+	      util.destroy(socket, error);
 	    }
 
 	    client[kResume]();
@@ -9824,12 +9891,22 @@ function requireClientH1 () {
 	  const socket = client[kSocket];
 	  clearIdleSocketValidation(socket);
 
-	  const abort = (err) => {
-	    if (request.aborted || request.completed) {
+	  /**
+	   * @param {Error} [error]
+	   */
+	  const abort = (error) => {
+	    if (request.aborted) {
 	      return
 	    }
 
-	    util.errorRequest(client, request, err || new RequestAbortedError());
+	    if (request.completed) {
+	      if (request.upgrade || request.method === 'CONNECT') {
+	        util.destroy(socket, new InformationalError('aborted'));
+	      }
+	      return
+	    }
+
+	    util.errorRequest(client, request, error || new RequestAbortedError());
 
 	    util.destroy(body);
 	    util.destroy(socket, new InformationalError('aborted'));
@@ -10287,6 +10364,7 @@ function requireClientH2 () {
 	hasRequiredClientH2 = 1;
 
 	const assert = require$$0$6;
+	const { errorMonitor } = require$$0$5;
 	const { pipeline } = require$$0$7;
 	const util = requireUtil$b();
 	const {
@@ -10361,6 +10439,15 @@ function requireClientH2 () {
 	  }
 
 	  return result
+	}
+
+	/**
+	 * @param {import('node:http2').IncomingHttpHeaders} headers
+	 * @returns {Buffer[]}
+	 */
+	function parseH2ResponseHeaders (headers) {
+	  const { [HTTP2_HEADER_STATUS]: _statusCode, ...realHeaders } = headers;
+	  return parseH2Headers(realHeaders)
 	}
 
 	async function connectH2 (client, socket) {
@@ -10583,22 +10670,32 @@ function requireClientH2 () {
 	  headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname}${port ? `:${port}` : ''}`;
 	  headers[HTTP2_HEADER_METHOD] = method;
 
-	  const abort = (err) => {
-	    if (request.aborted || request.completed) {
+	  /**
+	   * @param {Error} [error]
+	   */
+	  const abort = (error) => {
+	    if (request.aborted) {
 	      return
 	    }
 
-	    err = err || new RequestAbortedError();
+	    if (request.completed) {
+	      if (method === 'CONNECT' && stream != null) {
+	        util.destroy(stream, error || new RequestAbortedError());
+	      }
+	      return
+	    }
 
-	    util.errorRequest(client, request, err);
+	    error = error || new RequestAbortedError();
+
+	    util.errorRequest(client, request, error);
 
 	    if (stream != null) {
-	      util.destroy(stream, err);
+	      util.destroy(stream, error);
 	    }
 
 	    // We do not destroy the socket as we can continue using the session
 	    // the stream get's destroyed and the session remains to create new streams
-	    util.destroy(body, err);
+	    util.destroy(body, error);
 	    client[kQueue][client[kRunningIdx]++] = null;
 	    client[kResume]();
 	  };
@@ -10617,25 +10714,57 @@ function requireClientH2 () {
 
 	  if (method === 'CONNECT') {
 	    session.ref();
-	    // We are already connected, streams are pending, first request
-	    // will create a new stream. We trigger a request to create the stream and wait until
-	    // `ready` event is triggered
 	    // We disabled endStream to allow the user to write to the stream
 	    stream = session.request(headers, { endStream: false, signal });
+	    let upgradeResponseFinished = false;
 
-	    if (stream.id && !stream.pending) {
-	      request.onUpgrade(null, null, stream);
-	      ++session[kOpenStreams];
-	      client[kQueue][client[kRunningIdx]++] = null;
-	    } else {
-	      stream.once('ready', () => {
+	    /**
+	     * @param {import('node:http2').IncomingHttpHeaders} headers
+	     */
+	    const onResponse = (headers) => {
+	      upgradeResponseFinished = true;
+	      stream.off(errorMonitor, onUpgradeError);
+	      request.onUpgradeResponse(Number(headers[HTTP2_HEADER_STATUS]), headers, parseH2ResponseHeaders);
+	    };
+
+	    /**
+	     * @param {Error} error
+	     */
+	    const onUpgradeError = (error) => {
+	      upgradeResponseFinished = true;
+	      stream.off('response', onResponse);
+	      request.onUpgradeError(error);
+	    };
+
+	    const onReady = () => {
+	      try {
 	        request.onUpgrade(null, null, stream);
-	        ++session[kOpenStreams];
-	        client[kQueue][client[kRunningIdx]++] = null;
-	      });
-	    }
+	      } catch (error) {
+	        stream.off('response', onResponse);
+	        abort(error);
+	        return
+	      }
+
+	      if (request.aborted) {
+	        return
+	      }
+
+	      stream.off('error', abort);
+	      stream.once(errorMonitor, onUpgradeError);
+	      client[kQueue][client[kRunningIdx]++] = null;
+	    };
+
+	    stream.once('response', onResponse);
+	    stream.once('error', abort);
+	    ++session[kOpenStreams];
+	    onReady();
 
 	    stream.once('close', () => {
+	      if (!upgradeResponseFinished && request.completed) {
+	        stream.off('response', onResponse);
+	        stream.off(errorMonitor, onUpgradeError);
+	        request.onUpgradeError(new InformationalError(`HTTP/2: "stream error" received - code ${stream.rstCode}`));
+	      }
 	      session[kOpenStreams] -= 1;
 	      if (session[kOpenStreams] === 0) session.unref();
 	    });
@@ -13410,7 +13539,10 @@ function requireRetryHandler () {
 	    this.retryCount += 1;
 
 	    if (statusCode >= 300) {
-	      if (this.retryOpts.statusCodes.includes(statusCode) === false) {
+	      // Only expose a response if no earlier attempt has reached the caller.
+	      // Otherwise abort this attempt so the error settles the existing body
+	      // instead of replacing it with a new response.
+	      if (!this.headersSent && this.retryOpts.statusCodes.includes(statusCode) === false) {
 	        this.headersSent = true;
 	        this.checkpointResponseEnd(headers, resume);
 	        return this.handler.onHeaders(
@@ -46470,165 +46602,6 @@ function requireBrowser () {
 
 var node$1 = {exports: {}};
 
-var hasFlag;
-var hasRequiredHasFlag;
-
-function requireHasFlag () {
-	if (hasRequiredHasFlag) return hasFlag;
-	hasRequiredHasFlag = 1;
-
-	hasFlag = (flag, argv = process.argv) => {
-		const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
-		const position = argv.indexOf(prefix + flag);
-		const terminatorPosition = argv.indexOf('--');
-		return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
-	};
-	return hasFlag;
-}
-
-var supportsColor_1;
-var hasRequiredSupportsColor;
-
-function requireSupportsColor () {
-	if (hasRequiredSupportsColor) return supportsColor_1;
-	hasRequiredSupportsColor = 1;
-	const os = os__default;
-	const tty = require$$1$6;
-	const hasFlag = requireHasFlag();
-
-	const {env} = process;
-
-	let forceColor;
-	if (hasFlag('no-color') ||
-		hasFlag('no-colors') ||
-		hasFlag('color=false') ||
-		hasFlag('color=never')) {
-		forceColor = 0;
-	} else if (hasFlag('color') ||
-		hasFlag('colors') ||
-		hasFlag('color=true') ||
-		hasFlag('color=always')) {
-		forceColor = 1;
-	}
-
-	if ('FORCE_COLOR' in env) {
-		if (env.FORCE_COLOR === 'true') {
-			forceColor = 1;
-		} else if (env.FORCE_COLOR === 'false') {
-			forceColor = 0;
-		} else {
-			forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
-		}
-	}
-
-	function translateLevel(level) {
-		if (level === 0) {
-			return false;
-		}
-
-		return {
-			level,
-			hasBasic: true,
-			has256: level >= 2,
-			has16m: level >= 3
-		};
-	}
-
-	function supportsColor(haveStream, streamIsTTY) {
-		if (forceColor === 0) {
-			return 0;
-		}
-
-		if (hasFlag('color=16m') ||
-			hasFlag('color=full') ||
-			hasFlag('color=truecolor')) {
-			return 3;
-		}
-
-		if (hasFlag('color=256')) {
-			return 2;
-		}
-
-		if (haveStream && !streamIsTTY && forceColor === undefined) {
-			return 0;
-		}
-
-		const min = forceColor || 0;
-
-		if (env.TERM === 'dumb') {
-			return min;
-		}
-
-		if (process.platform === 'win32') {
-			// Windows 10 build 10586 is the first Windows release that supports 256 colors.
-			// Windows 10 build 14931 is the first release that supports 16m/TrueColor.
-			const osRelease = os.release().split('.');
-			if (
-				Number(osRelease[0]) >= 10 &&
-				Number(osRelease[2]) >= 10586
-			) {
-				return Number(osRelease[2]) >= 14931 ? 3 : 2;
-			}
-
-			return 1;
-		}
-
-		if ('CI' in env) {
-			if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI', 'GITHUB_ACTIONS', 'BUILDKITE'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
-				return 1;
-			}
-
-			return min;
-		}
-
-		if ('TEAMCITY_VERSION' in env) {
-			return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
-		}
-
-		if (env.COLORTERM === 'truecolor') {
-			return 3;
-		}
-
-		if ('TERM_PROGRAM' in env) {
-			const version = parseInt((env.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
-
-			switch (env.TERM_PROGRAM) {
-				case 'iTerm.app':
-					return version >= 3 ? 3 : 2;
-				case 'Apple_Terminal':
-					return 2;
-				// No default
-			}
-		}
-
-		if (/-256(color)?$/i.test(env.TERM)) {
-			return 2;
-		}
-
-		if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
-			return 1;
-		}
-
-		if ('COLORTERM' in env) {
-			return 1;
-		}
-
-		return min;
-	}
-
-	function getSupportLevel(stream) {
-		const level = supportsColor(stream, stream && stream.isTTY);
-		return translateLevel(level);
-	}
-
-	supportsColor_1 = {
-		supportsColor: getSupportLevel,
-		stdout: translateLevel(supportsColor(true, tty.isatty(1))),
-		stderr: translateLevel(supportsColor(true, tty.isatty(2)))
-	};
-	return supportsColor_1;
-}
-
 /**
  * Module dependencies.
  */
@@ -46639,7 +46612,7 @@ function requireNode$1 () {
 	if (hasRequiredNode$1) return node$1.exports;
 	hasRequiredNode$1 = 1;
 	(function (module, exports) {
-		const tty = require$$1$6;
+		const tty = require$$0$b;
 		const util = require$$0$3;
 
 		/**
@@ -46666,7 +46639,7 @@ function requireNode$1 () {
 		try {
 			// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
 			// eslint-disable-next-line import/no-extraneous-dependencies
-			const supportsColor = requireSupportsColor();
+			const supportsColor = require('supports-color');
 
 			if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
 				exports.colors = [
@@ -47031,7 +47004,7 @@ function requireDist$3 () {
 		};
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.Agent = void 0;
-		const net = __importStar(require$$0$b);
+		const net = __importStar(require$$0$c);
 		const http = __importStar(http__default);
 		const https_1 = https__default;
 		__exportStar(requireHelpers(), exports);
@@ -47327,7 +47300,7 @@ function requireDist$2 () {
 	};
 	Object.defineProperty(dist$3, "__esModule", { value: true });
 	dist$3.HttpsProxyAgent = void 0;
-	const net = __importStar(require$$0$b);
+	const net = __importStar(require$$0$c);
 	const tls = __importStar(require$$1$1);
 	const assert_1 = __importDefault(require$$5$4);
 	const debug_1 = __importDefault(requireSrc());
@@ -47518,7 +47491,7 @@ function requireDist$1 () {
 	};
 	Object.defineProperty(dist$1, "__esModule", { value: true });
 	dist$1.HttpProxyAgent = void 0;
-	const net = __importStar(require$$0$b);
+	const net = __importStar(require$$0$c);
 	const tls = __importStar(require$$1$1);
 	const debug_1 = __importDefault(requireSrc());
 	const events_1 = require$$1__default;
@@ -56869,8 +56842,8 @@ class UserDelegationKeyCredential {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-const SDK_VERSION = "12.33.0";
-const SERVICE_VERSION = "2026-06-06";
+const SDK_VERSION = "12.34.0";
+const SERVICE_VERSION = "2026-10-06";
 const BLOCK_BLOB_MAX_UPLOAD_BLOB_BYTES = 256 * 1024 * 1024; // 256MB
 const BLOCK_BLOB_MAX_STAGE_BLOCK_BYTES = 4000 * 1024 * 1024; // 4000MB
 const BLOCK_BLOB_MAX_BLOCKS = 50000;
@@ -61266,6 +61239,66 @@ const ContainerListBlobFlatSegmentExceptionHeaders = {
         },
     },
 };
+const ContainerListBlobFlatSegmentApacheArrowHeaders = {
+    serializedName: "Container_listBlobFlatSegmentApacheArrowHeaders",
+    type: {
+        name: "Composite",
+        className: "ContainerListBlobFlatSegmentApacheArrowHeaders",
+        modelProperties: {
+            contentType: {
+                serializedName: "content-type",
+                xmlName: "content-type",
+                type: {
+                    name: "String",
+                },
+            },
+            clientRequestId: {
+                serializedName: "x-ms-client-request-id",
+                xmlName: "x-ms-client-request-id",
+                type: {
+                    name: "String",
+                },
+            },
+            requestId: {
+                serializedName: "x-ms-request-id",
+                xmlName: "x-ms-request-id",
+                type: {
+                    name: "String",
+                },
+            },
+            version: {
+                serializedName: "x-ms-version",
+                xmlName: "x-ms-version",
+                type: {
+                    name: "String",
+                },
+            },
+            date: {
+                serializedName: "date",
+                xmlName: "date",
+                type: {
+                    name: "DateTimeRfc1123",
+                },
+            },
+        },
+    },
+};
+const ContainerListBlobFlatSegmentApacheArrowExceptionHeaders = {
+    serializedName: "Container_listBlobFlatSegmentApacheArrowExceptionHeaders",
+    type: {
+        name: "Composite",
+        className: "ContainerListBlobFlatSegmentApacheArrowExceptionHeaders",
+        modelProperties: {
+            errorCode: {
+                serializedName: "x-ms-error-code",
+                xmlName: "x-ms-error-code",
+                type: {
+                    name: "String",
+                },
+            },
+        },
+    },
+};
 const ContainerListBlobHierarchySegmentHeaders = {
     serializedName: "Container_listBlobHierarchySegmentHeaders",
     type: {
@@ -61322,6 +61355,66 @@ const ContainerListBlobHierarchySegmentExceptionHeaders = {
     type: {
         name: "Composite",
         className: "ContainerListBlobHierarchySegmentExceptionHeaders",
+        modelProperties: {
+            errorCode: {
+                serializedName: "x-ms-error-code",
+                xmlName: "x-ms-error-code",
+                type: {
+                    name: "String",
+                },
+            },
+        },
+    },
+};
+const ContainerListBlobHierarchySegmentApacheArrowHeaders = {
+    serializedName: "Container_listBlobHierarchySegmentApacheArrowHeaders",
+    type: {
+        name: "Composite",
+        className: "ContainerListBlobHierarchySegmentApacheArrowHeaders",
+        modelProperties: {
+            contentType: {
+                serializedName: "content-type",
+                xmlName: "content-type",
+                type: {
+                    name: "String",
+                },
+            },
+            clientRequestId: {
+                serializedName: "x-ms-client-request-id",
+                xmlName: "x-ms-client-request-id",
+                type: {
+                    name: "String",
+                },
+            },
+            requestId: {
+                serializedName: "x-ms-request-id",
+                xmlName: "x-ms-request-id",
+                type: {
+                    name: "String",
+                },
+            },
+            version: {
+                serializedName: "x-ms-version",
+                xmlName: "x-ms-version",
+                type: {
+                    name: "String",
+                },
+            },
+            date: {
+                serializedName: "date",
+                xmlName: "date",
+                type: {
+                    name: "DateTimeRfc1123",
+                },
+            },
+        },
+    },
+};
+const ContainerListBlobHierarchySegmentApacheArrowExceptionHeaders = {
+    serializedName: "Container_listBlobHierarchySegmentApacheArrowExceptionHeaders",
+    type: {
+        name: "Composite",
+        className: "ContainerListBlobHierarchySegmentApacheArrowExceptionHeaders",
         modelProperties: {
             errorCode: {
                 serializedName: "x-ms-error-code",
@@ -61759,6 +61852,34 @@ const BlobDownloadHeaders = {
                 xmlName: "x-ms-structured-content-length",
                 type: {
                     name: "Number",
+                },
+            },
+            accessTier: {
+                serializedName: "x-ms-access-tier",
+                xmlName: "x-ms-access-tier",
+                type: {
+                    name: "String",
+                },
+            },
+            accessTierInferred: {
+                serializedName: "x-ms-access-tier-inferred",
+                xmlName: "x-ms-access-tier-inferred",
+                type: {
+                    name: "Boolean",
+                },
+            },
+            accessTierChangedOn: {
+                serializedName: "x-ms-access-tier-change-time",
+                xmlName: "x-ms-access-tier-change-time",
+                type: {
+                    name: "DateTimeRfc1123",
+                },
+            },
+            smartAccessTier: {
+                serializedName: "x-ms-smart-access-tier",
+                xmlName: "x-ms-smart-access-tier",
+                type: {
+                    name: "String",
                 },
             },
             errorCode: {
@@ -65376,6 +65497,13 @@ const BlockBlobUploadHeaders = {
                     name: "ByteArray",
                 },
             },
+            xMsContentCrc64: {
+                serializedName: "x-ms-content-crc64",
+                xmlName: "x-ms-content-crc64",
+                type: {
+                    name: "ByteArray",
+                },
+            },
             clientRequestId: {
                 serializedName: "x-ms-client-request-id",
                 xmlName: "x-ms-client-request-id",
@@ -65488,6 +65616,13 @@ const BlockBlobPutBlobFromUrlHeaders = {
             contentMD5: {
                 serializedName: "content-md5",
                 xmlName: "content-md5",
+                type: {
+                    name: "ByteArray",
+                },
+            },
+            xMsContentCrc64: {
+                serializedName: "x-ms-content-crc64",
+                xmlName: "x-ms-content-crc64",
                 type: {
                     name: "ByteArray",
                 },
@@ -66110,8 +66245,12 @@ var Mappers = /*#__PURE__*/Object.freeze({
     ContainerGetPropertiesExceptionHeaders: ContainerGetPropertiesExceptionHeaders,
     ContainerGetPropertiesHeaders: ContainerGetPropertiesHeaders,
     ContainerItem: ContainerItem,
+    ContainerListBlobFlatSegmentApacheArrowExceptionHeaders: ContainerListBlobFlatSegmentApacheArrowExceptionHeaders,
+    ContainerListBlobFlatSegmentApacheArrowHeaders: ContainerListBlobFlatSegmentApacheArrowHeaders,
     ContainerListBlobFlatSegmentExceptionHeaders: ContainerListBlobFlatSegmentExceptionHeaders,
     ContainerListBlobFlatSegmentHeaders: ContainerListBlobFlatSegmentHeaders,
+    ContainerListBlobHierarchySegmentApacheArrowExceptionHeaders: ContainerListBlobHierarchySegmentApacheArrowExceptionHeaders,
+    ContainerListBlobHierarchySegmentApacheArrowHeaders: ContainerListBlobHierarchySegmentApacheArrowHeaders,
     ContainerListBlobHierarchySegmentExceptionHeaders: ContainerListBlobHierarchySegmentExceptionHeaders,
     ContainerListBlobHierarchySegmentHeaders: ContainerListBlobHierarchySegmentHeaders,
     ContainerProperties: ContainerProperties,
@@ -66270,7 +66409,7 @@ const timeoutInSeconds = {
 const version = {
     parameterPath: "version",
     mapper: {
-        defaultValue: "2026-06-06",
+        defaultValue: "2026-10-06",
         isConstant: true,
         serializedName: "x-ms-version",
         type: {
@@ -66810,6 +66949,27 @@ const startFrom = {
     mapper: {
         serializedName: "startFrom",
         xmlName: "startFrom",
+        type: {
+            name: "String",
+        },
+    },
+};
+const accept2 = {
+    parameterPath: "accept",
+    mapper: {
+        defaultValue: "application/vnd.apache.arrow.stream,application/xml",
+        isConstant: true,
+        serializedName: "Accept",
+        type: {
+            name: "String",
+        },
+    },
+};
+const endBefore = {
+    parameterPath: ["options", "endBefore"],
+    mapper: {
+        serializedName: "endBefore",
+        xmlName: "endBefore",
         type: {
             name: "String",
         },
@@ -67570,7 +67730,7 @@ const body1 = {
         },
     },
 };
-const accept2 = {
+const accept3 = {
     parameterPath: "accept",
     mapper: {
         defaultValue: "application/xml",
@@ -68405,6 +68565,14 @@ class ContainerImpl {
         return this.client.sendOperationRequest({ options }, listBlobFlatSegmentOperationSpec);
     }
     /**
+     * The List Blobs operation returns a list of the blobs under the specified container. This operation
+     * is for Apache Arrow use case so response is returned as raw to be deserialized by the client.
+     * @param options The options parameters.
+     */
+    listBlobFlatSegmentApacheArrow(options) {
+        return this.client.sendOperationRequest({ options }, listBlobFlatSegmentApacheArrowOperationSpec);
+    }
+    /**
      * [Update] The List Blobs operation returns a list of the blobs under the specified container
      * @param delimiter When the request includes this parameter, the operation returns a BlobPrefix
      *                  element in the response body that acts as a placeholder for all blobs whose names begin with the
@@ -68414,6 +68582,19 @@ class ContainerImpl {
      */
     listBlobHierarchySegment(delimiter, options) {
         return this.client.sendOperationRequest({ delimiter, options }, listBlobHierarchySegmentOperationSpec);
+    }
+    /**
+     * [Update] The List Blobs operation returns a list of the blobs under the specified container. This
+     * operation is for Apache Arrow use case so response is returned as raw to be deserialized by the
+     * client.
+     * @param delimiter When the request includes this parameter, the operation returns a BlobPrefix
+     *                  element in the response body that acts as a placeholder for all blobs whose names begin with the
+     *                  same substring up to the appearance of the delimiter character. The delimiter may be a single
+     *                  character or a string.
+     * @param options The options parameters.
+     */
+    listBlobHierarchySegmentApacheArrow(delimiter, options) {
+        return this.client.sendOperationRequest({ delimiter, options }, listBlobHierarchySegmentApacheArrowOperationSpec);
     }
     /**
      * Returns the sku name and account kind
@@ -68906,6 +69087,42 @@ const listBlobFlatSegmentOperationSpec = {
     isXML: true,
     serializer: xmlSerializer$4,
 };
+const listBlobFlatSegmentApacheArrowOperationSpec = {
+    path: "/{containerName}",
+    httpMethod: "GET",
+    responses: {
+        200: {
+            bodyMapper: {
+                type: { name: "Stream" },
+                serializedName: "parsedResponse",
+            },
+            headersMapper: ContainerListBlobFlatSegmentApacheArrowHeaders,
+        },
+        default: {
+            bodyMapper: StorageError,
+            headersMapper: ContainerListBlobFlatSegmentApacheArrowExceptionHeaders,
+        },
+    },
+    queryParameters: [
+        timeoutInSeconds,
+        comp2,
+        prefix,
+        marker,
+        maxPageSize,
+        restype2,
+        include1,
+        startFrom,
+        endBefore,
+    ],
+    urlParameters: [url],
+    headerParameters: [
+        version,
+        requestId,
+        accept2,
+    ],
+    isXML: true,
+    serializer: xmlSerializer$4,
+};
 const listBlobHierarchySegmentOperationSpec = {
     path: "/{containerName}",
     httpMethod: "GET",
@@ -68935,6 +69152,43 @@ const listBlobHierarchySegmentOperationSpec = {
         version,
         requestId,
         accept1,
+    ],
+    isXML: true,
+    serializer: xmlSerializer$4,
+};
+const listBlobHierarchySegmentApacheArrowOperationSpec = {
+    path: "/{containerName}",
+    httpMethod: "GET",
+    responses: {
+        200: {
+            bodyMapper: {
+                type: { name: "Stream" },
+                serializedName: "parsedResponse",
+            },
+            headersMapper: ContainerListBlobHierarchySegmentApacheArrowHeaders,
+        },
+        default: {
+            bodyMapper: StorageError,
+            headersMapper: ContainerListBlobHierarchySegmentApacheArrowExceptionHeaders,
+        },
+    },
+    queryParameters: [
+        timeoutInSeconds,
+        comp2,
+        prefix,
+        marker,
+        maxPageSize,
+        restype2,
+        include1,
+        startFrom,
+        endBefore,
+        delimiter,
+    ],
+    urlParameters: [url],
+    headerParameters: [
+        version,
+        requestId,
+        accept2,
     ],
     isXML: true,
     serializer: xmlSerializer$4,
@@ -70189,7 +70443,7 @@ const uploadPagesOperationSpec = {
         transactionalContentMD5,
         transactionalContentCrc64,
         contentType1,
-        accept2,
+        accept3,
         pageWrite,
         ifSequenceNumberLessThanOrEqualTo,
         ifSequenceNumberLessThan,
@@ -70593,7 +70847,7 @@ const appendBlockOperationSpec = {
         transactionalContentMD5,
         transactionalContentCrc64,
         contentType1,
-        accept2,
+        accept3,
         structuredContentLength,
         maxSize,
         appendPosition,
@@ -70823,7 +71077,7 @@ const uploadOperationSpec = {
         transactionalContentMD5,
         transactionalContentCrc64,
         contentType1,
-        accept2,
+        accept3,
         structuredContentLength,
         blobType2,
     ],
@@ -70922,7 +71176,7 @@ const stageBlockOperationSpec = {
         transactionalContentMD5,
         transactionalContentCrc64,
         contentType1,
-        accept2,
+        accept3,
         structuredContentLength,
     ],
     isXML: true,
@@ -71083,7 +71337,7 @@ let StorageClient$1 = class StorageClient extends ExtendedServiceClient {
         const defaults = {
             requestContentType: "application/json; charset=utf-8",
         };
-        const packageDetails = `azsdk-js-azure-storage-blob/12.33.0`;
+        const packageDetails = `azsdk-js-azure-storage-blob/12.34.0`;
         const userAgentPrefix = options.userAgentOptions && options.userAgentOptions.userAgentPrefix
             ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
             : `${packageDetails}`;
@@ -71099,7 +71353,7 @@ let StorageClient$1 = class StorageClient extends ExtendedServiceClient {
         // Parameter assignments
         this.url = url;
         // Assigning values to Constant parameters
-        this.version = options.version || "2026-06-06";
+        this.version = options.version || "2026-10-06";
         this.service = new ServiceImpl(this);
         this.container = new ContainerImpl(this);
         this.blob = new BlobImpl(this);
@@ -74294,6 +74548,43 @@ class BlobDownloadResponse {
      */
     get legalHold() {
         return this.originalResponse.legalHold;
+    }
+    /**
+     * The access tier of the blob. Values include premium page-blob tiers and block-blob tiers
+     * such as Hot, Cool, Cold, Archive, and Smart. See
+     * https://learn.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers.
+     *
+     * @readonly
+     */
+    get accessTier() {
+        return this.originalResponse.accessTier;
+    }
+    /**
+     * For page blobs on a premium storage account only. If the access tier is not explicitly set on
+     * the blob, the tier is inferred based on its content length and this header will be returned
+     * with true value.
+     *
+     * @readonly
+     */
+    get accessTierInferred() {
+        return this.originalResponse.accessTierInferred;
+    }
+    /**
+     * The time the tier was changed on the object. This is only returned if the tier on the block
+     * blob was ever set.
+     *
+     * @readonly
+     */
+    get accessTierChangedOn() {
+        return this.originalResponse.accessTierChangedOn;
+    }
+    /**
+     * The underlying tier of a smart tier blob. Only returned if the blob is in Smart tier.
+     *
+     * @readonly
+     */
+    get smartAccessTier() {
+        return this.originalResponse.smartAccessTier;
     }
     get structuredBodyType() {
         return this.originalResponse.structuredBodyType;
@@ -79308,6 +79599,26 @@ function requireBraceExpansion () {
 	// characters) so legitimate input is unaffected.
 	var EXPANSION_MAX_LENGTH = 4000000;
 
+	// `expand` recurses once per level of brace *nesting* - both when expanding a
+	// set's comma members and when re-wrapping a set whose body is a single part.
+	// The CVE-2026-14257 fix made the *tail* iterative (recursion on `m.post`, one
+	// level per chained group), which left nesting depth unbounded: about 3,100
+	// levels of `{{{...a,b...}}}` - only ~6KB of input - exhausted the native stack
+	// and crashed the process. `EXPANSION_MAX_DEPTH` bounds how deep the parser
+	// will follow nesting. It sits far above any realistic pattern and well below
+	// the depth at which the stack runs out.
+	var EXPANSION_MAX_DEPTH = 1000;
+
+	// Bash keeps a quirk where a brace group followed by a comma set still expands
+	// (`{a},b}`). The parser implements it by rewriting the string and restarting
+	// the scan, absorbing one `}` per pass. `n` trailing braces therefore cost `n`
+	// full passes over a string that itself grows by one `escClose` sentinel each
+	// time - quadratic in `n`, with a ~26x constant from the sentinel's length.
+	// 128KB of `'{a}' + '}'.repeat(n) + ',z}'` blocked the event loop for 27
+	// seconds to produce two results. `EXPANSION_MAX_REWRITES` bounds how many
+	// times the scan may restart. Real `{a},b}` input needs a handful.
+	var EXPANSION_MAX_REWRITES = 1000;
+
 	function numeric(str) {
 	  return parseInt(str, 10) == str
 	    ? parseInt(str, 10)
@@ -79331,34 +79642,54 @@ function requireBraceExpansion () {
 	}
 
 
+	// Like `target.push(...items)` but doesn't overflow the stack
+	function pushAll(target, items) {
+	  for (var i = 0; i < items.length; i++) {
+	    target.push(items[i]);
+	  }
+	}
+
 	// Basically just str.split(","), but handling cases
 	// where we have nested braced sections, which should be
 	// treated as individual members, like {a,{b,c},d}
 	function parseCommaParts(str) {
-	  if (!str)
-	    return [''];
-
 	  var parts = [];
-	  var m = balanced('{', '}', str);
 
-	  if (!m)
-	    return str.split(',');
+	  // Walk the brace groups iteratively. Recursing on `post` once per group let a
+	  // chain of them exhaust the stack - the parsing-side counterpart to
+	  // the `expand` overflow fixed for CVE-2026-14257, and not something `max` or
+	  // `maxLength` can bound, since it happens before expansion.
+	  //
+	  // The part the next chunk continues
+	  var carry = '';
 
-	  var pre = m.pre;
-	  var body = m.body;
-	  var post = m.post;
-	  var p = pre.split(',');
+	  for (;;) {
+	    var m = balanced('{', '}', str);
 
-	  p[p.length-1] += '{' + body + '}';
-	  var postParts = parseCommaParts(post);
-	  if (post.length) {
-	    p[p.length-1] += postParts.shift();
-	    p.push.apply(p, postParts);
+	    if (!m) {
+	      var tail = str.split(',');
+	      tail[0] = carry + tail[0];
+	      pushAll(parts, tail);
+	      return parts;
+	    }
+
+	    var pre = m.pre;
+	    var body = m.body;
+	    var post = m.post;
+	    var p = pre.split(',');
+
+	    p[0] = carry + p[0];
+	    p[p.length-1] += '{' + body + '}';
+
+	    if (!post.length) {
+	      pushAll(parts, p);
+	      return parts;
+	    }
+
+	    carry = p.pop();
+	    pushAll(parts, p);
+	    str = post;
 	  }
-
-	  parts.push.apply(parts, p);
-
-	  return parts;
 	}
 
 	function expandTop(str, options) {
@@ -79368,6 +79699,8 @@ function requireBraceExpansion () {
 	  options = options || {};
 	  var max = options.max == null ? EXPANSION_MAX : options.max;
 	  var maxLength = options.maxLength == null ? EXPANSION_MAX_LENGTH : options.maxLength;
+	  var maxDepth = options.maxDepth == null ? EXPANSION_MAX_DEPTH : options.maxDepth;
+	  var maxRewrites = options.maxRewrites == null ? EXPANSION_MAX_REWRITES : options.maxRewrites;
 
 	  // I don't know why Bash 4.3 does this, but it does.
 	  // Anything starting with {} will have the first two bytes preserved
@@ -79379,7 +79712,7 @@ function requireBraceExpansion () {
 	    str = '\\{\\}' + str.substr(2);
 	  }
 
-	  return expand(escapeBraces(str), max, maxLength, true).map(unescapeBraces);
+	  return expand(escapeBraces(str), max, maxLength, maxDepth, 0, maxRewrites, true).map(unescapeBraces);
 	}
 
 	function embrace(str) {
@@ -79491,8 +79824,18 @@ function requireBraceExpansion () {
 	  str,
 	  max,
 	  maxLength,
+	  maxDepth,
+	  depth,
+	  maxRewrites,
 	  isTop
 	) {
+	  // Too deeply nested to keep following: treat the rest as literal, the same
+	  // way a group that cannot expand is already handled. Truncating rather than
+	  // throwing keeps expansion total, matching `max` and `maxLength`.
+	  if (depth > maxDepth) {
+	    return [str];
+	  }
+
 	  // Consume the string's top-level brace groups left to right, threading a
 	  // running set of combined prefixes (`acc`). Expanding the tail iteratively -
 	  // rather than recursing on `m.post` once per group - keeps the native stack
@@ -79505,6 +79848,9 @@ function requireBraceExpansion () {
 	  // comma set - a sequence like `{a..\}` may legitimately yield ''. The drop
 	  // is on the final strings, so it is applied to whichever `combine` produces
 	  // them (the one with no brace set left in the tail).
+	  // How many times the `{a},b}` rewrite below has restarted the scan. Each pass
+	  // re-reads the whole string, so leaving this unbounded is quadratic.
+	  var rewrites = 0;
 	  var dropEmpties = false;
 	  var firstGroup = true;
 
@@ -79540,7 +79886,8 @@ function requireBraceExpansion () {
 	    var isOptions = m.body.indexOf(',') >= 0;
 	    if (!isSequence && !isOptions) {
 	      // {a},b}
-	      if (m.post.match(/,(?!,).*\}/)) {
+	      if (rewrites < maxRewrites && m.post.match(/,(?!,).*\}/)) {
+	        rewrites++;
 	        str = m.pre + '{' + m.body + escClose + m.post;
 	        isTop = true;
 	        continue;
@@ -79568,7 +79915,7 @@ function requireBraceExpansion () {
 	      var n = parseCommaParts(m.body);
 	      if (n.length === 1 && n[0] !== undefined) {
 	        // x{{a,b}}y ==> x{a}y x{b}y
-	        n = expand(n[0], max, maxLength, false).map(embrace);
+	        n = expand(n[0], max, maxLength, maxDepth, depth + 1, maxRewrites, false).map(embrace);
 	        //XXX is this necessary? Can't seem to hit it in tests.
 	        /* c8 ignore start */
 	        if (n.length === 1) {
@@ -79602,7 +79949,7 @@ function requireBraceExpansion () {
 	      values = [];
 	      var valuesLength = 0;
 	      outer: for (var j = 0; j < n.length; j++) {
-	        var expanded = expand(n[j], max, maxLength, false);
+	        var expanded = expand(n[j], max, maxLength, maxDepth, depth + 1, maxRewrites, false);
 	        for (var k = 0; k < expanded.length; k++) {
 	          var v = expanded[k];
 	          if (dropsEmpties && !v) continue
@@ -86947,7 +87294,7 @@ var hasRequiredPolyfills;
 function requirePolyfills () {
 	if (hasRequiredPolyfills) return polyfills;
 	hasRequiredPolyfills = 1;
-	var constants = require$$0$c;
+	var constants = require$$0$d;
 
 	var origCwd = process.cwd;
 	var cwd = null;
@@ -88045,7 +88392,7 @@ function requireSafeBuffer$1 () {
 	if (hasRequiredSafeBuffer$1) return safeBuffer$1.exports;
 	hasRequiredSafeBuffer$1 = 1;
 	(function (module, exports) {
-		var buffer = require$$0$d;
+		var buffer = require$$0$e;
 		var Buffer = buffer.Buffer;
 
 		// alternative to using Object.keys for old browsers
@@ -88219,7 +88566,7 @@ function requireUtil$3 () {
 	}
 	util$3.isPrimitive = isPrimitive;
 
-	util$3.isBuffer = require$$0$d.Buffer.isBuffer;
+	util$3.isBuffer = require$$0$e.Buffer.isBuffer;
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -94058,7 +94405,7 @@ function requireUtil$2 () {
 	hasRequiredUtil$2 = 1;
 	(function (module) {
 
-		const bufferModule = require$$0$d;
+		const bufferModule = require$$0$e;
 		const { format, inspect } = requireInspect();
 		const {
 		  codes: { ERR_INVALID_ARG_TYPE }
@@ -95852,7 +96199,7 @@ function requireBuffer_list () {
 	hasRequiredBuffer_list = 1;
 
 	const { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array } = requirePrimordials();
-	const { Buffer } = require$$0$d;
+	const { Buffer } = require$$0$e;
 	const { inspect } = requireUtil$2();
 	buffer_list = class BufferList {
 	  constructor() {
@@ -96069,7 +96416,7 @@ function requireSafeBuffer () {
 	hasRequiredSafeBuffer = 1;
 	(function (module, exports) {
 		/* eslint-disable node/no-deprecated-api */
-		var buffer = require$$0$d;
+		var buffer = require$$0$e;
 		var Buffer = buffer.Buffer;
 
 		// alternative to using Object.keys for old browsers
@@ -96431,7 +96778,7 @@ function requireFrom () {
 	/* replacement end */
 
 	const { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = requirePrimordials();
-	const { Buffer } = require$$0$d;
+	const { Buffer } = require$$0$e;
 	const { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = requireErrors$1().codes;
 	function from(Readable, iterable, opts) {
 	  let iterator;
@@ -96554,7 +96901,7 @@ function requireReadable () {
 	Readable.ReadableState = ReadableState;
 	const { EventEmitter: EE } = require$$1__default;
 	const { Stream, prependListener } = requireLegacy();
-	const { Buffer } = require$$0$d;
+	const { Buffer } = require$$0$e;
 	const { addAbortSignal } = requireAddAbortSignal();
 	const eos = requireEndOfStream();
 	let debug = requireUtil$2().debuglog('stream', (fn) => {
@@ -97828,7 +98175,7 @@ function requireWritable () {
 	Writable.WritableState = WritableState;
 	const { EventEmitter: EE } = require$$1__default;
 	const Stream = requireLegacy().Stream;
-	const { Buffer } = require$$0$d;
+	const { Buffer } = require$$0$e;
 	const destroyImpl = requireDestroy();
 	const { addAbortSignal } = requireAddAbortSignal();
 	const { getHighWaterMark, getDefaultHighWaterMark } = requireState();
@@ -98612,7 +98959,7 @@ function requireDuplexify () {
 
 	/* replacement end */
 
-	;	const bufferModule = require$$0$d;
+	;	const bufferModule = require$$0$e;
 	const {
 	  isReadable,
 	  isWritable,
@@ -100462,7 +100809,7 @@ function requireStream () {
 
 	/* replacement start */
 
-	const { Buffer } = require$$0$d;
+	const { Buffer } = require$$0$e;
 
 	/* replacement end */
 
@@ -106963,7 +107310,7 @@ function requireCommonjs$1 () {
 	Object.defineProperty(commonjs$2, "__esModule", { value: true });
 	commonjs$2.PathScurry = commonjs$2.Path = commonjs$2.PathScurryDarwin = commonjs$2.PathScurryPosix = commonjs$2.PathScurryWin32 = commonjs$2.PathScurryBase = commonjs$2.PathPosix = commonjs$2.PathWin32 = commonjs$2.PathBase = commonjs$2.ChildrenCache = commonjs$2.ResolveCache = void 0;
 	const lru_cache_1 = /*@__PURE__*/ requireCommonjs$3();
-	const node_path_1 = require$$1$7;
+	const node_path_1 = require$$1$6;
 	const node_url_1 = require$$1$3;
 	const fs_1 = fs__default$1;
 	const actualFS = __importStar(fs__default);
@@ -112950,7 +113297,7 @@ function requireDeflateCrc32Stream () {
 	if (hasRequiredDeflateCrc32Stream) return deflateCrc32Stream;
 	hasRequiredDeflateCrc32Stream = 1;
 
-	const {DeflateRaw} = require$$0$e;
+	const {DeflateRaw} = require$$0$f;
 
 	const crc32 = requireCrc32();
 
@@ -116915,7 +117262,7 @@ var hasRequiredTar;
 function requireTar () {
 	if (hasRequiredTar) return tar;
 	hasRequiredTar = 1;
-	var zlib = require$$0$e;
+	var zlib = require$$0$f;
 
 	var engine = requireTarStream();
 	var util = requireArchiverUtils();
@@ -124584,7 +124931,7 @@ function requireUnzipStream () {
 	var binary = requireBinary();
 	var stream = require$$0__default;
 	var util = require$$0$3;
-	var zlib = require$$0$e;
+	var zlib = require$$0$f;
 	var MatcherStream = requireMatcherStream();
 	var Entry = requireEntry();
 
