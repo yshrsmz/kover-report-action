@@ -6,5 +6,12 @@
     "github>yshrsmz/renovate-config:github-actions",
     "github>yshrsmz/renovate-config:tooling"
   ],
-  "reviewers": ["yshrsmz"]
+  "reviewers": ["yshrsmz"],
+  "packageRules": [
+    {
+      "description": "action は runs.using: node24 で動くので、@types/node を実行環境に揃えて 24 系に留める。GitHub Actions が node26 をサポートしたら外す",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
+    }
+  ]
 }
