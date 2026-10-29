@@ -9,8 +9,8 @@
   "reviewers": ["yshrsmz"],
   "packageRules": [
     {
-      "description": "action は runs.using: node24 で動くので、@types/node を実行環境に揃えて 24 系に留める。GitHub Actions が node26 をサポートしたら外す",
-      "matchPackageNames": ["@types/node"],
+      "description": "action は runs.using: node24 で動くので、Node 本体と @types/node を実行環境に揃えて 24 系に留める。Node 本体の版は mise.toml の node が SoT で、CI の setup-node は node-version-file: mise.toml で同じ版を読む。mise の node も setup-node の node-version も depName は node なので matchDepNames で両方に効く。GitHub Actions が node26 をサポートしたら外す",
+      "matchDepNames": ["node", "@types/node"],
       "allowedVersions": "<25"
     }
   ]
