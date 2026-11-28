@@ -37,18 +37,18 @@
     "glob": "14.0.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
+    "@biomejs/biome": "2.6.8",
     "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-typescript": "12.3.1",
     "@types/node": "26.6.6",
-    "@vitest/coverage-v8": "5.1.0",
-    "@vitest/ui": "5.1.0",
+    "@vitest/coverage-v8": "5.1.1",
+    "@vitest/ui": "5.1.1",
     "lefthook": "2.2.2",
-    "rollup": "4.68.2",
+    "rollup": "4.68.8",
     "typescript": "6.0.3",
-    "vitest": "5.1.0"
+    "vitest": "5.1.1"
   },
   "packageManager": "pnpm@12.20.0"
 }
